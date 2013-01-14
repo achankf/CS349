@@ -19,7 +19,6 @@ class Collision;
 class Game {
 public: /* members */
 	Player player;
-	std::list <Structure> buildings;
 	std::list <Missile> missiles;
 	int xblock_num, yblock_num;
 	std::vector < std::vector<char> > structure_map; // a map of structures

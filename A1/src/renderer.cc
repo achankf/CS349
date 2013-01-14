@@ -5,6 +5,7 @@
 #ifdef DEBUG
 #include "func.h"
 #include <iostream>
+#include <sstream>
 #endif
 using namespace std;
 
@@ -47,12 +48,19 @@ void Renderer::repaint(Game &go, XInfo &xinfo){
 		0, 0, xinfo.dwidth, xinfo.dheight);
 
 	go.player.draw(*this,xinfo);
-	for (auto it = go.buildings.begin(), end = go.buildings.end(); it != end; it++){
-		if (!within_focus_x(*it)) continue;
-		it->draw(*this,xinfo);
+
+	/* structures are stored in a 2D array of char */
+	for (size_t x = (size_t)focus_bound_low, xsize = go.structure_map.size();
+		x < (size_t)focus_bound_high &&x < xsize; x++){
+		for (size_t y = 0, ysize = go.structure_map[x].size(); y < ysize; y++){
+			if (!go.structure_map[x][y]) continue;
+			draw_structure(go, xinfo, x, y);
+		}
 	}
+
 	for (auto it = go.missiles.begin(), end = go.missiles.end(); it != end; it++){
-		if (!within_focus_x(*it)) continue;
+		if (!within_focus_x(it->getx() / xblocksize, 
+			it->gety() / xblocksize, MISSILE_WIDTH)) continue;
 		it->draw(*this,xinfo);
 	}
 	XCopyArea(xinfo.display, xinfo.pixmap, xinfo.window,  xinfo.gc[XInfo::DEFAULT],
@@ -60,22 +68,22 @@ void Renderer::repaint(Game &go, XInfo &xinfo){
 	XFlush(xinfo.display);
 }
 
-bool Renderer::within_focus_x(Object &ob){
-#if 0
-	print_pair((int)ob.getx() / xblocksize,  (int)(ob.getx() + ob.get_width()) / xblocksize);
-	print_pair(focus_bound_low,  focus_bound_high);
-	cout << endl;
-#endif
-	return ob.getx() / xblocksize >= focus_bound_low 
-		&& (ob.getx() + ob.get_width()) / xblocksize <= focus_bound_high;
+bool Renderer::within_focus_x(int x, int y, int width){
+	return x >= focus_bound_low 
+		&& (x+width) <= focus_bound_high;
 }
 
 void Renderer::recalculate_focus_bound(){
 	focus += SCROLL_FACTOR;
 	focus_bound_low = (focus - xblocksize) / xblocksize;
 	focus_bound_high = (width + focus + xblocksize) / xblocksize;
+}
 
-#if DEBUG
-	print_pair(focus_bound_low, focus_bound_high);
-#endif
+void Renderer::draw_structure(Game &go, XInfo &xinfo, int x, int y){
+	Display *display = xinfo.display;
+	GC gc = xinfo.gc[XInfo::DEFAULT];
+	Pixmap pixmap = xinfo.pixmap;
+	x = x * xblocksize - focus;
+	y *= yblocksize;
+	XDrawRectangle(display, pixmap, gc, x, y, xblocksize, yblocksize);
 }

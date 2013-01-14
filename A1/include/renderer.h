@@ -18,7 +18,8 @@ public: /* functions */
 	Renderer(Game &, XInfo &);
 	void update_attributes(Game &go, XInfo &xinfo, int new_width, int new_height);
 	void repaint(Game &, XInfo &);
-	bool within_focus_x(Object &);
+	bool within_focus_x(int x, int y, int width);
+	void draw_structure(Game &, XInfo &, int x, int y);
 private: /* functions */
 	void recalculate_focus_bound();
 };

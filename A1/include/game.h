@@ -7,6 +7,8 @@
 #include "object.h"
 #include "movable.h"
 #include "missile.h"
+#include "structure.h"
+#include "player.h"
 #include "renderer.h"
 #include "collision.h"
 
@@ -16,8 +18,8 @@ class Collision;
 
 class Game {
 public: /* members */
-	Movable player;
-	std::list <Object> buildings;
+	Player player;
+	std::list <Structure> buildings;
 	std::list <Missile> missiles;
 	int xblock_num, yblock_num;
 	std::vector < std::vector<char> > structure_map; // a map of structures

@@ -12,7 +12,7 @@ using namespace xinfo;
 const char *TITLE = "Game";
 
 /* constructor */
-XInfo::XInfo(int argc, char **argv) {
+XInfo::XInfo(int argc, char **argv){
 	XSizeHints hints;
 	unsigned long white, black;
 
@@ -75,6 +75,9 @@ XInfo::XInfo(int argc, char **argv) {
 
 	int depth = DefaultDepth(display, DefaultScreen(display));
 	pixmap = XCreatePixmap(display, window, hints.width, hints.height, depth);
+
+	dwidth = DisplayWidth(display, screen);
+	dheight = DisplayHeight(display, screen);
 
 	/* Put the window on the screen. */
 	XMapRaised( display, window );

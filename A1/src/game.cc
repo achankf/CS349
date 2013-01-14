@@ -17,13 +17,13 @@ Game::Game() : player(50,50,0,0),
 		bool make = rand() % 2;
 		if (!make) continue;
 		y = yblock_num - 2;
-		buildings.push_back(Object(x,y));
+		buildings.push_back(Structure(x,y));
 		structure_map[x][y] = true;
 	}
 	
 	int temp = yblock_num - 1;
 	for (int i = 0; i < xblock_num; i++){
-		buildings.push_back(Object(i,yblock_num-1));
+		buildings.push_back(Structure(i,yblock_num-1));
 		structure_map[i][temp] = true;
 	}
 }

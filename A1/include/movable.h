@@ -4,14 +4,7 @@
 #include "object.h"
 #include <utility>
 
-typedef float magnitude_t;
-typedef float acc_t;
-
-namespace movable{
-	enum DIRECTION{
-		UP,DOWN,FORWARD,BACKWARD
-	};
-}
+class Renderer;
 
 class Movable : public Object {
 protected:
@@ -22,12 +15,14 @@ public: /* member */
 
 public: /* functions */
 	Movable(magnitude_t x, magnitude_t y, magnitude_t speedx, magnitude_t speedy);
-	void decelerate();
 	void move_up();
 	void move_down();
 	void move_forward();
 	void move_backward();
-	virtual void update_position();
+	virtual void update_position() = 0;
+	virtual void draw(Renderer &, XInfo &) = 0;
+	virtual magnitude_t get_width() = 0;
+	virtual magnitude_t get_height() = 0;
 	magnitude_t get_speedx();
 	magnitude_t get_speedy();
 };

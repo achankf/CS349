@@ -8,104 +8,74 @@
 #endif
 using namespace std;
 
-Renderer::Renderer(Game *go, XInfo *xinfo) :
-	go_pt(go),
-	xinfo_pt(xinfo),
-	dwidth(DisplayWidth(xinfo->display, xinfo->screen)),
-	dheight(DisplayHeight(xinfo->display, xinfo->screen)),
-	width(DEFAULT_WIDTH > dwidth ? dwidth : DEFAULT_WIDTH),
-	height(DEFAULT_HEIGHT > dheight ? dheight : DEFAULT_HEIGHT),
-	focus(0)
+Renderer::Renderer(Game &go, XInfo &xinfo) :
+	width(DEFAULT_WIDTH > xinfo.dwidth ? xinfo.dwidth : DEFAULT_WIDTH),
+	height(DEFAULT_HEIGHT > xinfo.dheight ? xinfo.dheight : DEFAULT_HEIGHT),
+	focus(0),
+	focus_bound_low(0),
+	focus_bound_high(0)
 {
-	update_attributes(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+	update_attributes(go, xinfo, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 }
 
-void Renderer::update_attributes(int new_width, int new_height){
-	width = new_width > dwidth ? dwidth : new_width;
-	height = new_height > dheight ? dheight : new_height;
-	yblocksize = height / go_pt->yblock_num;
+void Renderer::update_attributes(Game &go, XInfo &xinfo, int new_width, int new_height){
+	width = new_width > xinfo.dwidth ? xinfo.dwidth : new_width;
+	height = new_height > xinfo.dheight ? xinfo.dheight : new_height;
+	yblocksize = height / go.yblock_num;
 	xblocksize = yblocksize;
-	//edge_difference = go_pt->xblock_num / 2 * xblocksize;
 
 #ifdef DEBUG
 	{
 		using namespace std;
 		cout << "display:";
-		print_pair(dwidth,dheight);
+		print_pair(xinfo.dwidth,xinfo.dheight);
 		cout << "game:";
 		print_pair(width,height);
 		cout << "block_size:";
 		print_pair(xblocksize,yblocksize);
-		//cout << "edge_difference:" << edge_difference << endl;
 	}
 #endif
 }
 
-void Renderer::repaint(){
-	update_focus();
-	//XClearWindow(xinfo_pt->display,xinfo_pt->window);
+void Renderer::repaint(Game &go, XInfo &xinfo){
+	recalculate_focus_bound();
+
 	// clean canvas
-	XFillRectangle(xinfo_pt->display,
-		xinfo_pt->pixmap,
-		xinfo_pt->gc[XInfo::INVERSE_BACKGROUND],
-		0, 0, dwidth, dheight);
+	XFillRectangle(xinfo.display,
+		xinfo.pixmap,
+		xinfo.gc[XInfo::INVERSE_BACKGROUND],
+		0, 0, xinfo.dwidth, xinfo.dheight);
 
-	draw_player(*xinfo_pt, go_pt->player);
-	for (auto it = go_pt->buildings.begin(), end = go_pt->buildings.end(); it != end; it++){
-		draw_building(*xinfo_pt,*it);
+	go.player.draw(*this,xinfo);
+	for (auto it = go.buildings.begin(), end = go.buildings.end(); it != end; it++){
+		if (!within_focus_x(*it)) continue;
+		it->draw(*this,xinfo);
 	}
-	for (auto it = go_pt->missiles.begin(), end = go_pt->missiles.end(); it != end; it++){
-		draw_missile(*xinfo_pt,*it);
+	for (auto it = go.missiles.begin(), end = go.missiles.end(); it != end; it++){
+		if (!within_focus_x(*it)) continue;
+		it->draw(*this,xinfo);
 	}
-	XCopyArea(xinfo_pt->display, xinfo_pt->pixmap, xinfo_pt->window,  xinfo_pt->gc[XInfo::DEFAULT],
-		0, 0, dwidth, dheight, 0, 0);
-	XFlush(xinfo_pt->display);
+	XCopyArea(xinfo.display, xinfo.pixmap, xinfo.window,  xinfo.gc[XInfo::DEFAULT],
+		0, 0, xinfo.dwidth, xinfo.dheight, 0, 0);
+	XFlush(xinfo.display);
 }
 
-void Renderer::draw_player(XInfo &xinfo, Movable &player){
-	Display *display = xinfo.display;
-//	Window win = xinfo.window;
-	GC gc = xinfo.gc[xinfo::DEFAULT];
-	Pixmap pixmap = xinfo.pixmap;
-	magnitude_t x = player.getx() - focus;
-	magnitude_t y = player.gety();
-	XFillRectangle(display, pixmap, gc, x, y, PLAYER_WIDTH, PLAYER_HEIGHT);
+bool Renderer::within_focus_x(Object &ob){
+#if 0
+	print_pair((int)ob.getx() / xblocksize,  (int)(ob.getx() + ob.get_width()) / xblocksize);
+	print_pair(focus_bound_low,  focus_bound_high);
+	cout << endl;
+#endif
+	return ob.getx() / xblocksize >= focus_bound_low 
+		&& (ob.getx() + ob.get_width()) / xblocksize <= focus_bound_high;
 }
 
-void Renderer::draw_building(XInfo &xinfo, Object &building){
-	Display *display = xinfo.display;
-//	Window win = xinfo.window;
-	GC gc = xinfo.gc[xinfo::DEFAULT];
-	Pixmap pixmap = xinfo.pixmap;
-	magnitude_t x = building.getx() - focus;
-	magnitude_t y = building.gety();
-	XDrawRectangle(display, pixmap, gc, x * xblocksize, y * yblocksize, xblocksize, yblocksize);
-	std::stringstream ss;
-	ss << (int)x;
-	XDrawString(display, pixmap, gc, x*xblocksize + 1, y * yblocksize +10, ss.str().c_str(), ss.str().size());
-	ss.str("");
-	ss << (int)y;
-	XDrawString(display, pixmap, gc, x*xblocksize + 1, y * yblocksize +20, ss.str().c_str(), ss.str().size());
-}
-
-void Renderer::draw_missile(XInfo &xinfo, Missile &missile){
-	Display *display = xinfo.display;
-//	Window win = xinfo.window;
-	GC gc = xinfo.gc[xinfo::DEFAULT];
-	Pixmap pixmap = xinfo.pixmap;
-	magnitude_t x = missile.getx() - focus;
-	magnitude_t y = missile.gety();
-	XFillRectangle(display, pixmap, gc, x, y, MISSILE_WIDTH, MISSILE_HEIGHT);
-}
-
-void Renderer::update_focus(){
+void Renderer::recalculate_focus_bound(){
 	focus += SCROLL_FACTOR;
-}
+	focus_bound_low = (focus - xblocksize) / xblocksize;
+	focus_bound_high = (width + focus + xblocksize) / xblocksize;
 
-int Renderer::get_xblocksize() const{
-	return yblocksize;
-}
-
-int Renderer::get_yblocksize() const{
-	return yblocksize;
+#if DEBUG
+	print_pair(focus_bound_low, focus_bound_high);
+#endif
 }

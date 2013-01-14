@@ -10,14 +10,6 @@ Movable::Movable(magnitude_t x, magnitude_t y, magnitude_t speedx, magnitude_t s
 	velocity(std::make_pair(speedx,speedy)){
 }
 
-void Movable::update_position(){
-	pos.first += velocity.first;
-	pos.second += velocity.second;
-}
-
-void Movable::decelerate(){
-}
-
 void Movable::move_up(){
 	magnitude_t temp = velocity.second - acceleration;
 	if (fabs(temp) > MAX_SPEED) return;

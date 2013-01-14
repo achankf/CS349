@@ -39,7 +39,7 @@ void handle_keypress(Game &go, Renderer &rn, XInfo &xinfo, XEvent &event){
 int main(int argc, char **argv){
 	XInfo xinfo(argc, argv);
 	Game go;
-	Renderer rn(&go,&xinfo);
+	Renderer rn(go,xinfo);
 	Collision cl(go,rn);
 
 	const unsigned long sleep_period = 1000000/FPS;
@@ -64,7 +64,7 @@ int main(int argc, char **argv){
 		end = now();
 		if (end - lastRepaint > sleep_period){
 			go.update(cl,rn);
-			rn.repaint();
+			rn.repaint(go,xinfo);
 			lastRepaint = now();
 		} else if (XPending(xinfo.display) == 0){
 			usleep(sleep_period - (end - lastRepaint));

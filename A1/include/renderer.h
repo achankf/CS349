@@ -2,29 +2,25 @@
 #define __ALFRED_renderer_h__
 #include "xinfo.h"
 #include "game.h"
+#include "config.h"
 
 // place holder
 class Game;
 
 class Renderer{
-	Game *go_pt;
-	XInfo *xinfo_pt;
-
-	int dwidth,dheight;
+public: /* members */
 	int width,height;
 	int xblocksize, yblocksize;
-	float focus;
+	magnitude_t focus;
+	int focus_bound_low, focus_bound_high;
 
-public:
-	Renderer(Game *, XInfo *);
-	void update_focus();
-	void update_attributes(int new_width, int new_height);
-	void draw_player(XInfo &, Movable &);
-	void draw_building(XInfo &, Object &);
-	void draw_missile(XInfo &, Missile &);
-	int get_xblocksize() const;
-	int get_yblocksize() const;
-	void repaint();
+public: /* functions */
+	Renderer(Game &, XInfo &);
+	void update_attributes(Game &go, XInfo &xinfo, int new_width, int new_height);
+	void repaint(Game &, XInfo &);
+	bool within_focus_x(Object &);
+private: /* functions */
+	void recalculate_focus_bound();
 };
 
 #endif

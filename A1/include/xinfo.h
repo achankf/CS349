@@ -36,6 +36,7 @@ public: /* member variables */
 	Window window;
 	GC gc[xinfo::NUM_GC_TYPE];
 	Pixmap pixmap;
+	int dwidth,dheight;
 
 public: /* functions */
 	XInfo(int argc, char **argv);

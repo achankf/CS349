@@ -4,10 +4,7 @@
 #include <list>
 #include <vector>
 
-#include "object.h"
-#include "movable.h"
 #include "missile.h"
-#include "structure.h"
 #include "player.h"
 #include "renderer.h"
 #include "collision.h"

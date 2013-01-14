@@ -17,15 +17,19 @@ unsigned long now() {
 void handle_keypress(Game &go, Renderer &rn, XInfo &xinfo, XEvent &event){
 	auto key_pressed = XLookupKeysym(&event.xkey, 0);
 	switch(key_pressed){
+		case 'k': // vim bindings :) -- fall-through
 		case XK_Up:
 			go.player.move_up();
 			break;
+		case 'j': // vim bindings :) -- fall-through
 		case XK_Down:
 			go.player.move_down();
 			break;
+		case 'h': // vim bindings :) -- fall-through
 		case XK_Left:
 			go.player.move_backward();
 			break;
+		case 'l': // vim bindings :) -- fall-through
 		case XK_Right:
 			go.player.move_forward();
 			break;

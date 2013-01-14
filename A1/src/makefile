@@ -1,7 +1,7 @@
 CXX=g++
 SOURCES = $(shell find -name "*.cc")
 LDFLAGS = -lX11
-OLEVEL = -O2 -ggdb
+OLEVEL = -O0 -ggdb
 INCLUDE_DIR = -I../include
 DEBUG = -Werror
 DEBUG = -DDEBUG

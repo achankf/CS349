@@ -21,8 +21,6 @@ public: /* functions */
 	void move_backward();
 	virtual void update_position() = 0;
 	virtual void draw(Renderer &, XInfo &) = 0;
-	virtual magnitude_t get_width() = 0;
-	virtual magnitude_t get_height() = 0;
 	magnitude_t get_speedx();
 	magnitude_t get_speedy();
 };

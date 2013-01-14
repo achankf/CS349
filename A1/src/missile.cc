@@ -31,10 +31,3 @@ void Missile::update_position(){
 	}
 	pos.second += MISSLE_SPEED;
 }
-
-magnitude_t Missile::get_width(){
-	return MISSILE_WIDTH;
-}
-magnitude_t Missile::get_height(){
-	return MISSILE_HEIGHT;
-}

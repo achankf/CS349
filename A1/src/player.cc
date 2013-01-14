@@ -26,14 +26,6 @@ void Player::update_position(){
 	pos.second += velocity.second;
 }
 
-magnitude_t Player::get_width(){
-	return PLAYER_WIDTH;
-}
-
-magnitude_t Player::get_height(){
-	return PLAYER_HEIGHT;
-}
-
 void Player::fire(Game &go){
 	go.missiles.push_back(Missile(getx(),gety(),get_speedx(),get_speedy()));
 }

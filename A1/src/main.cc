@@ -32,7 +32,14 @@ void handle_keypress(Game &go, Renderer &rn, XInfo &xinfo, XEvent &event){
 		case 'q':
 			throw 0; // exit
 		case 'z':
-			go.player_fire();
+			go.player.fire(go);
+			break;
+		case 'x':
+			go.player.brake();
+			break;
+		case 'b':
+			go.player.emergency_brake(); // aka "easy" mode
+			break;
 	}
 }
 

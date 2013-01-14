@@ -2,12 +2,10 @@
 #define __ALFRED_collision_h__
 
 #include <vector>
-#include "collision.h"
-#include "renderer.h"
-#include "missile.h"
 
 class Game;
 class Renderer;
+class Missile;
 
 class Collision{
 	Game &go;

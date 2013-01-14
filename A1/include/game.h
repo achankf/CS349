@@ -12,6 +12,8 @@
 // place holder
 class Renderer;
 class Collision;
+class Missile;
+class Player;
 
 class Game {
 public: /* members */
@@ -30,8 +32,6 @@ public: // enum
 public: /* functions */
 	Game();
 	void update(Collision &cl, Renderer &rn);
-	void player_fire();
-	bool collide_missile(Renderer &rn, const Missile &mi);
 	void normalize_coor(int &x, int &y);
 };
 

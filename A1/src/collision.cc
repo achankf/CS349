@@ -1,4 +1,6 @@
 #include "collision.h"
+#include "renderer.h"
+#include "missile.h"
 
 Collision::Collision(Game &go, Renderer &rn)
 : go(go),

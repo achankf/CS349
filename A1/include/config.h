@@ -17,7 +17,7 @@
 
 // moving object magnitude
 #define ACCELERATION 0.3
-#define MAX_SPEED 2
+#define MAX_SPEED 10
 #define MISSLE_SPEED 1
 #define MISSILE_INERTIA 0.01
 

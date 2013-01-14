@@ -33,3 +33,24 @@ magnitude_t Player::get_width(){
 magnitude_t Player::get_height(){
 	return PLAYER_HEIGHT;
 }
+
+void Player::fire(Game &go){
+	go.missiles.push_back(Missile(getx(),gety(),get_speedx(),get_speedy()));
+}
+
+void Player::brake(){
+	if (velocity.first > 0){
+		velocity.first -= ACCELERATION;
+	} else if (velocity.first < 0){
+		velocity.first += ACCELERATION;
+	}
+	if (velocity.second > 0){
+		velocity.second -= ACCELERATION;
+	} else if (velocity.second < 0){
+		velocity.second += ACCELERATION;
+	}
+}
+
+void Player::emergency_brake(){
+	velocity.first = velocity.second = 0;
+}

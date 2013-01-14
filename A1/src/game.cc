@@ -34,23 +34,6 @@ void Game::update(Collision &cl, Renderer &rn){
 	missiles.remove_if(cl);
 }
 
-void Game::player_fire(){
-	magnitude_t x,y,speedx,speedy;
-	x = player.getx();
-	y = player.gety();
-	speedx = player.get_speedx();
-	speedy = player.get_speedy();
-
-#if DEBUG
-	cout << "Missile launched at ";
-	print_pair(x,y);
-	cout << "\tvelocity:";
-	print_pair(speedx,speedy);
-#endif
-	
-	missiles.push_back(Missile(x,y,speedx,speedy));
-}
-
 void Game::normalize_coor(int &x, int &y){
 	if (x < 0){
 		x = 0;

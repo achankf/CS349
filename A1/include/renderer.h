@@ -20,6 +20,7 @@ public: /* functions */
 	void repaint(Game &, XInfo &);
 	bool within_focus_x(int x, int y, int width);
 	void draw_structure(Game &, XInfo &, int x, int y);
+	void draw_cannon(Game &, XInfo &, int x, int y);
 private: /* functions */
 	void recalculate_focus_bound();
 };

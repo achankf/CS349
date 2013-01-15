@@ -11,8 +11,13 @@ using namespace std;
 Game::Game() : player(50,50,0,0),
 	xblock_num(XBLOCK_NUM),
 	yblock_num(YBLOCK_NUM),
-	structure_map(xblock_num, std::vector<char>(yblock_num, false))
+	structure_map(xblock_num, std::vector<char>(yblock_num, false)),
+	cannon_height_map(xblock_num, NO_CANNON)
 {
+	setup();
+}
+
+void Game::setup(){
 	for (int x = 0, y; x < xblock_num; x++){
 		bool make = rand() % 2;
 		if (!make) continue;
@@ -23,6 +28,17 @@ Game::Game() : player(50,50,0,0),
 	int temp = yblock_num - 1;
 	for (int i = 0; i < xblock_num; i++){
 		structure_map[i][temp] = true;
+	}
+
+	for (int x = 0; x < xblock_num; x++){
+		for (int y = yblock_num - 1; y >= 0; y--){ // search from the bottom
+			// requires that (x,y) doesn't contain a structure
+			if (structure_map[x][y]) continue;
+			if ((rand() % CANNON_SPAWN_TOTAL) <= CANNON_SPAWN){
+				cannon_height_map[x] = y;
+			}
+			break;
+		}
 	}
 }
 

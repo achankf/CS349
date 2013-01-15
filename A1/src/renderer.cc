@@ -50,13 +50,21 @@ void Renderer::repaint(Game &go, XInfo &xinfo){
 	go.player.draw(*this,xinfo);
 
 	/* structures are stored in a 2D array of char */
-	for (size_t x = (size_t)focus_bound_low, xsize = go.structure_map.size();
-		x < (size_t)focus_bound_high &&x < xsize; x++){
-		for (size_t y = 0, ysize = go.structure_map[x].size(); y < ysize; y++){
+	for (int x = focus_bound_low; x < focus_bound_high &&x < go.xblock_num; x++){
+		for (int y = 0; y < go.yblock_num; y++){
 			if (!go.structure_map[x][y]) continue;
 			draw_structure(go, xinfo, x, y);
 		}
 	}
+
+
+#if 1
+	for (int x = focus_bound_low, y; x < focus_bound_high &&x < go.xblock_num; x++){
+		y = go.cannon_height_map[x];
+		if (y == Game::NO_CANNON) continue;
+		draw_cannon(go, xinfo, x, y);
+	}
+#endif
 
 	for (auto it = go.missiles.begin(), end = go.missiles.end(); it != end; it++){
 		if (!within_focus_x(it->getx() / xblocksize, 
@@ -77,13 +85,4 @@ void Renderer::recalculate_focus_bound(){
 	focus += SCROLL_FACTOR;
 	focus_bound_low = (focus - xblocksize) / xblocksize;
 	focus_bound_high = (width + focus + xblocksize) / xblocksize;
-}
-
-void Renderer::draw_structure(Game &go, XInfo &xinfo, int x, int y){
-	Display *display = xinfo.display;
-	GC gc = xinfo.gc[XInfo::DEFAULT];
-	Pixmap pixmap = xinfo.pixmap;
-	x = x * xblocksize - focus;
-	y *= yblocksize;
-	XDrawRectangle(display, pixmap, gc, x, y, xblocksize, yblocksize);
 }

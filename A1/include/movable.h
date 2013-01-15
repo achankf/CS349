@@ -7,14 +7,18 @@
 class Renderer;
 
 class Movable : public Object {
-protected:
-	magnitude_t acceleration;
-
 public: /* member */
 	std::pair <magnitude_t,magnitude_t> velocity;
+	std::pair <magnitude_t,magnitude_t> acceleration;
+
+public:
+	enum DIRECTION{
+		UP, DOWN, FORWARD, BACKWARD
+	};
 
 public: /* functions */
-	Movable(magnitude_t x, magnitude_t y, magnitude_t speedx, magnitude_t speedy);
+	Movable(bool enemy, magnitude_t x, magnitude_t y, 
+		magnitude_t speedx, magnitude_t speedy, magnitude_t accx, magnitude_t accy);
 	void move_up();
 	void move_down();
 	void move_forward();

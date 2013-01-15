@@ -7,8 +7,9 @@
 #include "func.h"
 #endif
 
-Missile::Missile(magnitude_t x, magnitude_t y, magnitude_t speedx, magnitude_t speedy) :
-	Movable(x,y,speedx,speedy)
+Missile::Missile(bool enemy, magnitude_t x, magnitude_t y,
+		magnitude_t speedx, magnitude_t speedy, magnitude_t accx, magnitude_t accy) :
+	Movable(enemy,x,y,speedx,speedy,accx,accy)
 {
 }
 
@@ -29,5 +30,6 @@ void Missile::update_position(){
 		velocity.first += MISSILE_INERTIA;
 		pos.first += velocity.first;
 	}
-	pos.second += MISSLE_SPEED;
+	velocity.second += acceleration.second;
+	pos.second += velocity.second;
 }

@@ -4,29 +4,31 @@
 #include <cmath>
 using namespace std;
 
-Movable::Movable(magnitude_t x, magnitude_t y, magnitude_t speedx, magnitude_t speedy) : 
-	Object(x,y),
-	acceleration(ACCELERATION),
-	velocity(std::make_pair(speedx,speedy)){
+Movable::Movable(bool enemy, magnitude_t x, magnitude_t y,
+		magnitude_t speedx, magnitude_t speedy, magnitude_t accx, magnitude_t accy) :
+	Object(enemy,x,y),
+	velocity(std::make_pair(speedx,speedy)),
+	acceleration(std::make_pair(accx,accy))
+{
 }
 
 void Movable::move_up(){
-	magnitude_t temp = velocity.second - acceleration;
+	magnitude_t temp = velocity.second - acceleration.second;
 	if (fabs(temp) > MAX_SPEED) return;
 	velocity.second = temp;
 }
 void Movable::move_down(){
-	magnitude_t temp = velocity.second + acceleration;
+	magnitude_t temp = velocity.second + acceleration.second;
 	if (fabs(temp) > MAX_SPEED) return;
 	velocity.second = temp;
 }
 void Movable::move_forward(){
-	magnitude_t temp = velocity.first + acceleration;
+	magnitude_t temp = velocity.first + acceleration.first;
 	if (fabs(temp) > MAX_SPEED) return;
 	velocity.first = temp;
 }
 void Movable::move_backward(){
-	magnitude_t temp = velocity.first - acceleration;
+	magnitude_t temp = velocity.first - acceleration.first;
 	if (fabs(temp) > MAX_SPEED) return;
 	velocity.first = temp;
 }

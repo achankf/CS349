@@ -8,7 +8,7 @@
 #endif
 
 Player::Player(magnitude_t x, magnitude_t y, magnitude_t speedx, magnitude_t speedy) :
-	Movable(x,y,speedx,speedy)
+	Movable(false,x,y,speedx,speedy,ACCELERATION,ACCELERATION)
 {
 }
 
@@ -27,7 +27,8 @@ void Player::update_position(){
 }
 
 void Player::fire(Game &go){
-	go.missiles.push_back(Missile(getx(),gety(),get_speedx(),get_speedy()));
+	go.missiles.push_back(
+		Missile(false, getx(),gety(), get_speedx(),get_speedy(),0,MISSILE_INERTIA));
 }
 
 void Player::brake(){

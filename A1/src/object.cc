@@ -1,7 +1,9 @@
 #include "object.h"
 
-Object::Object(magnitude_t x, magnitude_t y) : 
-	pos(std::make_pair(x,y)){
+Object::Object(bool enemy, magnitude_t x, magnitude_t y) : 
+	pos(std::make_pair(x,y)),
+	enemy(enemy)
+{
 }
 
 magnitude_t Object::getx() const{

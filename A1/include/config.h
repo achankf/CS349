@@ -28,13 +28,16 @@
 /* a cannon spawns when (rand() % CANNON_TOTAL) < CANNON_SPAWN) */
 #define CANNON_SPAWN 25
 #define CANNON_SPAWN_TOTAL 100
+#define CANNON_MIN_FIRE_TIME 10
 
 // number of blocks in a level
 #define XBLOCK_NUM 600
 #define YBLOCK_NUM 16
 
-#define NO_CANNON -1 // ==> cannon's height max 254
+#define NO_CANNON -1
 
 typedef float magnitude_t;
+typedef char height_t;
+typedef unsigned char cannon_fire_time_t;
 
 #endif

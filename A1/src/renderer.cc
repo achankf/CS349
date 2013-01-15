@@ -61,7 +61,7 @@ void Renderer::repaint(Game &go, XInfo &xinfo){
 #if 1
 	for (int x = focus_bound_low, y; x < focus_bound_high &&x < go.xblock_num; x++){
 		y = go.cannon_height_map[x];
-		if (y == Game::NO_CANNON) continue;
+		if (y == NO_CANNON) continue;
 		draw_cannon(go, xinfo, x, y);
 	}
 #endif

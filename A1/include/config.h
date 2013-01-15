@@ -29,6 +29,12 @@
 #define CANNON_SPAWN 25
 #define CANNON_SPAWN_TOTAL 100
 
+// number of blocks in a level
+#define XBLOCK_NUM 600
+#define YBLOCK_NUM 16
+
+#define NO_CANNON -1 // ==> cannon's height max 254
+
 typedef float magnitude_t;
 
 #endif

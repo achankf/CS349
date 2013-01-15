@@ -21,7 +21,7 @@
 #define ACCELERATION 0.3
 #define MAX_SPEED 10
 #define MISSLE_SPEED 2
-#define MISSILE_INERTIA 0.01
+#define MISSILE_INERTIA 0.05
 
 // gameplay
 

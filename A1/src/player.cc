@@ -46,3 +46,24 @@ void Player::brake(){
 void Player::emergency_brake(){
 	velocity.first = velocity.second = 0;
 }
+
+void Player::fit_to_boundary(Renderer &rn){
+	magnitude_t right_bound = rn.width + rn.focus - PLAYER_WIDTH;
+	magnitude_t lower_bound = rn.height - PLAYER_HEIGHT;
+
+	if (getx() < rn.focus){
+		setx(rn.focus);
+		move_forward();
+	} else if (getx() > right_bound){
+		setx(right_bound);
+		move_backward();
+	}
+
+	if (gety() < 0){
+		sety(0);
+		move_down();
+	} else if (gety() > lower_bound){
+		sety(lower_bound);
+		move_up();
+	}
+}

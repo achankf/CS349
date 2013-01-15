@@ -44,6 +44,8 @@ void Game::setup(){
 
 void Game::update(Collision &cl, Renderer &rn){
 	player.update_position();
+	player.fit_to_boundary(rn);
+
 	for (auto it = missiles.begin(); it != missiles.end(); it++){
 		it->update_position();
 	}

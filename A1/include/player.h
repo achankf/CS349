@@ -12,5 +12,8 @@ public:
 	void fire(Game &);
 	void brake();
 	void emergency_brake();
+
+	// adjust player position so that the helicopter will not go out of bound
+	void fit_to_boundary(Renderer &);
 };
 #endif

@@ -10,3 +10,11 @@ magnitude_t Object::getx() const{
 magnitude_t Object::gety() const{
 	return pos.second;
 }
+
+void Object::setx(magnitude_t x){
+	pos.first = x;
+}
+
+void Object::sety(magnitude_t y){
+	pos.second = y;
+}

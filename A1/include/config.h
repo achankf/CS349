@@ -6,7 +6,7 @@
 #define DEFAULT_HEIGHT 450
 
 // rendering
-#define SCROLL_FACTOR 0.5
+#define SCROLL_FACTOR 2
 #define FPS 30
 
 // collision space

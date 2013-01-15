@@ -21,8 +21,10 @@ public: /* functions */
 	void move_backward();
 	virtual void update_position() = 0;
 	virtual void draw(Renderer &, XInfo &) = 0;
-	magnitude_t get_speedx();
-	magnitude_t get_speedy();
+	magnitude_t get_speedx() const;
+	magnitude_t get_speedy() const;
+	void set_speedx(magnitude_t);
+	void set_speedy(magnitude_t);
 };
 
 #endif

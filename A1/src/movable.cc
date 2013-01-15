@@ -31,9 +31,17 @@ void Movable::move_backward(){
 	velocity.first = temp;
 }
 
-magnitude_t Movable::get_speedx(){
+magnitude_t Movable::get_speedx() const{
 	return velocity.first;
 }
-magnitude_t Movable::get_speedy(){
+magnitude_t Movable::get_speedy() const{
 	return velocity.second;
+}
+
+void Movable::set_speedx(magnitude_t vx){
+	velocity.first = vx;
+}
+
+void Movable::set_speedy(magnitude_t vy){
+	velocity.second = vy;
 }

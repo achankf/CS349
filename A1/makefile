@@ -10,3 +10,7 @@ all: $(EXE)
 $(EXE): $(SOURCES)
 	$(CXX) $(INCLUDE_DIR) $(CXXFLAGS) src/*.cc -o $@ $(LDFLAGS)
 	strip $(EXE)
+
+.phony: rm
+clean:
+	rm $(EXE)

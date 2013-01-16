@@ -7,9 +7,9 @@
 #include "func.h"
 #endif
 
-Missile::Missile(bool enemy, magnitude_t x, magnitude_t y,
+Missile::Missile(bool team, magnitude_t x, magnitude_t y,
 		magnitude_t speedx, magnitude_t speedy, magnitude_t accx, magnitude_t accy) :
-	Movable(enemy,x,y,speedx,speedy,accx,accy)
+	Movable(team,x,y,speedx,speedy,accx,accy)
 {
 }
 

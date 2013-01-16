@@ -8,7 +8,8 @@
 #endif
 
 Player::Player(magnitude_t x, magnitude_t y, magnitude_t speedx, magnitude_t speedy) :
-	Movable(false,x,y,speedx,speedy,ACCELERATION,ACCELERATION)
+	Movable(false,x,y,speedx,speedy,ACCELERATION,ACCELERATION),
+	dead(false)
 {
 }
 

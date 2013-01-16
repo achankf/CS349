@@ -3,7 +3,7 @@
 #include "missile.h"
 #include "config.h"
 #include "movable.h"
-
+#include <iostream>
 Collision::Collision(Game &go, Renderer &rn)
 : go(go),
 	rn(rn)
@@ -11,8 +11,8 @@ Collision::Collision(Game &go, Renderer &rn)
 }
 
 bool Collision::inbound(int x, int y){
-	return x > 0 && x <= go.xblock_num
-		&& y > 0 && y <= go.yblock_num;
+	return x >= 0 && x <= go.xblock_num
+		&& y >= 0 && y <= go.yblock_num;
 }
 
 //bool Collision::operator()(Missile &mi){
@@ -44,5 +44,12 @@ bool Collision::operator()(Object &mi){
 		return true;
 	}
 
+	int px = go.player.getx(), py = go.player.gety();
+	if (go.player.team != mi.team
+		&& x >= px && x <= px + PLAYER_WIDTH
+		&& y >= py && y <= py + PLAYER_HEIGHT){
+		go.player.dead = true;
+		return true;
+	}
 	return false;
 }

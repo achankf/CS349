@@ -6,10 +6,10 @@ CXXFLAGS = -std=c++0x -march=native -O3 -pipe -s
 EXE = start
 
 all: $(EXE)
+	./$(EXE)
 
 $(EXE): $(SOURCES)
 	$(CXX) $(INCLUDE_DIR) $(CXXFLAGS) src/*.cc -o $@ $(LDFLAGS)
-#	strip $(EXE)
 
 .phony: rm
 clean:

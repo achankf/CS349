@@ -4,9 +4,9 @@
 #include <cmath>
 using namespace std;
 
-Movable::Movable(bool enemy, magnitude_t x, magnitude_t y,
+Movable::Movable(bool team, magnitude_t x, magnitude_t y,
 		magnitude_t speedx, magnitude_t speedy, magnitude_t accx, magnitude_t accy) :
-	Object(enemy,x,y),
+	Object(team,x,y),
 	velocity(std::make_pair(speedx,speedy)),
 	acceleration(std::make_pair(accx,accy))
 {

@@ -10,10 +10,10 @@ class XInfo;
 class Object{
 public:
 	std::pair<magnitude_t,magnitude_t> pos;
-	bool enemy;
+	bool team;
 
 public: /* functions */
-	Object(bool enemy, magnitude_t x, magnitude_t y);
+	Object(bool team, magnitude_t x, magnitude_t y);
 	magnitude_t getx() const;
 	magnitude_t gety() const;
 	void setx(magnitude_t);

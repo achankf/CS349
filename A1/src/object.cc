@@ -1,8 +1,8 @@
 #include "object.h"
 
-Object::Object(bool enemy, magnitude_t x, magnitude_t y) : 
+Object::Object(bool team, magnitude_t x, magnitude_t y) : 
 	pos(std::make_pair(x,y)),
-	enemy(enemy)
+	team(team)
 {
 }
 

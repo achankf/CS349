@@ -90,5 +90,6 @@ XInfo::~XInfo(){
 	for (int i = 0; i < NUM_GC_TYPE; i++){
 		XFree(gc[i]);
 	}
+	XFreePixmap(display,pixmap);
 	XCloseDisplay(display);
 }

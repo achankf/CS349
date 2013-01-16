@@ -5,14 +5,6 @@
 #include <X11/Xlib.h>
 
 namespace xinfo{
-	enum DEFAULTS{
-		BORDER = 4,
-		HINT_X = 100,
-		HINT_Y = 100,
-		HINT_WIDTH = 800,
-		HINT_HEIGHT = 600
-	};
-
 	enum GC_TYPE{
 		DEFAULT,
 		INVERSE_BACKGROUND,

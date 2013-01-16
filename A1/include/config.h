@@ -4,6 +4,9 @@
 // screen
 #define DEFAULT_WIDTH 800
 #define DEFAULT_HEIGHT 450
+#define HINT_X 0
+#define HINT_Y 0
+#define BORDER 0
 
 // rendering
 #define SCROLL_FACTOR 2

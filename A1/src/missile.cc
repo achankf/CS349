@@ -16,7 +16,7 @@ Missile::Missile(bool team, magnitude_t x, magnitude_t y,
 void Missile::draw(Renderer &rn, XInfo &xinfo){
 	Display *display = xinfo.display;
 	GC gc = xinfo.gc[XInfo::DEFAULT];
-	Pixmap pixmap = xinfo.pixmap;
+	Pixmap pixmap = xinfo.pixmap[XInfo::GAME_SCREEN];
 	magnitude_t x = getx() - rn.focus;
 	magnitude_t y = gety();
 	XFillRectangle(display, pixmap, gc, x, y, MISSILE_WIDTH, MISSILE_HEIGHT);

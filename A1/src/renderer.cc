@@ -1,6 +1,7 @@
 #include "renderer.h"
 #include "config.h"
 #include <sstream>
+#include <cstring> // for strlen
 
 #ifdef DEBUG
 #include "func.h"
@@ -14,7 +15,8 @@ Renderer::Renderer(Game &go, XInfo &xinfo) :
 	height(DEFAULT_HEIGHT > xinfo.dheight ? xinfo.dheight : DEFAULT_HEIGHT),
 	focus(0),
 	focus_bound_low(0),
-	focus_bound_high(0)
+	focus_bound_high(0),
+	show_splash(true)
 {
 	update_attributes(go, xinfo, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 }
@@ -43,7 +45,7 @@ void Renderer::repaint(Game &go, XInfo &xinfo){
 
 	// clean canvas
 	XFillRectangle(xinfo.display,
-		xinfo.pixmap,
+		xinfo.pixmap[XInfo::GAME_SCREEN],
 		xinfo.gc[XInfo::INVERSE_BACKGROUND],
 		0, 0, xinfo.dwidth, xinfo.dheight);
 
@@ -68,7 +70,8 @@ void Renderer::repaint(Game &go, XInfo &xinfo){
 			it->gety() / xblocksize, MISSILE_WIDTH)) continue;
 		it->draw(*this,xinfo);
 	}
-	XCopyArea(xinfo.display, xinfo.pixmap, xinfo.window,  xinfo.gc[XInfo::DEFAULT],
+	XCopyArea(xinfo.display, xinfo.pixmap[XInfo::GAME_SCREEN],
+		xinfo.window,  xinfo.gc[XInfo::DEFAULT],
 		0, 0, xinfo.dwidth, xinfo.dheight, 0, 0);
 	XFlush(xinfo.display);
 }
@@ -82,4 +85,26 @@ void Renderer::recalculate_focus_bound(){
 	focus += SCROLL_FACTOR;
 	focus_bound_low = (focus - xblocksize) / xblocksize;
 	focus_bound_high = (width + focus + xblocksize) / xblocksize;
+}
+
+void Renderer::draw_splash(Game &go, XInfo &xinfo){
+	// clean canvas
+	XFillRectangle(xinfo.display,
+		xinfo.pixmap[XInfo::SPLASH_SCREEN],
+		xinfo.gc[XInfo::INVERSE_BACKGROUND],
+		0, 0, xinfo.dwidth, xinfo.dheight);
+
+	XDrawString(xinfo.display,xinfo.pixmap[XInfo::SPLASH_SCREEN],
+		xinfo.gc[XInfo::TITLE_FONT],
+		30,50,GAME_TITLE,strlen(GAME_TITLE));
+	for (int i = 0; !TUTORIAL[i].empty(); i++){
+		XDrawString(xinfo.display,xinfo.pixmap[XInfo::SPLASH_SCREEN],
+			xinfo.gc[XInfo::DEFAULT],
+			40,80 + 20 *i,TUTORIAL[i].c_str(), TUTORIAL[i].size());
+	}
+
+	XCopyArea(xinfo.display, xinfo.pixmap[XInfo::SPLASH_SCREEN],
+		xinfo.window,  xinfo.gc[XInfo::TITLE_FONT],
+		0, 0, xinfo.dwidth, xinfo.dheight, 0, 0);
+	XFlush(xinfo.display);
 }

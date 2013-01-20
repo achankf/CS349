@@ -15,8 +15,8 @@ Player::Player(magnitude_t x, magnitude_t y, magnitude_t speedx, magnitude_t spe
 
 void Player::draw(Renderer &rn, XInfo &xinfo){
 	Display *display = xinfo.display;
-	GC gc = xinfo.gc[xinfo::DEFAULT];
-	Pixmap pixmap = xinfo.pixmap;
+	GC gc = xinfo.gc[XInfo::DEFAULT];
+	Pixmap pixmap = xinfo.pixmap[XInfo::GAME_SCREEN];
 	magnitude_t x = getx() - rn.focus;
 	magnitude_t y = gety();
 	XFillRectangle(display, pixmap, gc, x, y, PLAYER_WIDTH, PLAYER_HEIGHT);

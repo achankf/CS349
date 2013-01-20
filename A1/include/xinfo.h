@@ -4,31 +4,32 @@
 #include <string>
 #include <X11/Xlib.h>
 
-namespace xinfo{
-	enum GC_TYPE{
-		DEFAULT,
-		INVERSE_BACKGROUND,
-		NUM_GC_TYPE
-	};
-}
-
-extern const char *TITLE;
-
 /* Information to draw on the window. */
 class XInfo {
 public: /* enum */
 	enum GC_TYPE{
 		DEFAULT,
 		INVERSE_BACKGROUND,
+		TITLE_FONT,
 		NUM_GC_TYPE
+	};
+	enum PIXMAP_TYPE{
+		GAME_SCREEN,
+		SPLASH_SCREEN,
+		NUM_PIXMAP_TYPE
+	};
+	enum FONT_TYPE{
+		F_TITLE,
+		NUM_FONT_TYPE
 	};
 public: /* member variables */
 	Display *display;
 	int screen;
 	Window window;
-	GC gc[xinfo::NUM_GC_TYPE];
-	Pixmap pixmap;
+	GC gc[NUM_GC_TYPE];
+	Pixmap pixmap[NUM_PIXMAP_TYPE];
 	int dwidth,dheight;
+	Font font[NUM_FONT_TYPE];
 
 public: /* functions */
 	XInfo(int argc, char **argv);

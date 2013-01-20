@@ -5,11 +5,9 @@
 #include "renderer.h"
 #include "config.h"
 
+#include <cstring>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
-using namespace xinfo;
-
-const char *TITLE = "Game";
 
 /* constructor */
 XInfo::XInfo(int argc, char **argv){
@@ -53,7 +51,7 @@ XInfo::XInfo(int argc, char **argv){
 	XSetStandardProperties(
 		display,		// display containing the window
 		window,		// window whose properties are set
-		TITLE,	// window's title
+		GAME_TITLE,	// window's title
 		"OW",				// icon's title
 		None,				// pixmap for the icon
 		argv, argc,			// applications command line args
@@ -73,8 +71,17 @@ XInfo::XInfo(int argc, char **argv){
 	XSetForeground(display, gc[INVERSE_BACKGROUND], white);
 	XSetBackground(display, gc[INVERSE_BACKGROUND], black);
 
+	/* allocate fonts */
+	font[F_TITLE] = XLoadFont(display,"*x16");
+	XSetForeground(display, gc[TITLE_FONT], black);
+	XSetBackground(display, gc[TITLE_FONT], white);
+	XSetFont(display,gc[TITLE_FONT], font[F_TITLE]);
+
+	/* allocate pixmaps */
 	int depth = DefaultDepth(display, DefaultScreen(display));
-	pixmap = XCreatePixmap(display, window, hints.width, hints.height, depth);
+	for (int i = 0; i < NUM_PIXMAP_TYPE; i++){
+		pixmap[i] = XCreatePixmap(display, window, hints.width, hints.height, depth);
+	}
 
 	dwidth = DisplayWidth(display, screen);
 	dheight = DisplayHeight(display, screen);
@@ -90,6 +97,11 @@ XInfo::~XInfo(){
 	for (int i = 0; i < NUM_GC_TYPE; i++){
 		XFree(gc[i]);
 	}
-	XFreePixmap(display,pixmap);
+	for (int i = 0; i < NUM_PIXMAP_TYPE; i++){
+		XFreePixmap(display,pixmap[i]);
+	}
+	for (int i = 0; i < NUM_FONT_TYPE; i++){
+		XUnloadFont(display,font[i]);
+	}
 	XCloseDisplay(display);
 }

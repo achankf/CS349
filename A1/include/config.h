@@ -43,4 +43,9 @@ typedef float magnitude_t;
 typedef char height_t;
 typedef unsigned char cannon_fire_time_t;
 
+#define GAME_TITLE "Alfred Chan 255"
+
+#include <string>
+extern const std::string TUTORIAL[];
+
 #endif

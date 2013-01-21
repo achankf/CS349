@@ -81,4 +81,5 @@ bool Collision::operator()(Player &pl){
 		go.num_kills++;
 		return true;
 	}
+	return false;
 }

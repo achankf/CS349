@@ -74,7 +74,7 @@ void Renderer::draw_game_over(Game &go, XInfo &xinfo){
 		xinfo.gc[XInfo::TITLE_FONT],
 		30,80,scores.c_str(),scores.size());
 
-	const string restart_hints("Press \"r\" to restart the game");
+	const string restart_hints("Press \"r\" to restart the game, or \"q\" to quit.");
 	XDrawString(xinfo.display,xinfo.pixmap[XInfo::SPLASH_SCREEN],
 		xinfo.gc[XInfo::TITLE_FONT],
 		30,110,restart_hints.c_str(),restart_hints.size());

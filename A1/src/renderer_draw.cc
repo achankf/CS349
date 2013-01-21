@@ -33,11 +33,18 @@ void Renderer::draw_splash(Game &go, XInfo &xinfo){
 	XDrawString(xinfo.display,xinfo.pixmap[XInfo::SPLASH_SCREEN],
 		xinfo.gc[XInfo::TITLE_FONT],
 		30,50,GAME_TITLE,strlen(GAME_TITLE));
-	for (int i = 0; !TUTORIAL[i].empty(); i++){
+
+	int i;
+	for (i = 0; !TUTORIAL[i].empty(); i++){
 		XDrawString(xinfo.display,xinfo.pixmap[XInfo::SPLASH_SCREEN],
 			xinfo.gc[XInfo::DEFAULT],
 			40,80 + 20 *i,TUTORIAL[i].c_str(), TUTORIAL[i].size());
 	}
+
+	const string restart_hints("Press \"f\" to continue");
+	XDrawString(xinfo.display,xinfo.pixmap[XInfo::SPLASH_SCREEN],
+		xinfo.gc[XInfo::TITLE_FONT],
+		30,100+20*i,restart_hints.c_str(),restart_hints.size());
 
 	XCopyArea(xinfo.display, xinfo.pixmap[XInfo::SPLASH_SCREEN],
 		xinfo.window,  xinfo.gc[XInfo::TITLE_FONT],

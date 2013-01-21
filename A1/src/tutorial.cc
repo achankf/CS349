@@ -15,7 +15,6 @@ const std::string TUTORIAL[] = {
 "q/Q -- quit",
 " ",
 "p/P -- suicide",
-"f/F -- show splash screen, start/continue game",
 "r/R -- restart the game",
 "" // end of array
 };

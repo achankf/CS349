@@ -9,8 +9,8 @@
 using namespace std;
 
 Renderer::Renderer(Game &go, XInfo &xinfo) :
-	dim(DEFAULT_WIDTH > xinfo.dwidth ? xinfo.dwidth : DEFAULT_WIDTH,
-		DEFAULT_HEIGHT > xinfo.dheight ? xinfo.dheight : DEFAULT_HEIGHT),
+	dim(DEFAULT_WIDTH > xinfo.dwidth() ? xinfo.dwidth() : DEFAULT_WIDTH,
+		DEFAULT_HEIGHT > xinfo.dheight() ? xinfo.dheight() : DEFAULT_HEIGHT),
 	focus(0),
 	focus_bound_low(0),
 	focus_bound_high(0),
@@ -21,8 +21,17 @@ Renderer::Renderer(Game &go, XInfo &xinfo) :
 }
 
 void Renderer::update_attributes(Game &go, XInfo &xinfo, unsigned int new_width, unsigned int new_height){
-	dim.first = new_width > xinfo.dwidth ? xinfo.dwidth : new_width;
-	dim.second = new_height > xinfo.dheight ? xinfo.dheight : new_height;
+	dim.first = new_width;
+	dim.second = new_height;
+//	dim.first = new_width > xinfo.dwidth() ? xinfo.dwidth() : new_width;
+//	dim.second = new_height > xinfo.dheight() ? xinfo.dheight() : new_height;
+
+#ifdef DEBUG
+	cout << "renderer nor dim: " << endl;
+#endif
+	xinfo.normalize_dim(go, dim);
+print_pair(dim);
+//	xinfo.set_dim(dim);
 
 	blockside = dim.second / go.yblock_num;
 
@@ -30,7 +39,7 @@ void Renderer::update_attributes(Game &go, XInfo &xinfo, unsigned int new_width,
 	{
 		using namespace std;
 		cout << "display:";
-		print_pair(xinfo.dwidth,xinfo.dheight);
+		print_pair(xinfo.dwidth(),xinfo.dheight());
 		cout << "game:";
 		print_pair(dim);
 		cout << "block_size:";
@@ -46,7 +55,7 @@ void Renderer::repaint(Game &go, XInfo &xinfo){
 	XFillRectangle(xinfo.display,
 		xinfo.pixmap[XInfo::GAME_SCREEN],
 		xinfo.gc[XInfo::INVERSE_BACKGROUND],
-		0, 0, xinfo.dwidth, xinfo.dheight);
+		0, 0, dim.first, dim.second);
 
 	go.player.draw(*this,xinfo);
 
@@ -69,10 +78,9 @@ void Renderer::repaint(Game &go, XInfo &xinfo){
 			it->gety() / blockside, MISSILE_WIDTH)) continue;
 		it->draw(*this,xinfo);
 	}
-print_pair(xinfo.dwidth, xinfo.dheight);
 	XCopyArea(xinfo.display, xinfo.pixmap[XInfo::GAME_SCREEN],
 		xinfo.window,  xinfo.gc[XInfo::DEFAULT],
-		0, 0, xinfo.dwidth, xinfo.dheight, 0, 0);
+		0, 0, dim.first, dim.second, 0, 0);
 	XFlush(xinfo.display);
 }
 
@@ -85,7 +93,4 @@ void Renderer::recalculate_focus_bound(){
 	focus += SCROLL_FACTOR;
 	focus_bound_low = (focus - blockside) / blockside;
 	focus_bound_high = (dim.first + focus + blockside) / blockside;
-}
-
-void Renderer::normalize_dim(std::pair<unsigned int, unsigned int>&){
 }

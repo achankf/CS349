@@ -4,6 +4,8 @@
 #include <string>
 #include <X11/Xlib.h>
 
+class Game;
+
 /* Information to draw on the window. */
 class XInfo {
 public: /* enum */
@@ -28,12 +30,16 @@ public: /* member variables */
 	Window window;
 	GC gc[NUM_GC_TYPE];
 	Pixmap pixmap[NUM_PIXMAP_TYPE];
-	unsigned int dwidth,dheight;
+	std::pair<unsigned int, unsigned int> ddim;
 	Font font[NUM_FONT_TYPE];
 
 public: /* functions */
 	XInfo(int argc, char **argv);
 	~XInfo();
+	void normalize_dim(Game &go, std::pair<unsigned int, unsigned int>&);
+	unsigned int dwidth();
+	unsigned int dheight();
+	void set_dim(std::pair<unsigned int, unsigned int>&);
 };
 
 #endif

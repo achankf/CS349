@@ -4,6 +4,7 @@
 #include "func.h"
 #include "renderer.h"
 #include "config.h"
+#include "game.h"
 
 #include <cstring>
 #include <X11/Xlib.h>
@@ -83,8 +84,8 @@ XInfo::XInfo(int argc, char **argv){
 		pixmap[i] = XCreatePixmap(display, window, hints.width, hints.height, depth);
 	}
 
-	dwidth = DisplayWidth(display, screen);
-	dheight = DisplayHeight(display, screen);
+	ddim.first = DisplayWidth(display, screen);
+	ddim.second= DisplayHeight(display, screen);
 
 	/* Put the window on the screen. */
 	XMapRaised( display, window );
@@ -104,4 +105,41 @@ XInfo::~XInfo(){
 		XUnloadFont(display,font[i]);
 	}
 	XCloseDisplay(display);
+}
+
+unsigned int XInfo::dwidth(){
+	return ddim.first;
+}
+
+unsigned int XInfo::dheight(){
+	return ddim.second;
+}
+
+void XInfo::normalize_dim(Game &go, std::pair<unsigned int, unsigned int> &tar){
+#ifdef DEBUG
+	std::cout << "nor_before: blockside:"<<tar.first % go.xblock_num;
+	print_pair(tar);
+#endif
+
+	// make sure tar is bounded by the display dimension
+	tar.first = tar.first > dwidth() ? dwidth() : tar.first;
+	tar.second = tar.second > dheight() ? dheight() : tar.second;
+
+	// normalize the target dimension
+	unsigned int blockside = tar.second / go.yblock_num;
+	unsigned int nor_width = tar.first - (tar.first % blockside);
+	unsigned int nor_height = tar.second - (tar.second % blockside);
+	tar.first = nor_width > dwidth() ? dwidth() : nor_width;
+	tar.second = nor_height > dheight() ? dheight() : nor_height;
+#ifdef DEBUG
+	std::cout << "normalizing dim: ";
+	print_pair(tar);
+#endif
+}
+
+void XInfo::set_dim(std::pair<unsigned int, unsigned int> &tar){
+	XWindowChanges setNewDim;
+	setNewDim.width = tar.first;
+	setNewDim.height = tar.second;
+	XConfigureWindow(display,window,CWWidth | CWHeight, &setNewDim);
 }

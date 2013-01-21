@@ -12,7 +12,7 @@ class Game;
 class Renderer{
 public: /* members */
 	std::pair<unsigned int, unsigned int> dim;
-	int blockside;
+	unsigned int blockside;
 	magnitude_t focus;
 	int focus_bound_low, focus_bound_high;
 	bool show_splash;
@@ -27,7 +27,6 @@ public: /* functions */
 	void draw_cannon(Game &, XInfo &, int x, int y);
 	void draw_splash(Game &, XInfo &);
 	void draw_game_over(Game &,XInfo &);
-	void normalize_dim(std::pair<unsigned int, unsigned int>&);
 private: /* functions */
 	void recalculate_focus_bound();
 };

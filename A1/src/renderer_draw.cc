@@ -28,7 +28,7 @@ void Renderer::draw_splash(Game &go, XInfo &xinfo){
 	XFillRectangle(xinfo.display,
 		xinfo.pixmap[XInfo::SPLASH_SCREEN],
 		xinfo.gc[XInfo::INVERSE_BACKGROUND],
-		0, 0, xinfo.dwidth, xinfo.dheight);
+		0, 0, xinfo.dwidth(), xinfo.dheight());
 
 	XDrawString(xinfo.display,xinfo.pixmap[XInfo::SPLASH_SCREEN],
 		xinfo.gc[XInfo::TITLE_FONT],
@@ -48,7 +48,7 @@ void Renderer::draw_splash(Game &go, XInfo &xinfo){
 
 	XCopyArea(xinfo.display, xinfo.pixmap[XInfo::SPLASH_SCREEN],
 		xinfo.window,  xinfo.gc[XInfo::TITLE_FONT],
-		0, 0, xinfo.dwidth, xinfo.dheight, 0, 0);
+		0, 0, xinfo.dwidth(), xinfo.dheight(), 0, 0);
 	XFlush(xinfo.display);
 }
 
@@ -59,7 +59,7 @@ void Renderer::draw_game_over(Game &go, XInfo &xinfo){
 	XFillRectangle(xinfo.display,
 		xinfo.pixmap[XInfo::SPLASH_SCREEN],
 		xinfo.gc[XInfo::INVERSE_BACKGROUND],
-		0, 0, xinfo.dwidth, xinfo.dheight);
+		0, 0, xinfo.dwidth(), xinfo.dheight());
 
 	XDrawString(xinfo.display,xinfo.pixmap[XInfo::SPLASH_SCREEN],
 		xinfo.gc[XInfo::TITLE_FONT],
@@ -82,6 +82,6 @@ void Renderer::draw_game_over(Game &go, XInfo &xinfo){
 
 	XCopyArea(xinfo.display, xinfo.pixmap[XInfo::SPLASH_SCREEN],
 		xinfo.window,  xinfo.gc[XInfo::TITLE_FONT],
-		0, 0, xinfo.dwidth, xinfo.dheight, 0, 0);
+		0, 0, xinfo.dwidth(), xinfo.dheight(), 0, 0);
 	XFlush(xinfo.display);
 }

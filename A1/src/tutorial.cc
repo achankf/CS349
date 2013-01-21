@@ -13,9 +13,9 @@ const std::string TUTORIAL[] = {
 "z/Z -- fire missiles",
 "x/X -- \"automatic\" brake (or if you think you are pro, then the arrow keys instead)",
 "b/B -- total brake, helicopter halts immediately (each time inflicts a score penalty)",
-"q/Q -- quit",
 " ",
 "p/P -- suicide",
 "r/R -- restart the game",
+"q/Q -- quit",
 "" // end of array
 };

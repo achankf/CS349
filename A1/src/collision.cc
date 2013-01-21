@@ -15,8 +15,8 @@ bool Collision::inbound(int x, int y){
 		&& y >= 0 && y <= go.yblock_num;
 }
 
-//bool Collision::operator()(Missile &mi){
-bool Collision::operator()(Object &mi){
+// check missiles collision against structures and the player
+bool Collision::operator()(Missile &mi){
 	magnitude_t x = mi.getx(), y = mi.gety();
 	int s0 = x / rn.xblocksize;
 	int t0 = y / rn.yblocksize;
@@ -54,4 +54,15 @@ bool Collision::operator()(Object &mi){
 		return true;
 	}
 	return false;
+}
+
+// check player collision against structures
+bool Collision::operator()(Player &pl){
+	magnitude_t x = pl.getx(), y = pl.gety();
+	int s0 = x / rn.xblocksize;
+	int t0 = y / rn.yblocksize;
+	int s1 = (x + PLAYER_WIDTH) / rn.xblocksize;
+	int t1 = (y + PLAYER_HEIGHT) / rn.yblocksize;
+
+	return go.structure_map[s0][t0] || go.structure_map[s1][t1];
 }

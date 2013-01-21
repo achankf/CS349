@@ -23,7 +23,15 @@ void Renderer::update_attributes(Game &go, XInfo &xinfo, unsigned int new_width,
 	dim.first = new_width > xinfo.dwidth() ? xinfo.dwidth() : new_width;
 	dim.second = new_height > xinfo.dheight() ? xinfo.dheight() : new_height;
 	resize_factor = (float)new_width/ DEFAULT_WIDTH;
+
+	// figure out the new size
 	final_blockside_len = (float)resize_factor * BLOCK_SIDE_LEN;
+	// player dimension
+	player_dim.first = (float)resize_factor * PLAYER_WIDTH;
+	player_dim.second = (float)resize_factor * PLAYER_HEIGHT;
+	// missile dimension
+	missile_dim.first = (float)resize_factor * MISSILE_WIDTH;
+	missile_dim.second = (float)resize_factor * MISSILE_HEIGHT;
 
 	xinfo.new_pixmap(XInfo::GAME_SCREEN,dim);
 	go.player.draw(*this,xinfo);
@@ -47,18 +55,22 @@ void Renderer::update_attributes(Game &go, XInfo &xinfo, unsigned int new_width,
 }
 
 void Renderer::repaint(Game &go, XInfo &xinfo){
+	Display *display = xinfo.display;
+	GC gc = xinfo.gc[XInfo::DEFAULT];
+	Pixmap pixmap = xinfo.pixmap[XInfo::GAME_SCREEN];
+
 	recalculate_focus_bound();
 
 	// clean canvas
-	XFillRectangle(xinfo.display,
-		xinfo.pixmap[XInfo::GAME_SCREEN],
+	XFillRectangle(display, pixmap,
 		xinfo.gc[XInfo::INVERSE_BACKGROUND],
 		0, 0, dim.first, dim.second);
 
 	//go.player.draw(*this,xinfo);
-	XCopyArea(xinfo.display, xinfo.pixmap[XInfo::PPLAYER],
-		xinfo.pixmap[XInfo::GAME_SCREEN],  xinfo.gc[XInfo::DEFAULT],
-		0, 0, 100, 100, go.player.getx() * resize_factor - focus, go.player.gety() * resize_factor);
+	XCopyArea(display, xinfo.pixmap[XInfo::PPLAYER],
+		pixmap, gc, 0, 0, 
+		player_dim.first, player_dim.second,
+		nor_x(go.player.getx()), nor_y(go.player.gety()));
 	
 
 	/* structures are stored in a 2D array of char */
@@ -78,7 +90,11 @@ void Renderer::repaint(Game &go, XInfo &xinfo){
 	for (auto it = go.missiles.begin(), end = go.missiles.end(); it != end; it++){
 		if (!within_focus_x(it->getx() / final_blockside_len, 
 			it->gety() / final_blockside_len, MISSILE_WIDTH)) continue;
-		it->draw(*this,xinfo);
+		XCopyArea(display, xinfo.pixmap[XInfo::PMISSILE],
+			pixmap, gc,
+			0, 0, 
+			missile_dim.first, missile_dim.second,
+			nor_x(it->getx()), nor_y(it->gety()));
 	}
 	XCopyArea(xinfo.display, xinfo.pixmap[XInfo::GAME_SCREEN],
 		xinfo.window,  xinfo.gc[XInfo::DEFAULT],
@@ -96,4 +112,11 @@ void Renderer::recalculate_focus_bound(){
 	focus += SCROLL_FACTOR;
 	focus_bound_low = (focus - final_blockside_len) / final_blockside_len;
 	focus_bound_high = (dim.first + focus + final_blockside_len) / final_blockside_len;
+}
+
+int Renderer::nor_x(int x){
+	return x * resize_factor - focus;
+}
+int Renderer::nor_y(int y){
+	return y * resize_factor;
 }

@@ -14,12 +14,11 @@ Missile::Missile(bool team, magnitude_t x, magnitude_t y,
 }
 
 void Missile::draw(Renderer &rn, XInfo &xinfo){
+	// create a new pixmap
+	Pixmap pixmap = xinfo.new_pixmap(XInfo::PPLAYER, rn.missile_dim);
 	Display *display = xinfo.display;
 	GC gc = xinfo.gc[XInfo::DEFAULT];
-	Pixmap pixmap = xinfo.pixmap[XInfo::PMISSILE];
-	magnitude_t x = getx() * rn.resize_factor - rn.focus;
-	magnitude_t y = gety() * rn.resize_factor;
-	XFillRectangle(display, pixmap, gc, x, y, MISSILE_WIDTH * rn.resize_factor, MISSILE_HEIGHT * rn.resize_factor);
+	XFillRectangle(display, pixmap, gc, 0, 0, rn.missile_dim.first, rn.missile_dim.second);
 }
 
 void Missile::update_position(){

@@ -14,14 +14,12 @@ Player::Player(magnitude_t x, magnitude_t y, magnitude_t speedx, magnitude_t spe
 }
 
 void Player::draw(Renderer &rn, XInfo &xinfo){
-	std::pair<unsigned int, unsigned int> dim( PLAYER_WIDTH * rn.resize_factor, PLAYER_HEIGHT * rn.resize_factor);
-	Pixmap pixmap = xinfo.new_pixmap(XInfo::PPLAYER,dim);
+	// create a new pixmap
+	Pixmap pixmap = xinfo.new_pixmap(XInfo::PPLAYER, rn.player_dim);
 
 	Display *display = xinfo.display;
 	GC gc = xinfo.gc[XInfo::DEFAULT];
-	magnitude_t x = getx() * rn.resize_factor - rn.focus;
-	magnitude_t y = gety() * rn.resize_factor;
-	XFillRectangle(display, pixmap, gc, 0, 0, PLAYER_WIDTH * rn.resize_factor, PLAYER_HEIGHT * rn.resize_factor);
+	XFillRectangle(display, pixmap, gc, 0, 0, rn.player_dim.first, rn.player_dim.second);
 }
 
 void Player::update_position(){
@@ -53,22 +51,22 @@ void Player::emergency_brake(){
 }
 
 void Player::fit_to_boundary(Renderer &rn){
-	magnitude_t right_bound = rn.dim.first + rn.focus - PLAYER_WIDTH;
-	magnitude_t lower_bound = rn.dim.second - PLAYER_HEIGHT;
+	magnitude_t right_bound = rn.dim.first + rn.focus - rn.player_dim.first;
+	magnitude_t lower_bound = rn.dim.second - rn.player_dim.second;
 
-	if (getx() < rn.focus){
-		setx(rn.focus);
+	if (getx() * rn.resize_factor < rn.focus){
+		setx(rn.focus / rn.resize_factor);
 		move_forward();
-	} else if (getx() > right_bound){
-		setx(right_bound);
+	} else if (getx() * rn.resize_factor > right_bound){
+		setx(right_bound / rn.resize_factor);
 		move_backward();
 	}
 
 	if (gety() < 0){
 		sety(0);
 		move_down();
-	} else if (gety() > lower_bound){
-		sety(lower_bound);
+	} else if (gety() * rn.resize_factor> lower_bound){
+		sety(lower_bound / rn.resize_factor);
 		move_up();
 	}
 }

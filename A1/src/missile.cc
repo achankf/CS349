@@ -19,7 +19,7 @@ void Missile::draw(Renderer &rn, XInfo &xinfo){
 	Pixmap pixmap = xinfo.pixmap[XInfo::GAME_SCREEN];
 	magnitude_t x = getx() - rn.focus;
 	magnitude_t y = gety();
-	XFillRectangle(display, pixmap, gc, x, y, MISSILE_WIDTH, MISSILE_HEIGHT);
+	XFillRectangle(display, pixmap, gc, x, y, MISSILE_WIDTH * rn.resize_factor, MISSILE_HEIGHT * rn.resize_factor);
 }
 
 void Missile::update_position(){

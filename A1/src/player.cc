@@ -51,8 +51,8 @@ void Player::emergency_brake(){
 }
 
 void Player::fit_to_boundary(Renderer &rn){
-	magnitude_t right_bound = rn.width + rn.focus - PLAYER_WIDTH;
-	magnitude_t lower_bound = rn.height - PLAYER_HEIGHT;
+	magnitude_t right_bound = rn.dim.first + rn.focus - PLAYER_WIDTH;
+	magnitude_t lower_bound = rn.dim.second - PLAYER_HEIGHT;
 
 	if (getx() < rn.focus){
 		setx(rn.focus);

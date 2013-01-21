@@ -6,6 +6,10 @@
 #include <unistd.h>
 #include <sys/time.h>
 
+#ifdef DEBUG
+#include "func.h"
+#endif
+
 using namespace std;
 
 enum ERROR_CODES{
@@ -70,6 +74,20 @@ void handle_keypress(Game &go, Renderer &rn, XInfo &xinfo, XEvent &event,
 	}
 }
 
+void handle_expose(Game &go, Renderer &rn, XInfo &xinfo){
+	XWindowAttributes windowInfo;
+	XGetWindowAttributes(xinfo.display, xinfo.window, &windowInfo);
+	unsigned int new_width = windowInfo.width;
+	unsigned int new_height = windowInfo.height;
+	
+
+#ifdef DEBUG
+	print_pair(new_width, new_height);
+#endif
+
+	rn.update_attributes(go, xinfo, new_width, new_height);
+}
+
 ERROR_CODES event_loop(int argc, char **argv, XInfo &xinfo){
 	Game go;
 	Renderer rn(go,xinfo);
@@ -96,6 +114,7 @@ ERROR_CODES event_loop(int argc, char **argv, XInfo &xinfo){
 					}
 					break;
 				case Expose:
+					handle_expose(go, rn, xinfo);
 					redraw_splash = true;
 			}
 		}

@@ -28,7 +28,7 @@ public: /* member variables */
 	Window window;
 	GC gc[NUM_GC_TYPE];
 	Pixmap pixmap[NUM_PIXMAP_TYPE];
-	int dwidth,dheight;
+	unsigned int dwidth,dheight;
 	Font font[NUM_FONT_TYPE];
 
 public: /* functions */

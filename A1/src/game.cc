@@ -73,8 +73,8 @@ void Game::update(Collision &cl, Renderer &rn){
 		cannon_fire_count[x] = random_fire_time();
 		missiles.push_back(
 			Missile(true, 
-				(x * rn.xblocksize + rn.xblocksize / 2),
-				(cannon_height_map[x] - 1) * rn.yblocksize,
+				(x * rn.blockside + rn.blockside / 2),
+				(cannon_height_map[x] - 1) * rn.blockside,
 				0, 0,
 				0, -MISSILE_INERTIA));
 	}

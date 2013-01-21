@@ -18,10 +18,10 @@ bool Collision::inbound(int x, int y){
 // check missiles collision against structures, cannons, and the player
 bool Collision::operator()(Missile &mi){
 	magnitude_t x = mi.getx(), y = mi.gety();
-	int s0 = x / rn.xblocksize;
-	int t0 = y / rn.yblocksize;
-	int s1 = (x + MISSILE_WIDTH) / rn.xblocksize;
-	int t1 = (y + MISSILE_HEIGHT) / rn.yblocksize;
+	int s0 = x / rn.blockside;
+	int t0 = y / rn.blockside;
+	int s1 = (x + MISSILE_WIDTH) / rn.blockside;
+	int t1 = (y + MISSILE_HEIGHT) / rn.blockside;
 
 	// out of bound
 	if (!inbound(s0,t0) || !inbound(s1,t1)) return true;
@@ -32,8 +32,8 @@ bool Collision::operator()(Missile &mi){
 
 	// check for cannons
 	// only width is different
-	s0 = (x + rn.xblocksize/4) / rn.xblocksize;
-	s1 = (x + MISSILE_WIDTH + rn.xblocksize/4) / rn.xblocksize;
+	s0 = (x + rn.blockside/4) / rn.blockside;
+	s1 = (x + MISSILE_WIDTH + rn.blockside/4) / rn.blockside;
 
 	if (go.cannon_height_map[s0] == t0){
 		go.cannon_height_map[s0] = NO_CANNON;
@@ -59,17 +59,17 @@ bool Collision::operator()(Missile &mi){
 // check player collision against structures
 bool Collision::operator()(Player &pl){
 	magnitude_t x = pl.getx(), y = pl.gety();
-	int s0 = x / rn.xblocksize;
-	int t0 = y / rn.yblocksize;
-	int s1 = (x + PLAYER_WIDTH) / rn.xblocksize;
-	int t1 = (y + PLAYER_HEIGHT) / rn.yblocksize;
+	int s0 = x / rn.blockside;
+	int t0 = y / rn.blockside;
+	int s1 = (x + PLAYER_WIDTH) / rn.blockside;
+	int t1 = (y + PLAYER_HEIGHT) / rn.blockside;
 
 	if (go.structure_map[s0][t0] || go.structure_map[s1][t1]){
 		return true;
 	}
 
-	s0 = (x + rn.xblocksize/4) / rn.xblocksize;
-	s1 = (x + MISSILE_WIDTH + rn.xblocksize/4) / rn.xblocksize;
+	s0 = (x + rn.blockside/4) / rn.blockside;
+	s1 = (x + MISSILE_WIDTH + rn.blockside/4) / rn.blockside;
 
 	if (go.cannon_height_map[s0] == t0){
 		go.cannon_height_map[s0] = NO_CANNON;

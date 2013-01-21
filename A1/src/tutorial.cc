@@ -3,7 +3,7 @@
 const std::string TUTORIAL[] = {
 "Objective -- bomb as many cannon platforms as possible",
 "Losing condition -- get hit by enemy missiles or hit on buildings",
-"Hint -- DO NOT spam missiles, as each missiles sent lowers your score",
+"Hint -- DO NOT spam missiles, as each missiles lowers your score",
 " ",
 "ARROW KEY UP -- move up",
 "ARROW KEY DOWN -- move down",

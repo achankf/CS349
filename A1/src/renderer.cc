@@ -1,7 +1,5 @@
 #include "renderer.h"
 #include "config.h"
-#include <sstream>
-#include <cstring> // for strlen
 
 #ifdef DEBUG
 #include "func.h"
@@ -85,26 +83,4 @@ void Renderer::recalculate_focus_bound(){
 	focus += SCROLL_FACTOR;
 	focus_bound_low = (focus - xblocksize) / xblocksize;
 	focus_bound_high = (width + focus + xblocksize) / xblocksize;
-}
-
-void Renderer::draw_splash(Game &go, XInfo &xinfo){
-	// clean canvas
-	XFillRectangle(xinfo.display,
-		xinfo.pixmap[XInfo::SPLASH_SCREEN],
-		xinfo.gc[XInfo::INVERSE_BACKGROUND],
-		0, 0, xinfo.dwidth, xinfo.dheight);
-
-	XDrawString(xinfo.display,xinfo.pixmap[XInfo::SPLASH_SCREEN],
-		xinfo.gc[XInfo::TITLE_FONT],
-		30,50,GAME_TITLE,strlen(GAME_TITLE));
-	for (int i = 0; !TUTORIAL[i].empty(); i++){
-		XDrawString(xinfo.display,xinfo.pixmap[XInfo::SPLASH_SCREEN],
-			xinfo.gc[XInfo::DEFAULT],
-			40,80 + 20 *i,TUTORIAL[i].c_str(), TUTORIAL[i].size());
-	}
-
-	XCopyArea(xinfo.display, xinfo.pixmap[XInfo::SPLASH_SCREEN],
-		xinfo.window,  xinfo.gc[XInfo::TITLE_FONT],
-		0, 0, xinfo.dwidth, xinfo.dheight, 0, 0);
-	XFlush(xinfo.display);
 }

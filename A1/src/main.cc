@@ -53,6 +53,7 @@ void handle_keypress(Game &go, Renderer &rn, XInfo &xinfo, XEvent &event,
 		case 'B':
 		case 'b':
 			go.player.emergency_brake(); // aka "easy" mode
+			go.num_b_brakes++;
 			break;
 		case 'Q':
 		case 'q':
@@ -61,6 +62,10 @@ void handle_keypress(Game &go, Renderer &rn, XInfo &xinfo, XEvent &event,
 		case 'f':
 			*redraw_splash = true;
 			rn.show_splash = !rn.show_splash;
+			break;
+		case 'P':
+		case 'p':
+			go.player.dead = true;
 			break;
 	}
 }
@@ -96,27 +101,27 @@ ERROR_CODES event_loop(int argc, char **argv, XInfo &xinfo){
 		}
 		end = now();
 
-		if (end - lastRepaint > sleep_period){
-			// either draw splash screen or update game
-			if (rn.show_splash){
-				if (redraw_splash){ // redraw only if the splash is damaged
-					rn.draw_splash(go,xinfo);
-				}
-			} else {
-				// update game
-				go.update(cl,rn);
-				rn.repaint(go,xinfo);
+		if (end - lastRepaint <= sleep_period)
+			goto SKIP_DRAWING;
+
+		// either draw splash screen or update game
+		if (go.player.dead){
+			rn.draw_game_over(go,xinfo);
+		} else if (rn.show_splash){
+			if (redraw_splash){ // redraw only if the splash is damaged
+				rn.draw_splash(go,xinfo);
 			}
 		} else {
-			goto NOT_DRAWN_ANYTHING;
+			// update game
+			go.update(cl,rn);
+			rn.repaint(go,xinfo);
 		}
-
 		// reset expose flag
 		redraw_splash = false;
 		// update time
 		lastRepaint = now();
 
-NOT_DRAWN_ANYTHING:
+SKIP_DRAWING:
 		if (XPending(xinfo.display) == 0){
 			usleep(sleep_period - (end - lastRepaint));
 		}

@@ -37,6 +37,12 @@
 #define XBLOCK_NUM 600
 #define YBLOCK_NUM 16
 
+#define KILL_BONUS 100
+#define FIRE_PENALTY 10
+#define BRAKE_PENALTY 100
+
+// DO NOT TOUCH THE VARIABLES BELOW
+
 #define NO_CANNON -1
 
 typedef float magnitude_t;

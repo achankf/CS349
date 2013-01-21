@@ -23,6 +23,7 @@ public: /* members */
 	Player player;
 	std::list <Missile> missiles;
 	int xblock_num, yblock_num;
+	int num_fires, num_kills, num_b_brakes;
 
 	/* using "maps" for speed and memory optimization -- not in separate class */
 
@@ -39,6 +40,7 @@ public: /* functions */
 	Game();
 	void update(Collision &cl, Renderer &rn);
 	void normalize_coor(int &x, int &y);
+	int score();
 };
 
 #endif

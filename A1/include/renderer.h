@@ -24,6 +24,7 @@ public: /* functions */
 	void draw_structure(Game &, XInfo &, int x, int y);
 	void draw_cannon(Game &, XInfo &, int x, int y);
 	void draw_splash(Game &, XInfo &);
+	void draw_game_over(Game &,XInfo &);
 private: /* functions */
 	void recalculate_focus_bound();
 };

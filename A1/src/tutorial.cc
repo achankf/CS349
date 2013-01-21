@@ -14,6 +14,7 @@ const std::string TUTORIAL[] = {
 "b/B -- total brake, helicopter halts immediately (each time inflicts a score penalty)",
 "q/Q -- quit",
 " ",
+"p/P -- suicide",
 "f/F -- show splash screen, start/continue game",
 "r/R -- restart the game",
 "" // end of array

@@ -37,10 +37,12 @@ bool Collision::operator()(Object &mi){
 
 	if (go.cannon_height_map[s0] == t0){
 		go.cannon_height_map[s0] = NO_CANNON;
+		go.num_kills++;
 		return true;
 	}
 	if (go.cannon_height_map[s1] == t1){
 		go.cannon_height_map[s1] = NO_CANNON;
+		go.num_kills++;
 		return true;
 	}
 

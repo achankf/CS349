@@ -30,6 +30,7 @@ void Player::update_position(){
 void Player::fire(Game &go){
 	go.missiles.push_back(
 		Missile(false, getx(),gety(), get_speedx(),get_speedy(),0,MISSILE_INERTIA));
+	go.num_fires++;
 }
 
 void Player::brake(){

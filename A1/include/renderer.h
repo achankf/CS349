@@ -12,11 +12,10 @@ class Game;
 class Renderer{
 public: /* members */
 	std::pair<unsigned int, unsigned int> dim;
-	unsigned int blockside;
 	magnitude_t focus;
 	int focus_bound_low, focus_bound_high;
 	bool show_splash;
-	float resize_factor;
+	float resize_factor, final_blockside_len;
 
 public: /* functions */
 	Renderer(Game &, XInfo &);

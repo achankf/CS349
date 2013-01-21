@@ -5,22 +5,26 @@
 #include <iostream>
 using namespace std;
 
+#ifdef DEBUG
+#include "func.h"
+#endif
+
 void Renderer::draw_structure(Game &go, XInfo &xinfo, int x, int y){
 	Display *display = xinfo.display;
 	GC gc = xinfo.gc[XInfo::DEFAULT];
 	Pixmap pixmap = xinfo.pixmap[XInfo::GAME_SCREEN];
-	x = x * blockside - focus;
-	y *= blockside;
-	XDrawRectangle(display, pixmap, gc, x, y, blockside, blockside);
+	x = x * final_blockside_len - focus;
+	y = y * final_blockside_len;
+	XDrawRectangle(display, pixmap, gc, x, y, final_blockside_len, final_blockside_len);
 }
 
 void Renderer::draw_cannon(Game &go, XInfo &xinfo, int x, int y){
 	Display *display = xinfo.display;
 	GC gc = xinfo.gc[XInfo::DEFAULT];
 	Pixmap pixmap = xinfo.pixmap[XInfo::GAME_SCREEN];
-	x = x * blockside - focus;
-	y *= blockside;
-	XFillRectangle(display, pixmap, gc, x + blockside/4, y, blockside/2,	blockside);
+	x = x * final_blockside_len - focus;
+	y = y * final_blockside_len;
+	XFillRectangle(display, pixmap, gc, x + final_blockside_len/4, y, final_blockside_len/2,	final_blockside_len);
 }
 
 void Renderer::draw_splash(Game &go, XInfo &xinfo){

@@ -11,17 +11,17 @@ Collision::Collision(Game &go, Renderer &rn)
 }
 
 bool Collision::inbound(int x, int y){
-	return x >= 0 && x <= go.xblock_num
-		&& y >= 0 && y <= go.yblock_num;
+	return x >= 0 && x <= XBLOCK_NUM
+		&& y >= 0 && y <= YBLOCK_NUM;
 }
 
 // check missiles collision against structures, cannons, and the player
 bool Collision::operator()(Missile &mi){
 	magnitude_t x = mi.getx(), y = mi.gety();
-	int s0 = x / rn.blockside;
-	int t0 = y / rn.blockside;
-	int s1 = (x + MISSILE_WIDTH) / rn.blockside;
-	int t1 = (y + MISSILE_HEIGHT) / rn.blockside;
+	int s0 = x / BLOCK_SIDE_LEN;
+	int t0 = y / BLOCK_SIDE_LEN;
+	int s1 = (x + MISSILE_WIDTH) / BLOCK_SIDE_LEN;
+	int t1 = (y + MISSILE_HEIGHT) / BLOCK_SIDE_LEN;
 
 	// out of bound
 	if (!inbound(s0,t0) || !inbound(s1,t1)) return true;
@@ -32,8 +32,8 @@ bool Collision::operator()(Missile &mi){
 
 	// check for cannons
 	// only width is different
-	s0 = (x + rn.blockside/4) / rn.blockside;
-	s1 = (x + MISSILE_WIDTH + rn.blockside/4) / rn.blockside;
+	s0 = (x + BLOCK_SIDE_LEN/4) / BLOCK_SIDE_LEN;
+	s1 = (x + MISSILE_WIDTH + BLOCK_SIDE_LEN/4) / BLOCK_SIDE_LEN;
 
 	if (go.cannon_height_map[s0] == t0){
 		go.cannon_height_map[s0] = NO_CANNON;
@@ -59,17 +59,17 @@ bool Collision::operator()(Missile &mi){
 // check player collision against structures
 bool Collision::operator()(Player &pl){
 	magnitude_t x = pl.getx(), y = pl.gety();
-	int s0 = x / rn.blockside;
-	int t0 = y / rn.blockside;
-	int s1 = (x + PLAYER_WIDTH) / rn.blockside;
-	int t1 = (y + PLAYER_HEIGHT) / rn.blockside;
+	int s0 = x / BLOCK_SIDE_LEN;
+	int t0 = y / BLOCK_SIDE_LEN;
+	int s1 = (x + PLAYER_WIDTH) / BLOCK_SIDE_LEN;
+	int t1 = (y + PLAYER_HEIGHT) / BLOCK_SIDE_LEN;
 
 	if (go.structure_map[s0][t0] || go.structure_map[s1][t1]){
 		return true;
 	}
 
-	s0 = (x + rn.blockside/4) / rn.blockside;
-	s1 = (x + MISSILE_WIDTH + rn.blockside/4) / rn.blockside;
+	s0 = (x + BLOCK_SIDE_LEN/4) / BLOCK_SIDE_LEN;
+	s1 = (x + MISSILE_WIDTH + BLOCK_SIDE_LEN/4) / BLOCK_SIDE_LEN;
 
 	if (go.cannon_height_map[s0] == t0){
 		go.cannon_height_map[s0] = NO_CANNON;

@@ -14,12 +14,14 @@ Player::Player(magnitude_t x, magnitude_t y, magnitude_t speedx, magnitude_t spe
 }
 
 void Player::draw(Renderer &rn, XInfo &xinfo){
+	std::pair<unsigned int, unsigned int> dim( PLAYER_WIDTH * rn.resize_factor, PLAYER_HEIGHT * rn.resize_factor);
+	Pixmap pixmap = xinfo.new_pixmap(XInfo::PPLAYER,dim);
+
 	Display *display = xinfo.display;
 	GC gc = xinfo.gc[XInfo::DEFAULT];
-	Pixmap pixmap = xinfo.pixmap[XInfo::GAME_SCREEN];
-	magnitude_t x = getx() - rn.focus;
-	magnitude_t y = gety();
-	XFillRectangle(display, pixmap, gc, x, y, PLAYER_WIDTH, PLAYER_HEIGHT);
+	magnitude_t x = getx() * rn.resize_factor - rn.focus;
+	magnitude_t y = gety() * rn.resize_factor;
+	XFillRectangle(display, pixmap, gc, 0, 0, PLAYER_WIDTH * rn.resize_factor, PLAYER_HEIGHT * rn.resize_factor);
 }
 
 void Player::update_position(){

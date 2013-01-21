@@ -83,13 +83,9 @@ void handle_expose(Game &go, Renderer &rn, XInfo &xinfo){
 	XGetWindowAttributes(xinfo.display, xinfo.window, &windowInfo);
 	unsigned int new_width = windowInfo.width;
 	unsigned int new_height = windowInfo.height;
-	
-
-#ifdef DEBUG
-	print_pair(new_width, new_height);
-#endif
-
 	rn.update_attributes(go, xinfo, new_width, new_height);
+
+//	xinfo.change_window_dim(rn.dim);
 }
 
 ERROR_CODES event_loop(int argc, char **argv, XInfo &xinfo){
@@ -118,7 +114,6 @@ ERROR_CODES event_loop(int argc, char **argv, XInfo &xinfo){
 					}
 					break;
 				case Expose:
-					handle_expose(go, rn, xinfo);
 					redraw_splash = true;
 			}
 		}
@@ -138,6 +133,7 @@ ERROR_CODES event_loop(int argc, char **argv, XInfo &xinfo){
 			if (redraw_splash){ // redraw only if the splash is damaged
 				rn.draw_splash(go,xinfo);
 			}
+			handle_expose(go,rn,xinfo);
 		} else {
 			// update game
 			go.update(cl,rn);
@@ -157,6 +153,7 @@ SKIP_DRAWING:
 
 int main(int argc, char **argv){
 	XInfo xinfo(argc, argv);
+cout << BLOCK_SIDE_LEN<<endl;
 	// loop to an infinite loop 
 	// take advantage of scopings and destructors for retries
 	while(event_loop(argc, argv, xinfo) != EXIT);

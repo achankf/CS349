@@ -11,6 +11,13 @@
 // rendering
 #define SCROLL_FACTOR 2
 #define FPS 30
+#define XBLOCK_SHOW 20
+
+// number of blocks in a level
+#define XBLOCK_NUM 600
+#define YBLOCK_NUM 15
+
+#define BLOCK_SIDE_LEN (DEFAULT_HEIGHT / YBLOCK_NUM)
 
 // collision space
 #define MISSILE_WIDTH 2
@@ -32,10 +39,6 @@
 #define CANNON_SPAWN 25
 #define CANNON_SPAWN_TOTAL 100
 #define CANNON_MIN_FIRE_TIME 10
-
-// number of blocks in a level
-#define XBLOCK_NUM 600
-#define YBLOCK_NUM 16
 
 #define KILL_BONUS 100
 #define FIRE_PENALTY 10

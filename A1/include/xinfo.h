@@ -18,6 +18,8 @@ public: /* enum */
 	enum PIXMAP_TYPE{
 		GAME_SCREEN,
 		SPLASH_SCREEN,
+		PPLAYER,
+		PMISSILE,
 		NUM_PIXMAP_TYPE
 	};
 	enum FONT_TYPE{
@@ -36,10 +38,10 @@ public: /* member variables */
 public: /* functions */
 	XInfo(int argc, char **argv);
 	~XInfo();
-	void normalize_dim(Game &go, std::pair<unsigned int, unsigned int>&);
 	unsigned int dwidth();
 	unsigned int dheight();
-	void set_dim(std::pair<unsigned int, unsigned int>&);
+	void change_window_dim(std::pair<unsigned int, unsigned int>&);
+	Pixmap new_pixmap(PIXMAP_TYPE pt, std::pair<unsigned int, unsigned int>&);
 };
 
 #endif

@@ -14,24 +14,26 @@ Renderer::Renderer(Game &go, XInfo &xinfo) :
 	focus(0),
 	focus_bound_low(0),
 	focus_bound_high(0),
-	show_splash(true),
-	resize_factor(1)
+	show_splash(true)
 {
 	update_attributes(go, xinfo, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 }
 
 void Renderer::update_attributes(Game &go, XInfo &xinfo, unsigned int new_width, unsigned int new_height){
-	dim.first = new_width;
-	dim.second = new_height;
+	dim.first = new_width > xinfo.dwidth() ? xinfo.dwidth() : new_width;
+	dim.second = new_height > xinfo.dheight() ? xinfo.dheight() : new_height;
+	resize_factor = (float)new_width/ DEFAULT_WIDTH;
+	final_blockside_len = (float)resize_factor * BLOCK_SIDE_LEN;
+
+	xinfo.new_pixmap(XInfo::GAME_SCREEN,dim);
+	go.player.draw(*this,xinfo);
 
 #ifdef DEBUG
-	cout << "renderer nor dim: " << endl;
+	cout << "resize_factor:"<< resize_factor;
+	cout << " new dim: ";
+	print_pair(dim);
 #endif
-	xinfo.normalize_dim(go, dim);
-print_pair(dim);
-//	xinfo.set_dim(dim);
-
-	blockside = dim.second / go.yblock_num;
+	//final_blockside_len = dim.second / YBLOCK_NUM;
 
 #ifdef DEBUG
 	{
@@ -40,8 +42,6 @@ print_pair(dim);
 		print_pair(xinfo.dwidth(),xinfo.dheight());
 		cout << "game:";
 		print_pair(dim);
-		cout << "block_size:";
-		print_pair(blockside,blockside);
 	}
 #endif
 }
@@ -55,25 +55,29 @@ void Renderer::repaint(Game &go, XInfo &xinfo){
 		xinfo.gc[XInfo::INVERSE_BACKGROUND],
 		0, 0, dim.first, dim.second);
 
-	go.player.draw(*this,xinfo);
+	//go.player.draw(*this,xinfo);
+	XCopyArea(xinfo.display, xinfo.pixmap[XInfo::PPLAYER],
+		xinfo.pixmap[XInfo::GAME_SCREEN],  xinfo.gc[XInfo::DEFAULT],
+		0, 0, 100, 100, go.player.getx() * resize_factor - focus, go.player.gety() * resize_factor);
+	
 
 	/* structures are stored in a 2D array of char */
-	for (int x = focus_bound_low; x < focus_bound_high &&x < go.xblock_num; x++){
-		for (int y = 0; y < go.yblock_num; y++){
+	for (int x = focus_bound_low; x < focus_bound_high &&x < XBLOCK_NUM; x++){
+		for (int y = 0; y < YBLOCK_NUM; y++){
 			if (!go.structure_map[x][y]) continue;
 			draw_structure(go, xinfo, x, y);
 		}
 	}
 
-	for (int x = focus_bound_low, y; x < focus_bound_high &&x < go.xblock_num; x++){
+	for (int x = focus_bound_low, y; x < focus_bound_high &&x < XBLOCK_NUM; x++){
 		y = go.cannon_height_map[x];
 		if (y == NO_CANNON) continue;
 		draw_cannon(go, xinfo, x, y);
 	}
 
 	for (auto it = go.missiles.begin(), end = go.missiles.end(); it != end; it++){
-		if (!within_focus_x(it->getx() / blockside, 
-			it->gety() / blockside, MISSILE_WIDTH)) continue;
+		if (!within_focus_x(it->getx() / final_blockside_len, 
+			it->gety() / final_blockside_len, MISSILE_WIDTH)) continue;
 		it->draw(*this,xinfo);
 	}
 	XCopyArea(xinfo.display, xinfo.pixmap[XInfo::GAME_SCREEN],
@@ -84,11 +88,12 @@ void Renderer::repaint(Game &go, XInfo &xinfo){
 
 bool Renderer::within_focus_x(int x, int y, int width){
 	return x >= focus_bound_low 
-		&& (x+width) <= focus_bound_high;
+		&& (x+width*resize_factor) <= focus_bound_high
+		&& y > 0;
 }
 
 void Renderer::recalculate_focus_bound(){
 	focus += SCROLL_FACTOR;
-	focus_bound_low = (focus - blockside) / blockside;
-	focus_bound_high = (dim.first + focus + blockside) / blockside;
+	focus_bound_low = (focus - final_blockside_len) / final_blockside_len;
+	focus_bound_high = (dim.first + focus + final_blockside_len) / final_blockside_len;
 }

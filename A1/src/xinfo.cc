@@ -47,7 +47,7 @@ XInfo::XInfo(int argc, char **argv){
 		black,						// window border colour
 		white );					// window background colour
 
-	XSelectInput(display,window,StructureNotifyMask | ButtonPressMask | KeyPressMask | ExposureMask);
+	XSelectInput(display,window, StructureNotifyMask | KeyPressMask | ExposureMask);
 		
 	XSetStandardProperties(
 		display,		// display containing the window
@@ -115,40 +115,13 @@ unsigned int XInfo::dheight(){
 	return ddim.second;
 }
 
-void XInfo::normalize_dim(Game &go, std::pair<unsigned int, unsigned int> &tar){
-#ifdef DEBUG
-	std::cout << "nor_before: blockside:"<<tar.first % go.xblock_num;
-	print_pair(tar);
-#endif
-
-	// make sure tar is bounded by the display dimension
-	if (tar.first > dwidth()){
-		tar.first = dwidth();
-	} else if (tar.first < DEFAULT_WIDTH){
-		tar.first = DEFAULT_WIDTH;
-	}
-
-	if (tar.second > dheight()){
-		tar.second = dheight();
-	} else if (tar.second < DEFAULT_HEIGHT){
-		tar.second = DEFAULT_HEIGHT;
-	}
-
-	// normalize the target dimension
-	unsigned int blockside = tar.second / go.yblock_num;
-	unsigned int nor_width = tar.first - (tar.first % blockside);
-	unsigned int nor_height = tar.second - (tar.second % blockside);
-	tar.first = nor_width > dwidth() ? dwidth() : nor_width;
-	tar.second = nor_height > dheight() ? dheight() : nor_height;
-#ifdef DEBUG
-	std::cout << "normalizing dim: ";
-	print_pair(tar);
-#endif
+void XInfo::change_window_dim(std::pair<unsigned int, unsigned int> &tar){
+	XResizeWindow(display,window,tar.first,tar.second);
 }
 
-void XInfo::set_dim(std::pair<unsigned int, unsigned int> &tar){
-	XWindowChanges setNewDim;
-	setNewDim.width = tar.first;
-	setNewDim.height = tar.second;
-	XConfigureWindow(display,window,CWWidth | CWHeight, &setNewDim);
+Pixmap XInfo::new_pixmap(PIXMAP_TYPE pt, std::pair<unsigned int, unsigned int> &dim){
+	int depth = DefaultDepth(display, DefaultScreen(display));
+	XFreePixmap(display,pixmap[pt]);
+	pixmap[pt] = XCreatePixmap(display, window, dim.first, dim.second, depth);
+	return pixmap[pt];
 }

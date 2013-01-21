@@ -23,8 +23,6 @@ Renderer::Renderer(Game &go, XInfo &xinfo) :
 void Renderer::update_attributes(Game &go, XInfo &xinfo, unsigned int new_width, unsigned int new_height){
 	dim.first = new_width;
 	dim.second = new_height;
-//	dim.first = new_width > xinfo.dwidth() ? xinfo.dwidth() : new_width;
-//	dim.second = new_height > xinfo.dheight() ? xinfo.dheight() : new_height;
 
 #ifdef DEBUG
 	cout << "renderer nor dim: " << endl;

@@ -18,6 +18,7 @@ Game::Game() : player(50,50,0,0),
 	num_fires(0),
 	num_kills(0),
 	num_b_brakes(0),
+	god_mode(false),
 	structure_map(xblock_num, std::vector<height_t>(yblock_num, false)),
 	cannon_height_map(xblock_num, NO_CANNON)
 {

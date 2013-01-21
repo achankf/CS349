@@ -122,8 +122,17 @@ void XInfo::normalize_dim(Game &go, std::pair<unsigned int, unsigned int> &tar){
 #endif
 
 	// make sure tar is bounded by the display dimension
-	tar.first = tar.first > dwidth() ? dwidth() : tar.first;
-	tar.second = tar.second > dheight() ? dheight() : tar.second;
+	if (tar.first > dwidth()){
+		tar.first = dwidth();
+	} else if (tar.first < DEFAULT_WIDTH){
+		tar.first = DEFAULT_WIDTH;
+	}
+
+	if (tar.second > dheight()){
+		tar.second = dheight();
+	} else if (tar.second < DEFAULT_HEIGHT){
+		tar.second = DEFAULT_HEIGHT;
+	}
 
 	// normalize the target dimension
 	unsigned int blockside = tar.second / go.yblock_num;

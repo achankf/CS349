@@ -71,6 +71,10 @@ void handle_keypress(Game &go, Renderer &rn, XInfo &xinfo, XEvent &event,
 		case 'p':
 			go.player.dead = true;
 			break;
+		case 'G':
+		case 'g':
+			go.god_mode = !go.god_mode;
+			break;
 	}
 }
 
@@ -125,7 +129,11 @@ ERROR_CODES event_loop(int argc, char **argv, XInfo &xinfo){
 
 		// either draw splash screen or update game
 		if (go.player.dead){
-			rn.draw_game_over(go,xinfo);
+			if (go.god_mode){
+				go.player.dead = false;
+			} else {
+				rn.draw_game_over(go,xinfo);
+			}
 		} else if (rn.show_splash){
 			if (redraw_splash){ // redraw only if the splash is damaged
 				rn.draw_splash(go,xinfo);

@@ -22,6 +22,12 @@ bool Collision::operator()(Missile &mi){
 	int t0 = y / BLOCK_SIDE_LEN;
 	int s1 = (x + MISSILE_WIDTH) / BLOCK_SIDE_LEN;
 	int t1 = (y + MISSILE_HEIGHT) / BLOCK_SIDE_LEN;
+	if (s0 < 0 || s0 >= XBLOCK_NUM
+		|| s1 < 0 || s1 >= XBLOCK_NUM
+		|| t0 < 0 || t0 >= YBLOCK_NUM
+		|| t1 < 0 || t1 >= YBLOCK_NUM){
+		return true;
+	}
 
 	// out of bound
 	if (!inbound(s0,t0) || !inbound(s1,t1)) return true;
@@ -63,6 +69,12 @@ bool Collision::operator()(Player &pl){
 	int t0 = y / BLOCK_SIDE_LEN;
 	int s1 = (x + PLAYER_WIDTH) / BLOCK_SIDE_LEN;
 	int t1 = (y + PLAYER_HEIGHT) / BLOCK_SIDE_LEN;
+	if (s0 < 0 || s0 >= XBLOCK_NUM
+		|| s1 < 0 || s1 >= XBLOCK_NUM
+		|| t0 < 0 || t0 >= YBLOCK_NUM
+		|| t1 < 0 || t1 >= YBLOCK_NUM){
+		return false;
+	}
 
 	if (go.structure_map[s0][t0] || go.structure_map[s1][t1]){
 		return true;

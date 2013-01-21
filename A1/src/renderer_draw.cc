@@ -89,3 +89,35 @@ void Renderer::draw_game_over(Game &go, XInfo &xinfo){
 		0, 0, xinfo.dwidth(), xinfo.dheight(), 0, 0);
 	XFlush(xinfo.display);
 }
+
+void Renderer::redraw_missile(XInfo &xinfo){
+	// create a new pixmap
+	Pixmap pixmap = xinfo.new_pixmap(XInfo::PMISSILE, missile_dim);
+	Display *display = xinfo.display;
+	GC gc = xinfo.gc[XInfo::DEFAULT];
+	XFillRectangle(display, pixmap, gc, 0, 0, missile_dim.first, missile_dim.second);
+}
+
+void Renderer::redraw_player(XInfo &xinfo){
+	// create a new pixmap
+	Pixmap pixmap = xinfo.new_pixmap(XInfo::PPLAYER, player_dim);
+	Display *display = xinfo.display;
+	GC gc = xinfo.gc[XInfo::DEFAULT];
+	XFillRectangle(display, pixmap, gc, 0, 0, player_dim.first, player_dim.second);
+}
+
+void Renderer::redraw_cannon(XInfo &xinfo){
+	// create a new pixmap
+	Pixmap pixmap = xinfo.new_pixmap(XInfo::PCANNON, player_dim);
+	Display *display = xinfo.display;
+	GC gc = xinfo.gc[XInfo::DEFAULT];
+	XFillRectangle(display, pixmap, gc, 0, 0, final_blockside_len/2,  final_blockside_len);
+}
+
+void Renderer::redraw_structure(XInfo &xinfo){
+	// create a new pixmap
+	Pixmap pixmap = xinfo.new_pixmap(XInfo::PSTRUCTURE, player_dim);
+	Display *display = xinfo.display;
+	GC gc = xinfo.gc[XInfo::DEFAULT];
+	XFillRectangle(display, pixmap, gc, 0, 0, final_blockside_len, final_blockside_len);
+}

@@ -13,14 +13,6 @@ Missile::Missile(bool team, magnitude_t x, magnitude_t y,
 {
 }
 
-void Missile::draw(Renderer &rn, XInfo &xinfo){
-	// create a new pixmap
-	Pixmap pixmap = xinfo.new_pixmap(XInfo::PPLAYER, rn.missile_dim);
-	Display *display = xinfo.display;
-	GC gc = xinfo.gc[XInfo::DEFAULT];
-	XFillRectangle(display, pixmap, gc, 0, 0, rn.missile_dim.first, rn.missile_dim.second);
-}
-
 void Missile::update_position(){
 	if (velocity.first > 0){
 		velocity.first -= MISSILE_INERTIA;

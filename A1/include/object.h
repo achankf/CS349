@@ -18,7 +18,6 @@ public: /* functions */
 	magnitude_t gety() const;
 	void setx(magnitude_t);
 	void sety(magnitude_t);
-	virtual void draw(Renderer &, XInfo &) = 0;
 };
 
 #endif

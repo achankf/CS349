@@ -13,15 +13,6 @@ Player::Player(magnitude_t x, magnitude_t y, magnitude_t speedx, magnitude_t spe
 {
 }
 
-void Player::draw(Renderer &rn, XInfo &xinfo){
-	// create a new pixmap
-	Pixmap pixmap = xinfo.new_pixmap(XInfo::PPLAYER, rn.player_dim);
-
-	Display *display = xinfo.display;
-	GC gc = xinfo.gc[XInfo::DEFAULT];
-	XFillRectangle(display, pixmap, gc, 0, 0, rn.player_dim.first, rn.player_dim.second);
-}
-
 void Player::update_position(){
 	pos.first += velocity.first;
 	pos.second += velocity.second;

@@ -7,6 +7,7 @@
 #endif
 
 void error(const char *msg);
+int previous_even(int val);
 
 #ifdef DEBUG
 template <typename T, typename S>

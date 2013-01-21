@@ -1,5 +1,6 @@
 #include "renderer.h"
 #include "config.h"
+#include "func.h"
 
 #ifdef DEBUG
 #include "func.h"
@@ -25,16 +26,19 @@ void Renderer::update_attributes(Game &go, XInfo &xinfo, unsigned int new_width,
 	resize_factor = (float)new_width/ DEFAULT_WIDTH;
 
 	// figure out the new size
-	final_blockside_len = (float)resize_factor * BLOCK_SIDE_LEN;
+	final_blockside_len = previous_even((float)resize_factor * BLOCK_SIDE_LEN);
 	// player dimension
-	player_dim.first = (float)resize_factor * PLAYER_WIDTH;
-	player_dim.second = (float)resize_factor * PLAYER_HEIGHT;
+	player_dim.first = previous_even((float)resize_factor * PLAYER_WIDTH);
+	player_dim.second = previous_even((float)resize_factor * PLAYER_HEIGHT);
 	// missile dimension
-	missile_dim.first = (float)resize_factor * MISSILE_WIDTH;
-	missile_dim.second = (float)resize_factor * MISSILE_HEIGHT;
+	missile_dim.first = previous_even((float)resize_factor * MISSILE_WIDTH);
+	missile_dim.second = previous_even((float)resize_factor * MISSILE_HEIGHT);
 
 	xinfo.new_pixmap(XInfo::GAME_SCREEN,dim);
-	go.player.draw(*this,xinfo);
+	redraw_player(xinfo);
+	redraw_missile(xinfo);
+	redraw_cannon(xinfo);
+	redraw_structure(xinfo);
 
 #ifdef DEBUG
 	cout << "resize_factor:"<< resize_factor;
@@ -96,10 +100,11 @@ void Renderer::repaint(Game &go, XInfo &xinfo){
 			missile_dim.first, missile_dim.second,
 			nor_x(it->getx()), nor_y(it->gety()));
 	}
+
+	// copy the buffer into the window
 	XCopyArea(xinfo.display, xinfo.pixmap[XInfo::GAME_SCREEN],
 		xinfo.window,  xinfo.gc[XInfo::DEFAULT],
 		0, 0, dim.first, dim.second, 0, 0);
-	XFlush(xinfo.display);
 }
 
 bool Renderer::within_focus_x(int x, int y, int width){

@@ -20,6 +20,8 @@ public: /* enum */
 		SPLASH_SCREEN,
 		PPLAYER,
 		PMISSILE,
+		PCANNON,
+		PSTRUCTURE,
 		NUM_PIXMAP_TYPE
 	};
 	enum FONT_TYPE{

@@ -24,6 +24,7 @@ public: /* members */
 	std::list <Missile> missiles;
 	int xblock_num, yblock_num;
 	int num_fires, num_kills, num_b_brakes;
+	bool god_mode;
 
 	/* using "maps" for speed and memory optimization -- not in separate class */
 

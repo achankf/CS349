@@ -1,6 +1,5 @@
 #include "renderer.h"
 #include "config.h"
-#include "func.h"
 
 #ifdef DEBUG
 #include "func.h"
@@ -42,16 +41,16 @@ void Renderer::update_attributes(Game &go, XInfo &xinfo, unsigned int new_width,
 	}
 
 	// figure out the new size
-	final_blockside_len = previous_even(dim.second/ YBLOCK_NUM);
+	final_blockside_len = (dim.second/ YBLOCK_NUM);
 
 	dim.second = final_blockside_len * YBLOCK_NUM;
 
 	// player dimension
-	player_dim.first = previous_even(dim.second / PLAYER_WIDTH_PROP);
-	player_dim.second = previous_even(dim.second / PLAYER_HEIGHT_PROP);
+	player_dim.first = (dim.second / PLAYER_WIDTH_PROP);
+	player_dim.second = (dim.second / PLAYER_HEIGHT_PROP);
 	// missile dimension
-	missile_dim.first = previous_even(dim.second / MISSILE_WIDTH_PROP);
-	missile_dim.second = previous_even(dim.second / MISSILE_HEIGHT_PROP);
+	missile_dim.first = (dim.second / MISSILE_WIDTH_PROP);
+	missile_dim.second = (dim.second / MISSILE_HEIGHT_PROP);
 
 	xinfo.new_pixmap(XInfo::GAME_SCREEN,dim);
 	redraw_player(xinfo);
@@ -81,7 +80,7 @@ void Renderer::repaint(Game &go, XInfo &xinfo){
 	GC gc = xinfo.gc[XInfo::DEFAULT];
 	Pixmap pixmap = xinfo.pixmap[XInfo::GAME_SCREEN];
 
-	recalculate_focus_bound();
+	recalculate_focus_bound(go);
 
 	// clean canvas
 	XFillRectangle(display, pixmap,
@@ -94,14 +93,16 @@ void Renderer::repaint(Game &go, XInfo &xinfo){
 		player_dim.first, player_dim.second,
 		go.player.getx() - focus, go.player.gety());
 	
-
+#ifdef DEBUG
+	cout << focus_bound_low * final_blockside_len - focus << endl;
+#endif
 	// copy structure pixmap into buffer
 	for (int x = focus_bound_low; x < focus_bound_high &&x < XBLOCK_NUM; x++){
 		for (int y = 0; y < YBLOCK_NUM; y++){
 			if (!go.structure_map[x][y]) continue;
 			XCopyArea(display, xinfo.pixmap[XInfo::PSTRUCTURE],
 				pixmap, gc, 0, 0, 
-				final_blockside_len, final_blockside_len,
+				final_blockside_len -1, final_blockside_len,
 				x * final_blockside_len - focus, y * final_blockside_len);
 		}
 	}
@@ -139,8 +140,8 @@ bool Renderer::within_focus_x(int x, int y, int width){
 		&& y > 0;
 }
 
-void Renderer::recalculate_focus_bound(){
-	focus += SCROLL_FACTOR;
+void Renderer::recalculate_focus_bound(Game &go){
+	focus += go.scroll_factor();
 	focus_bound_low = (focus - final_blockside_len) / final_blockside_len;
 	focus_bound_high = (dim.first + focus + final_blockside_len) / final_blockside_len;
 }

@@ -15,7 +15,6 @@ class Collision{
 public:
 	Collision(Game &go, Renderer &rn);
 	Collision(Renderer &rn, int xblock_num, int yblock_num);
-//	bool operator()(Missile &mi);
 	bool operator()(Missile &mi);
 	bool operator()(Player &pl);
 	bool inbound(int x, int y);

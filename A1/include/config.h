@@ -33,6 +33,7 @@
 #define MISSILE_INERTIA 0.05
 
 // gameplay
+#define PLAYER_FIRE_COOL_DOWN 15
 
 /* a cannon spawns when (rand() % CANNON_TOTAL) < CANNON_SPAWN) */
 #define CANNON_SPAWN 25
@@ -47,7 +48,6 @@
 
 #define NO_CANNON -1
 
-#define ALL_EVENT_MASKS (ButtonPressMask | ButtonReleaseMask | KeyReleaseMask | StructureNotifyMask | KeyPressMask | ExposureMask)
 typedef float magnitude_t;
 typedef char height_t;
 typedef unsigned char cannon_fire_time_t;

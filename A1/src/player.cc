@@ -9,7 +9,8 @@
 
 Player::Player(magnitude_t x, magnitude_t y, magnitude_t speedx, magnitude_t speedy) :
 	Movable(false,x,y,speedx,speedy,ACCELERATION,ACCELERATION),
-	dead(false)
+	dead(false),
+	fire_cool_down(0)
 {
 }
 
@@ -19,6 +20,10 @@ void Player::update_position(){
 }
 
 void Player::fire(Game &go){
+	if (fire_cool_down > 0){
+		return;
+	}
+	fire_cool_down = PLAYER_FIRE_COOL_DOWN;
 	go.missiles.push_back(
 		Missile(false, getx(),gety(), get_speedx(),get_speedy(),0,MISSILE_INERTIA));
 	go.num_fires++;

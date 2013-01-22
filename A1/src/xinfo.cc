@@ -10,6 +10,8 @@
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 
+#define ALL_EVENT_MASKS ( ButtonPressMask | ButtonReleaseMask | KeyReleaseMask | StructureNotifyMask | KeyPressMask | ExposureMask)
+
 /* constructor */
 XInfo::XInfo(int argc, char **argv){
 	XSizeHints hints;
@@ -90,10 +92,12 @@ XInfo::XInfo(int argc, char **argv){
 	/* Put the window on the screen. */
 	XMapRaised( display, window );
 	
+	XAutoRepeatOff(display);
 	XFlush(display);
 }
 
 XInfo::~XInfo(){
+	XAutoRepeatOn(display);
 	// free every gc's
 	for (int i = 0; i < NUM_GC_TYPE; i++){
 		XFree(gc[i]);

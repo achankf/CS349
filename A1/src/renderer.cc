@@ -40,6 +40,9 @@ void Renderer::update_attributes(Game &go, XInfo &xinfo, unsigned int new_width,
 
 	// figure out the new size
 	final_blockside_len = previous_even(dim.second/ YBLOCK_NUM);
+
+	dim.second = final_blockside_len * YBLOCK_NUM;
+
 	// player dimension
 	player_dim.first = previous_even(dim.second / PLAYER_WIDTH_PROP);
 	player_dim.second = previous_even(dim.second / PLAYER_HEIGHT_PROP);

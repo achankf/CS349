@@ -55,6 +55,8 @@ void Game::setup(){
 }
 
 void Game::update(Collision &cl, Renderer &rn){
+	// decrease cool down
+	player.fire_cool_down--;
 	player.update_position();
 	player.fit_to_boundary(rn);
 	if (cl(player)) player.dead = true;

@@ -47,7 +47,7 @@ XInfo::XInfo(int argc, char **argv){
 		black,						// window border colour
 		white );					// window background colour
 
-	XSelectInput(display,window, StructureNotifyMask | KeyPressMask | ExposureMask);
+	XSelectInput(display,window, ALL_EVENT_MASKS);
 		
 	XSetStandardProperties(
 		display,		// display containing the window

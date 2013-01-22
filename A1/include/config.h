@@ -1,6 +1,8 @@
 #ifndef __ALFRED_config_h__
 #define __ALFRED_config_h__
 
+#include <X11/Xlib.h>
+
 // screen
 #define DEFAULT_WIDTH 800
 #define DEFAULT_HEIGHT 450
@@ -11,7 +13,6 @@
 // rendering
 #define SCROLL_FACTOR 2
 #define FPS 30
-#define XBLOCK_SHOW 20
 
 // number of blocks in a level
 #define XBLOCK_NUM 600
@@ -46,6 +47,7 @@
 
 #define NO_CANNON -1
 
+#define ALL_EVENT_MASKS (ButtonPressMask | ButtonReleaseMask | KeyReleaseMask | StructureNotifyMask | KeyPressMask | ExposureMask)
 typedef float magnitude_t;
 typedef char height_t;
 typedef unsigned char cannon_fire_time_t;

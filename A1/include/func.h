@@ -19,6 +19,11 @@ template <typename T, typename S>
 void print_pair(std::pair <T,S> &p){
 	std::cout << '(' << p.first << ' ' << p.second << ')' << std::endl;
 }
+
+template <typename T>
+void puts(T val){
+	std::cout << val << std::endl;
+}
 #endif
 
 #endif

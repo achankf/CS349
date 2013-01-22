@@ -128,11 +128,8 @@ void Renderer::repaint(Game &go, XInfo &xinfo){
 }
 
 bool Renderer::within_focus_x(int x, int y, int width){
-#ifdef DEBUG
-cout << "input:" <<x<< ' ' << y << ' ' << width << " focus:" << focus_bound_low << ' '<<focus_bound_high << endl;
-#endif
 	return x >= focus_bound_low 
-		&& (x * final_blockside_len +width)/ final_blockside_len <= focus_bound_high
+		&& (x * (int) final_blockside_len +width)/ (int)final_blockside_len <= focus_bound_high
 		&& y > 0;
 }
 

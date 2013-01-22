@@ -11,12 +11,15 @@
 #define BORDER 0
 
 // rendering
-#define SCROLL_FACTOR 2
+#define SCROLL_FACTOR 40
+#define SCROLL_FACTOR_MAX 50
+#define SCROLL_DELTA 0.0001
 #define FPS 30
 
 // number of blocks in a level
 #define XBLOCK_NUM 600
 #define YBLOCK_NUM 15
+#define XBLOCK_BEFORE_WIN 50
 
 #define BLOCK_SIDE_LEN (DEFAULT_HEIGHT / YBLOCK_NUM)
 

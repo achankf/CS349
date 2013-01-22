@@ -19,6 +19,10 @@ class Game {
 	void setup();
 	void setup_cannon_fire();
 	unsigned char random_fire_time();
+	void correct_structure_map();
+	void update_scroll_factor();
+
+	float _scroll_factor;
 public: /* members */
 	Player player;
 	std::list <Missile> missiles;
@@ -39,8 +43,9 @@ public: /* members */
 public: /* functions */
 	Game();
 	void update(Collision &cl, Renderer &rn);
-	void normalize_coor(int &x, int &y);
+	//void normalize_coor(int &x, int &y);
 	int score();
+	float scroll_factor();
 };
 
 #endif

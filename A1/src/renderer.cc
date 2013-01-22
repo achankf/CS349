@@ -56,7 +56,7 @@ void Renderer::update_attributes(Game &go, XInfo &xinfo, unsigned int new_width,
 	redraw_player(xinfo);
 	redraw_missile(xinfo);
 	redraw_cannon(xinfo);
-	redraw_structure(xinfo);
+	redraw_structure(go,xinfo);
 
 #ifdef DEBUG
 	cout << " new dim: ";
@@ -87,6 +87,9 @@ void Renderer::repaint(Game &go, XInfo &xinfo){
 		xinfo.gc[XInfo::INVERSE_BACKGROUND],
 		0, 0, dim.first, dim.second);
 
+	// draw structures (background)
+	redraw_structure(go, xinfo);
+
 	//go.player.draw(*this,xinfo);
 	XCopyArea(display, xinfo.pixmap[XInfo::PPLAYER],
 		pixmap, gc, 0, 0, 
@@ -97,15 +100,18 @@ void Renderer::repaint(Game &go, XInfo &xinfo){
 	cout << focus_bound_low * final_blockside_len - focus << endl;
 #endif
 	// copy structure pixmap into buffer
+#if 0
 	for (int x = focus_bound_low; x < focus_bound_high &&x < XBLOCK_NUM; x++){
 		for (int y = 0; y < YBLOCK_NUM; y++){
 			if (!go.structure_map[x][y]) continue;
 			XCopyArea(display, xinfo.pixmap[XInfo::PSTRUCTURE],
 				pixmap, gc, 0, 0, 
-				final_blockside_len -1, final_blockside_len,
-				x * final_blockside_len - focus, y * final_blockside_len);
+				dim.first - focus, dim.second,
+				0,0);
+				//x * final_blockside_len - focus, y * final_blockside_len);
 		}
 	}
+#endif
 
 	// copy cannon pixmap into buffer
 	for (int x = focus_bound_low, y; x < focus_bound_high &&x < XBLOCK_NUM; x++){

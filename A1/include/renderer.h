@@ -23,16 +23,16 @@ public: /* functions */
 	void update_attributes(Game &go, XInfo &xinfo, unsigned int new_width, unsigned int new_height, bool init = false);
 	void repaint(Game &, XInfo &);
 	bool within_focus_x(int x, int y, int width);
-	void draw_structure(Game &, XInfo &, int x, int y);
+	void draw_structure(XInfo &, int xcoor, int ycoor);
 	void redraw_missile(XInfo &);
 	void redraw_player(XInfo &);
 	void redraw_cannon(XInfo &);
-	void redraw_structure(XInfo &);
-	void draw_cannon(Game &, XInfo &, int x, int y);
+	void redraw_structure(Game &, XInfo &);
+	void draw_cannon(XInfo &, int x, int y);
 	void draw_splash(Game &, XInfo &);
 	void draw_game_over(Game &,XInfo &);
 private: /* functions */
-	void recalculate_focus_bound();
+	void recalculate_focus_bound(Game &);
 };
 
 #endif

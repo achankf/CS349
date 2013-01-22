@@ -9,16 +9,14 @@ using namespace std;
 #include "func.h"
 #endif
 
-void Renderer::draw_structure(Game &go, XInfo &xinfo, int x, int y){
+void Renderer::draw_structure(XInfo &xinfo, int xcoor, int ycoor){
 	Display *display = xinfo.display;
 	GC gc = xinfo.gc[XInfo::DEFAULT];
 	Pixmap pixmap = xinfo.pixmap[XInfo::GAME_SCREEN];
-	x = x * final_blockside_len - focus;
-	y = y * final_blockside_len;
-	XDrawRectangle(display, pixmap, gc, x, y, final_blockside_len, final_blockside_len);
+	XFillRectangle(display, pixmap, gc, xcoor, ycoor, final_blockside_len, final_blockside_len);
 }
 
-void Renderer::draw_cannon(Game &go, XInfo &xinfo, int x, int y){
+void Renderer::draw_cannon(XInfo &xinfo, int x, int y){
 	Display *display = xinfo.display;
 	GC gc = xinfo.gc[XInfo::DEFAULT];
 	Pixmap pixmap = xinfo.pixmap[XInfo::GAME_SCREEN];
@@ -115,11 +113,19 @@ void Renderer::redraw_cannon(XInfo &xinfo){
 	XDrawRectangle(display, pixmap, gc, 0, 0, final_blockside_len/2 -1,  final_blockside_len);
 }
 
-void Renderer::redraw_structure(XInfo &xinfo){
-	pair<unsigned int, unsigned int> temp_dim(final_blockside_len,final_blockside_len);
+void Renderer::redraw_structure(Game &go, XInfo &xinfo){
+#if 1
+	pair<unsigned int, unsigned int> temp_dim(dim.first * 2, dim.second);
+#endif
 	// create a new pixmap
-	Pixmap pixmap = xinfo.new_pixmap(XInfo::PSTRUCTURE, temp_dim);
-	Display *display = xinfo.display;
-	GC gc = xinfo.gc[XInfo::DEFAULT];
-	XFillRectangle(display, pixmap, gc, 0, 0, final_blockside_len, final_blockside_len);
+	xinfo.new_pixmap(XInfo::PSTRUCTURE, dim);
+	for (int x = 0, xcoor = -focus; 
+		x < XBLOCK_NUM; x++){
+		for (int y = 0, ycoor = -final_blockside_len; y < YBLOCK_NUM; y++){
+			ycoor += final_blockside_len;
+			if (!go.structure_map[x][y]) continue;
+			draw_structure(xinfo, xcoor, ycoor);
+		}
+		xcoor += final_blockside_len;
+	}
 }

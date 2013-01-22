@@ -65,19 +65,19 @@ void Game::setup(){
 		cannon_fire_count[i] = random_fire_time();
 	}
 
-	int max_depth = YBLOCK_NUM / 6;
-	for (int x = 0 /* XBLOCK_NUM */; x < XBLOCK_NUM; x++){
+	int max_depth = YBLOCK_NUM/3;
+	for (int x = 0 /*XBLOCK_NUM / 2*/; x < XBLOCK_NUM; x++){
 		for (int y = 0; y < YBLOCK_NUM; y++){
 			bool make = rand() % 2;
-			if (!make || (y >= max_depth &&  y < YBLOCK_NUM - max_depth)) continue;
+			if (!make || (y < YBLOCK_NUM - max_depth)) continue;
 			structure_map[x][y] = true;
 		}
 	}
 	max_depth = YBLOCK_NUM / 3;
-	for (int x = 0 /* XBLOCK_NUM */; x < XBLOCK_NUM; x++){
+	for (int x = XBLOCK_NUM / 4; x < XBLOCK_NUM; x++){
 		for (int y = 0; y < YBLOCK_NUM; y++){
 			bool make = rand() % 2;
-			if (!make || (y >= max_depth &&  y < YBLOCK_NUM - max_depth)) continue;
+			if (!make || (y > max_depth &&  y < YBLOCK_NUM - max_depth)) continue;
 			structure_map[x][y] = true;
 		}
 	}

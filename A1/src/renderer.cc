@@ -21,6 +21,9 @@ Renderer::Renderer(Game &go, XInfo &xinfo) :
 }
 
 void Renderer::update_attributes(Game &go, XInfo &xinfo, unsigned int new_width, unsigned int new_height){
+	// check whether there's change
+	if (dim.first = new_width && dim.second == new_height) return;
+
 	// make sure the width is in bound
 	if (new_width > xinfo.dwidth()){
 		dim.first = xinfo.dwidth();

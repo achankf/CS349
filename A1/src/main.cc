@@ -16,6 +16,7 @@ enum KeyPressedRecordType{
 	KEYP_LEFT,
 	KEYP_RIGHT,
 	KEYP_FIRE,
+	KEYP_BRAKE,
 	ENUM_KEY_PRESS_SIZE
 };
 
@@ -42,6 +43,8 @@ void update_velocity(Game &go,bool keypressed_record[]){
 		go.player.move_backward();
 	if (keypressed_record[KEYP_FIRE])
 		go.player.fire(go);
+	if (keypressed_record[KEYP_BRAKE])
+		go.player.brake();
 }
 
 void handle_keypress_special(XEvent &event, bool keypressed_record[]){
@@ -66,6 +69,10 @@ void handle_keypress_special(XEvent &event, bool keypressed_record[]){
 		case 'Z':
 		case 'z':
 			keypressed_record[KEYP_FIRE] = !keypressed_record[KEYP_FIRE];
+			break;
+		case 'X':
+		case 'x':
+			keypressed_record[KEYP_BRAKE] = !keypressed_record[KEYP_BRAKE];
 			break;
 	}
 }
@@ -115,7 +122,7 @@ void handle_resize(XEvent &event,Game &go, Renderer &rn, XInfo &xinfo){
 #endif
 	rn.update_attributes(go, xinfo, new_width, new_height);
 
-	//xinfo.change_window_dim(rn.dim);
+	xinfo.change_window_dim(rn.dim);
 }
 
 ERROR_CODES event_loop(int argc, char **argv, XInfo &xinfo){
@@ -151,7 +158,8 @@ ERROR_CODES event_loop(int argc, char **argv, XInfo &xinfo){
 					redraw_splash = true;
 					break;
 				case ConfigureNotify:
-					handle_resize(event,go,rn,xinfo);
+			//		handle_resize(event,go,rn,xinfo);
+					break;
 			}
 		}
 		end = now();
@@ -166,10 +174,12 @@ ERROR_CODES event_loop(int argc, char **argv, XInfo &xinfo){
 			} else {
 				rn.draw_game_over(go,xinfo);
 			}
+			handle_resize(event,go,rn,xinfo);
 		} else if (rn.show_splash){
 			if (redraw_splash){ // redraw only if the splash is damaged
 				rn.draw_splash(go,xinfo);
-			}
+			}	
+			handle_resize(event,go,rn,xinfo);
 		} else {
 			// update game
 			update_velocity(go,keypressed_record);

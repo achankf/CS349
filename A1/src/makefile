@@ -4,8 +4,8 @@ LDFLAGS = -lX11
 OLEVEL = -O0 -ggdb
 INCLUDE_DIR = -I../include
 DEBUG = -Werror
-DEBUG = -DDEBUG
-CXXFLAGS = $(DEBUG) -pedantic-errors -std=c++0x -march=native -Wall $(OLEVEL) -pipe
+DEBUG = -DDEBUG -Werror
+CXXFLAGS = $(DEBUG) -pedantic-errors -Wall -std=c++0x -march=native $(OLEVEL) -pipe
 OBJECTS = $(SOURCES:.cc=.o)
 EXE = start
 

@@ -15,7 +15,7 @@ public: /* members */
 	magnitude_t focus;
 	int focus_bound_low, focus_bound_high;
 	bool show_splash;
-	float resize_factor, final_blockside_len;
+	unsigned int final_blockside_len;
 	std::pair<unsigned int, unsigned int> player_dim, missile_dim;
 
 public: /* functions */
@@ -32,8 +32,6 @@ public: /* functions */
 	void draw_splash(Game &, XInfo &);
 	void draw_game_over(Game &,XInfo &);
 private: /* functions */
-	int nor_x(int x);
-	int nor_y(int y);
 	void recalculate_focus_bound();
 };
 

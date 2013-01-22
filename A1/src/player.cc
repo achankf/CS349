@@ -45,19 +45,19 @@ void Player::fit_to_boundary(Renderer &rn){
 	magnitude_t right_bound = rn.dim.first + rn.focus - rn.player_dim.first;
 	magnitude_t lower_bound = rn.dim.second - rn.player_dim.second;
 
-	if (getx() * rn.resize_factor < rn.focus){
-		setx(rn.focus / rn.resize_factor);
+	if (getx() < rn.focus){
+		setx(rn.focus);
 		move_forward();
-	} else if (getx() * rn.resize_factor > right_bound){
-		setx(right_bound / rn.resize_factor);
+	} else if (getx() > right_bound){
+		setx(right_bound);
 		move_backward();
 	}
 
 	if (gety() < 0){
 		sety(0);
 		move_down();
-	} else if (gety() * rn.resize_factor> lower_bound){
-		sety(lower_bound / rn.resize_factor);
+	} else if (gety() > lower_bound){
+		sety(lower_bound);
 		move_up();
 	}
 }

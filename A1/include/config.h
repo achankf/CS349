@@ -19,13 +19,11 @@
 
 #define BLOCK_SIDE_LEN (DEFAULT_HEIGHT / YBLOCK_NUM)
 
-// collision space
-#define MISSILE_WIDTH 2
-#define MISSILE_HEIGHT 10
-#define PLAYER_WIDTH 15
-#define PLAYER_HEIGHT 10
-#define CANNON_WIDTH 20
-#define CANNON_HEIGHT 50
+// collision space  -- proportion
+#define MISSILE_WIDTH_PROP 100
+#define MISSILE_HEIGHT_PROP 40
+#define PLAYER_WIDTH_PROP 10
+#define PLAYER_HEIGHT_PROP 25
 
 // moving object magnitude
 #define ACCELERATION 0.3

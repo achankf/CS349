@@ -21,9 +21,23 @@ Renderer::Renderer(Game &go, XInfo &xinfo) :
 }
 
 void Renderer::update_attributes(Game &go, XInfo &xinfo, unsigned int new_width, unsigned int new_height){
-	dim.first = new_width > xinfo.dwidth() ? xinfo.dwidth() : new_width;
-	dim.second = new_height > xinfo.dheight() ? xinfo.dheight() : new_height;
-	resize_factor = (float)new_width/ DEFAULT_WIDTH;
+	// make sure the width is in bound
+	if (new_width > xinfo.dwidth()){
+		dim.first = xinfo.dwidth();
+	} else if (new_width < DEFAULT_WIDTH){
+		dim.first = DEFAULT_WIDTH;
+	} else {
+		dim.first = new_width;
+	}
+	// make sure the height is in bound
+	if (new_height > xinfo.dheight()){
+		dim.second = xinfo.dheight();
+	} else if (new_height < DEFAULT_HEIGHT){
+		dim.second = DEFAULT_HEIGHT;
+	} else {
+		dim.second = new_height;
+	}
+	resize_factor = (float)dim.first/ DEFAULT_WIDTH;
 
 	// figure out the new size
 	final_blockside_len = previous_even((float)resize_factor * BLOCK_SIDE_LEN);
@@ -81,14 +95,21 @@ void Renderer::repaint(Game &go, XInfo &xinfo){
 	for (int x = focus_bound_low; x < focus_bound_high &&x < XBLOCK_NUM; x++){
 		for (int y = 0; y < YBLOCK_NUM; y++){
 			if (!go.structure_map[x][y]) continue;
-			draw_structure(go, xinfo, x, y);
+			XCopyArea(display, xinfo.pixmap[XInfo::PSTRUCTURE],
+				pixmap, gc, 0, 0, 
+				final_blockside_len, final_blockside_len,
+				nor_x(x * final_blockside_len), nor_y(y * final_blockside_len));
 		}
 	}
 
 	for (int x = focus_bound_low, y; x < focus_bound_high &&x < XBLOCK_NUM; x++){
 		y = go.cannon_height_map[x];
 		if (y == NO_CANNON) continue;
-		draw_cannon(go, xinfo, x, y);
+			XCopyArea(display, xinfo.pixmap[XInfo::PCANNON],
+				pixmap, gc, 0, 0, 
+				final_blockside_len /2, final_blockside_len,
+				nor_x(x * final_blockside_len + final_blockside_len/4), nor_y(y * final_blockside_len));
+		//draw_cannon(go, xinfo, x, y);
 	}
 
 	for (auto it = go.missiles.begin(), end = go.missiles.end(); it != end; it++){

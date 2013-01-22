@@ -123,5 +123,7 @@ Pixmap XInfo::new_pixmap(PIXMAP_TYPE pt, std::pair<unsigned int, unsigned int> &
 	int depth = DefaultDepth(display, DefaultScreen(display));
 	XFreePixmap(display,pixmap[pt]);
 	pixmap[pt] = XCreatePixmap(display, window, dim.first, dim.second, depth);
+	// clean the pixmap
+	XFillRectangle(display, pixmap[pt], gc[INVERSE_BACKGROUND], 0, 0, dim.first,dim.second);
 	return pixmap[pt];
 }

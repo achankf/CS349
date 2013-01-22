@@ -24,7 +24,7 @@ void Renderer::draw_cannon(Game &go, XInfo &xinfo, int x, int y){
 	Pixmap pixmap = xinfo.pixmap[XInfo::GAME_SCREEN];
 	x = x * final_blockside_len - focus;
 	y = y * final_blockside_len;
-	XFillRectangle(display, pixmap, gc, x + final_blockside_len/4, y, final_blockside_len/2,	final_blockside_len);
+	XDrawRectangle(display, pixmap, gc, x + final_blockside_len/4, y, final_blockside_len/2,	final_blockside_len);
 }
 
 void Renderer::draw_splash(Game &go, XInfo &xinfo){
@@ -107,16 +107,18 @@ void Renderer::redraw_player(XInfo &xinfo){
 }
 
 void Renderer::redraw_cannon(XInfo &xinfo){
+	pair<unsigned int, unsigned int> temp_dim(final_blockside_len/2,  final_blockside_len);
 	// create a new pixmap
-	Pixmap pixmap = xinfo.new_pixmap(XInfo::PCANNON, player_dim);
+	Pixmap pixmap = xinfo.new_pixmap(XInfo::PCANNON, temp_dim);
 	Display *display = xinfo.display;
 	GC gc = xinfo.gc[XInfo::DEFAULT];
-	XFillRectangle(display, pixmap, gc, 0, 0, final_blockside_len/2,  final_blockside_len);
+	XDrawRectangle(display, pixmap, gc, 0, 0, final_blockside_len/2 -1,  final_blockside_len);
 }
 
 void Renderer::redraw_structure(XInfo &xinfo){
+	pair<unsigned int, unsigned int> temp_dim(final_blockside_len,final_blockside_len);
 	// create a new pixmap
-	Pixmap pixmap = xinfo.new_pixmap(XInfo::PSTRUCTURE, player_dim);
+	Pixmap pixmap = xinfo.new_pixmap(XInfo::PSTRUCTURE, temp_dim);
 	Display *display = xinfo.display;
 	GC gc = xinfo.gc[XInfo::DEFAULT];
 	XFillRectangle(display, pixmap, gc, 0, 0, final_blockside_len, final_blockside_len);

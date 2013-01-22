@@ -20,7 +20,7 @@ public: /* members */
 
 public: /* functions */
 	Renderer(Game &, XInfo &);
-	void update_attributes(Game &go, XInfo &xinfo, unsigned int new_width, unsigned int new_height);
+	void update_attributes(Game &go, XInfo &xinfo, unsigned int new_width, unsigned int new_height, bool init = false);
 	void repaint(Game &, XInfo &);
 	bool within_focus_x(int x, int y, int width);
 	void draw_structure(Game &, XInfo &, int x, int y);

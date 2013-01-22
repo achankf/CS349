@@ -17,12 +17,12 @@ Renderer::Renderer(Game &go, XInfo &xinfo) :
 	focus_bound_high(0),
 	show_splash(true)
 {
-	update_attributes(go, xinfo, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+	update_attributes(go, xinfo, DEFAULT_WIDTH, DEFAULT_HEIGHT, true);
 }
 
-void Renderer::update_attributes(Game &go, XInfo &xinfo, unsigned int new_width, unsigned int new_height){
+void Renderer::update_attributes(Game &go, XInfo &xinfo, unsigned int new_width, unsigned int new_height, bool init){
 	// check whether there's change
-	if (dim.first == new_width && dim.second == new_height) return;
+	if (!init && dim.first == new_width && dim.second == new_height) return;
 
 	// make sure the width is in bound
 	if (new_width > xinfo.dwidth()){

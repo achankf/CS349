@@ -11,8 +11,8 @@
 #define BORDER 0
 
 // rendering
-#define SCROLL_FACTOR 40
-#define SCROLL_FACTOR_MAX 50
+#define SCROLL_FACTOR 1
+#define SCROLL_FACTOR_MAX 5
 #define SCROLL_DELTA 0.0001
 #define FPS 30
 
@@ -32,6 +32,7 @@
 // moving object magnitude
 #define ACCELERATION 0.3
 #define MAX_SPEED 10
+#define PROPEL_SPEED 50
 #define MISSLE_SPEED 2
 #define MISSILE_INERTIA 0.05
 
@@ -39,13 +40,14 @@
 #define PLAYER_FIRE_COOL_DOWN 15
 
 /* a cannon spawns when (rand() % CANNON_TOTAL) < CANNON_SPAWN) */
-#define CANNON_SPAWN 25
+#define CANNON_SPAWN 30
 #define CANNON_SPAWN_TOTAL 100
-#define CANNON_MIN_FIRE_TIME 10
+#define CANNON_MIN_FIRE_TIME 30
 
 #define KILL_BONUS 100
 #define FIRE_PENALTY 10
 #define BRAKE_PENALTY 100
+#define SURVIVE_BONUS 1000
 
 // DO NOT TOUCH THE VARIABLES BELOW
 

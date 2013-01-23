@@ -19,6 +19,8 @@ Game::Game() :
 	num_kills(0),
 	num_b_brakes(0),
 	god_mode(false),
+	propel(false),
+	game_over(false),
 	structure_map(XBLOCK_NUM, std::vector<height_t>(YBLOCK_NUM, false)),
 	cannon_height_map(XBLOCK_NUM, NO_CANNON)
 {
@@ -58,6 +60,14 @@ void Game::correct_structure_map(){
 
 }
 
+void Game::generate_structure_by_height(int height, int from, int to, bool build_structure, int rand_modulo, int base_rand, int rand_target){
+	for (int x = from; x < to && x < XBLOCK_NUM; x++){
+		bool make = ((rand() % rand_modulo) + base_rand) <= rand_target;
+		if (!make) continue;
+		structure_map[x][height] = build_structure;
+	}
+}
+
 void Game::setup(){
 
 	cannon_fire_count.reserve(XBLOCK_NUM);
@@ -65,34 +75,55 @@ void Game::setup(){
 		cannon_fire_count[i] = random_fire_time();
 	}
 
-	int max_depth = YBLOCK_NUM/3;
-	for (int x = 0 /*XBLOCK_NUM / 2*/; x < XBLOCK_NUM; x++){
-		for (int y = 0; y < YBLOCK_NUM; y++){
-			bool make = rand() % 2;
-			if (!make || (y < YBLOCK_NUM - max_depth)) continue;
-			structure_map[x][y] = true;
+	// terrain generation, with the lowest level being 100% generated
+	for (int base = 100, height = YBLOCK_NUM - 1, i = 5; base > 0; base -= 20){
+		for (int right = XBLOCK_NUM / i, start = XBLOCK_NUM / i; right < XBLOCK_NUM;){
+			right = right + (rand() / 30) + (rand()/100);
+			generate_structure_by_height(height, start, right, true, 100, 0, base);
+			start = right;
+		}
+		height--;
+		i += i; // rough terrain
+	}
+
+	// generate ceiling
+	generate_structure_by_height(0, XBLOCK_NUM / 4, XBLOCK_NUM, true, 100, 0, 100);
+	generate_structure_by_height(1, XBLOCK_NUM / 3, XBLOCK_NUM, true, 100, 0, 30);
+	generate_structure_by_height(2, XBLOCK_NUM / 2, XBLOCK_NUM, true, 100, 0, 40);
+
+	for (int i = XBLOCK_NUM / 6 + 3; i < XBLOCK_NUM; i++){
+		for (int c = 0; c < 2; c++){
+			int j = rand() % YBLOCK_NUM;
+
+			// ignore if the surrounding is too packed
+			if (j < 2 
+				|| structure_map[i][j-1] 
+				|| structure_map[i][j-2] 
+				|| structure_map[i-1][j] 
+				|| structure_map[i-2][j]
+				|| structure_map[i-3][j]
+			) continue;
+
+			structure_map[i][j] = true;
 		}
 	}
-	max_depth = YBLOCK_NUM / 3;
-	for (int x = XBLOCK_NUM / 4; x < XBLOCK_NUM; x++){
-		for (int y = 0; y < YBLOCK_NUM; y++){
-			bool make = rand() % 2;
-			if (!make || (y > max_depth &&  y < YBLOCK_NUM - max_depth)) continue;
-			structure_map[x][y] = true;
-		}
-	}
-	
-	int temp = YBLOCK_NUM - 1;
-	for (int i = 0; i < XBLOCK_NUM; i++){
-		structure_map[i][temp] = true;
-	}
-	correct_structure_map();
+
+	// generate ground floor
+	generate_structure_by_height(YBLOCK_NUM - 1, 0, XBLOCK_NUM, true, 100, 0, 100);
+
+	// correct map
 	correct_structure_map();
 
 	for (int x = 0; x < XBLOCK_NUM; x++){
 		for (int y = YBLOCK_NUM - 1; y >= 0; y--){ // search from the bottom
-			// requires that (x,y) doesn't contain a structure
-			if (structure_map[x][y] || structure_map[x][y-1] || structure_map[x][y-2]) continue;
+			// requires that (x,y) doesn't contain a structure, and has at least 3 blocks to send the missiles
+			// and left and right to be empty
+			if (x <= 1 || x >= XBLOCK_NUM -1 || y <= 3 || y >= YBLOCK_NUM -2
+				|| structure_map[x][y] || structure_map[x][y-1] || structure_map[x][y-2] || structure_map[x][y-3]
+				|| !structure_map[x][y+1]
+				|| structure_map[x - 1][y] || structure_map[x + 1][y]
+			) continue;
+
 			if ((rand() % CANNON_SPAWN_TOTAL) <= CANNON_SPAWN){
 				cannon_height_map[x] = y;
 			}
@@ -131,7 +162,9 @@ void Game::update(Collision &cl, Renderer &rn){
 }
 
 int Game::score(){
-	return (num_kills * KILL_BONUS
+	return (
+		(player.dead ? 0 : SURVIVE_BONUS)
+		+ num_kills * KILL_BONUS
 		- num_fires * FIRE_PENALTY
 		- num_b_brakes * BRAKE_PENALTY);
 }

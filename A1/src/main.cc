@@ -32,7 +32,7 @@ unsigned long now() {
 	return tv.tv_sec * 1000000 + tv.tv_usec;
 }
 
-void update_velocity(Game &go,bool keypressed_record[]){
+void update_game_helicopter_action(Game &go,bool keypressed_record[]){
 	if (keypressed_record[KEYP_UP])
 		go.player.move_up();
 	if (keypressed_record[KEYP_DOWN])
@@ -110,6 +110,9 @@ void handle_keypress(Game &go, Renderer &rn, XInfo &xinfo, XEvent &event,
 		case 'g':
 			go.god_mode = !go.god_mode;
 			break;
+		case 'c':
+		case 'C':
+			go.propel = !go.propel;
 	}
 }
 
@@ -168,24 +171,23 @@ ERROR_CODES event_loop(int argc, char **argv, XInfo &xinfo){
 			goto SKIP_DRAWING;
 
 		// either draw splash screen or update game
-		if (go.player.dead){
-			if (go.god_mode){
-				go.player.dead = false;
-			} else {
-				rn.draw_game_over(go,xinfo);
-			}
-			handle_resize(event,go,rn,xinfo);
+		if (go.game_over || go.player.dead){ // be it dead of alive
+			rn.draw_game_over(go,xinfo);
 		} else if (rn.show_splash){
 			if (redraw_splash){ // redraw only if the splash is damaged
 				rn.draw_splash(go,xinfo);
 			}	
-			handle_resize(event,go,rn,xinfo);
 		} else {
 			// update game
-			update_velocity(go,keypressed_record);
+			update_game_helicopter_action(go,keypressed_record);
 			go.update(cl,rn);
 			rn.repaint(go,xinfo);
+			goto NO_HANDLE_RESIZE;
 		}
+
+		handle_resize(event,go,rn,xinfo);
+
+NO_HANDLE_RESIZE:
 		// reset expose flag
 		redraw_splash = false;
 		// update time
@@ -200,7 +202,7 @@ SKIP_DRAWING:
 
 int main(int argc, char **argv){
 	XInfo xinfo(argc, argv);
-	// loop to an infinite loop 
+	// a loop to infinite loops
 	// take advantage of scopings and destructors for retries
 	while(event_loop(argc, argv, xinfo) != EXIT);
 }

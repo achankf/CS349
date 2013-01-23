@@ -52,6 +52,9 @@ bool Collision::operator()(Missile &mi){
 		return true;
 	}
 
+	// god_mode -- no need to check collision with the player
+	if (go.god_mode) return false;
+
 	int px = go.player.getx(), py = go.player.gety();
 	if (go.player.team != mi.team
 		&& x >= px && x <= px + rn.player_dim.first
@@ -64,6 +67,9 @@ bool Collision::operator()(Missile &mi){
 
 // check player collision against structures
 bool Collision::operator()(Player &pl){
+	// no collision in god mode
+	if (go.god_mode) return false;
+
 	magnitude_t x = pl.getx(), y = pl.gety();
 	int s0 = x / rn.final_blockside_len;
 	int t0 = y / rn.final_blockside_len;

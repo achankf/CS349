@@ -21,13 +21,14 @@ class Game {
 	unsigned char random_fire_time();
 	void correct_structure_map();
 	void update_scroll_factor();
+	void generate_structure_by_height(int height, int from, int to, bool build_structure, int rand_modulo, int base_rand, int rand_target);
 
 	float _scroll_factor;
 public: /* members */
 	Player player;
 	std::list <Missile> missiles;
 	int num_fires, num_kills, num_b_brakes;
-	bool god_mode;
+	bool god_mode, propel, game_over;
 
 	/* using "maps" for speed and memory optimization -- not in separate class */
 

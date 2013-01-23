@@ -34,19 +34,19 @@ void Renderer::draw_splash(Game &go, XInfo &xinfo){
 
 	XDrawString(xinfo.display,xinfo.pixmap[XInfo::SPLASH_SCREEN],
 		xinfo.gc[XInfo::TITLE_FONT],
-		30,50,GAME_TITLE,strlen(GAME_TITLE));
+		30,30,GAME_TITLE,strlen(GAME_TITLE));
 
 	int i;
 	for (i = 0; !TUTORIAL[i].empty(); i++){
 		XDrawString(xinfo.display,xinfo.pixmap[XInfo::SPLASH_SCREEN],
 			xinfo.gc[XInfo::DEFAULT],
-			40,80 + 20 *i,TUTORIAL[i].c_str(), TUTORIAL[i].size());
+			40,60 + 20 *i,TUTORIAL[i].c_str(), TUTORIAL[i].size());
 	}
 
 	const string restart_hints("Press \"f\" to continue");
 	XDrawString(xinfo.display,xinfo.pixmap[XInfo::SPLASH_SCREEN],
 		xinfo.gc[XInfo::TITLE_FONT],
-		30,100+20*i,restart_hints.c_str(),restart_hints.size());
+		30,70+20*i,restart_hints.c_str(),restart_hints.size());
 
 	XCopyArea(xinfo.display, xinfo.pixmap[XInfo::SPLASH_SCREEN],
 		xinfo.window,  xinfo.gc[XInfo::TITLE_FONT],
@@ -105,7 +105,8 @@ void Renderer::redraw_player(XInfo &xinfo){
 }
 
 void Renderer::redraw_cannon(XInfo &xinfo){
-	pair<unsigned int, unsigned int> temp_dim(final_blockside_len/2,  final_blockside_len);
+	pair<unsigned int, unsigned int> temp_dim(
+		final_blockside_len/2,  final_blockside_len);
 	// create a new pixmap
 	Pixmap pixmap = xinfo.new_pixmap(XInfo::PCANNON, temp_dim);
 	Display *display = xinfo.display;
@@ -114,18 +115,24 @@ void Renderer::redraw_cannon(XInfo &xinfo){
 }
 
 void Renderer::redraw_structure(Game &go, XInfo &xinfo){
-#if 1
-	pair<unsigned int, unsigned int> temp_dim(dim.first * 2, dim.second);
-#endif
 	// create a new pixmap
 	xinfo.new_pixmap(XInfo::PSTRUCTURE, dim);
-	for (int x = 0, xcoor = -focus; 
-		x < XBLOCK_NUM; x++){
+
+	// draw the structures based on structure_map
+	for (int x = 0, xcoor = -focus; x < XBLOCK_NUM; 
+		x++, xcoor += final_blockside_len){
+
+		// no need to draw structures that are no needed
+		if (x > focus_bound_high){
+			break; // stop
+		} else if (x < focus_bound_low){
+			continue;
+		}
+
 		for (int y = 0, ycoor = -final_blockside_len; y < YBLOCK_NUM; y++){
 			ycoor += final_blockside_len;
 			if (!go.structure_map[x][y]) continue;
 			draw_structure(xinfo, xcoor, ycoor);
 		}
-		xcoor += final_blockside_len;
 	}
 }

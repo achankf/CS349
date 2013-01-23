@@ -59,12 +59,6 @@ void Renderer::update_attributes(Game &go, XInfo &xinfo, unsigned int new_width,
 	redraw_structure(go,xinfo);
 
 #ifdef DEBUG
-	cout << " new dim: ";
-	print_pair(dim);
-#endif
-	//final_blockside_len = dim.second / YBLOCK_NUM;
-
-#ifdef DEBUG
 	{
 		using namespace std;
 		cout << "display:";
@@ -81,6 +75,8 @@ void Renderer::repaint(Game &go, XInfo &xinfo){
 	Pixmap pixmap = xinfo.pixmap[XInfo::GAME_SCREEN];
 
 	recalculate_focus_bound(go);
+	// need to refit because player may decide to propel
+	go.player.fit_to_boundary(*this);
 
 	// clean canvas
 	XFillRectangle(display, pixmap,
@@ -90,28 +86,11 @@ void Renderer::repaint(Game &go, XInfo &xinfo){
 	// draw structures (background)
 	redraw_structure(go, xinfo);
 
-	//go.player.draw(*this,xinfo);
+	// draw the player
 	XCopyArea(display, xinfo.pixmap[XInfo::PPLAYER],
 		pixmap, gc, 0, 0, 
 		player_dim.first, player_dim.second,
 		go.player.getx() - focus, go.player.gety());
-	
-#ifdef DEBUG
-	cout << focus_bound_low * final_blockside_len - focus << endl;
-#endif
-	// copy structure pixmap into buffer
-#if 0
-	for (int x = focus_bound_low; x < focus_bound_high &&x < XBLOCK_NUM; x++){
-		for (int y = 0; y < YBLOCK_NUM; y++){
-			if (!go.structure_map[x][y]) continue;
-			XCopyArea(display, xinfo.pixmap[XInfo::PSTRUCTURE],
-				pixmap, gc, 0, 0, 
-				dim.first - focus, dim.second,
-				0,0);
-				//x * final_blockside_len - focus, y * final_blockside_len);
-		}
-	}
-#endif
 
 	// copy cannon pixmap into buffer
 	for (int x = focus_bound_low, y; x < focus_bound_high &&x < XBLOCK_NUM; x++){
@@ -147,7 +126,16 @@ bool Renderer::within_focus_x(int x, int y, int width){
 }
 
 void Renderer::recalculate_focus_bound(Game &go){
-	focus += go.scroll_factor();
+	if (go.propel){
+		focus += PROPEL_SPEED;
+	} else {
+		focus += go.scroll_factor();
+	}
 	focus_bound_low = (focus - final_blockside_len) / final_blockside_len;
 	focus_bound_high = (dim.first + focus + final_blockside_len) / final_blockside_len;
+
+	// calculate whether player has reached the end
+	if (focus_bound_high >= XBLOCK_NUM - XBLOCK_BEFORE_WIN){
+		go.game_over = true;
+	}
 }

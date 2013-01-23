@@ -9,7 +9,7 @@
 using namespace std;
 
 cannon_fire_time_t Game::random_fire_time(){
-	return (rand() & 0x3f) + CANNON_MIN_FIRE_TIME;
+	return (rand() & 4 * CANNON_MIN_FIRE_TIME) + CANNON_MIN_FIRE_TIME;
 }
 
 Game::Game() : 
@@ -91,9 +91,10 @@ void Game::setup(){
 	generate_structure_by_height(0, XBLOCK_NUM / 4, XBLOCK_NUM, true, 100, 0, 100);
 	generate_structure_by_height(1, XBLOCK_NUM / 3, XBLOCK_NUM, true, 100, 0, 30);
 	generate_structure_by_height(2, XBLOCK_NUM / 2, XBLOCK_NUM, true, 100, 0, 40);
+	generate_structure_by_height(3, XBLOCK_NUM / 2, XBLOCK_NUM, true, 100, 0, 60);
 
 	// generate obsticles
-	for (int i = XBLOCK_NUM / 6 + 3; i < XBLOCK_NUM; i++){
+	for (int i = XBLOCK_NUM / 2 + 3; i < XBLOCK_NUM; i++){
 		for (int c = 0; c < 2; c++){
 			int j = rand() % YBLOCK_NUM;
 
@@ -142,17 +143,22 @@ void Game::update(Collision &cl, Renderer &rn){
 	player.fit_to_boundary(rn);
 	if (cl(player)) player.dead = true;
 
+	// update missiles position
 	for (auto it = missiles.begin(); it != missiles.end(); it++){
 		it->update_position();
 	}
-	missiles.remove_if(cl); // collide
+	// remove any missiles that are either being collided or out-of-bound
+	missiles.remove_if(cl);
 
 	// cannons fire missiles
 	for (int x = rn.focus_bound_low; x < rn.focus_bound_high && x < XBLOCK_NUM; x++){
 		if (cannon_height_map[x] == NO_CANNON) continue;
 		cannon_fire_count[x]--;
-		if (cannon_fire_count[x] != 0) continue;
+		if (cannon_fire_count[x] != 0) continue; // cooling down
+
+		// resize cool-down time
 		cannon_fire_count[x] = random_fire_time();
+		// fire new missile
 		missiles.push_back(
 			Missile(true, 
 				(x * rn.final_blockside_len + rn.final_blockside_len / 2),

@@ -24,8 +24,8 @@
 #define BLOCK_SIDE_LEN (DEFAULT_HEIGHT / YBLOCK_NUM)
 
 // collision space  -- proportion
-#define MISSILE_WIDTH_PROP 100
-#define MISSILE_HEIGHT_PROP 40
+#define BOMB_WIDTH_PROP 100
+#define BOMB_HEIGHT_PROP 40
 #define PLAYER_WIDTH_PROP 10
 #define PLAYER_HEIGHT_PROP 25
 
@@ -37,7 +37,7 @@
 #define MAX_SPEED 10
 #define PROPEL_SPEED 50
 #define MISSLE_SPEED 2
-#define MISSILE_INERTIA 0.05
+#define BOMB_INERTIA 0.05
 
 /* a cannon spawns when (rand() % CANNON_TOTAL) < CANNON_SPAWN) */
 #define CANNON_SPAWN 30

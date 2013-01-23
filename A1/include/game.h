@@ -4,7 +4,7 @@
 #include <list>
 #include <vector>
 
-#include "missile.h"
+#include "bomb.h"
 #include "player.h"
 #include "renderer.h"
 #include "collision.h"
@@ -12,7 +12,7 @@
 // place holder
 class Renderer;
 class Collision;
-class Missile;
+class Bomb;
 class Player;
 
 class Game {
@@ -26,7 +26,7 @@ class Game {
 	float _scroll_factor;
 public: /* members */
 	Player player;
-	std::list <Missile> missiles;
+	std::list <Bomb> bombs;
 	int num_fires, num_kills, num_b_brakes;
 	bool god_mode, propel, game_over;
 

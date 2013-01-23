@@ -1,6 +1,6 @@
 #include "collision.h"
 #include "renderer.h"
-#include "missile.h"
+#include "bomb.h"
 #include "config.h"
 #include "movable.h"
 #include <iostream>
@@ -18,13 +18,13 @@ bool Collision::inbound(int x, int y){
 		&& y >= 0 && y < YBLOCK_NUM;
 }
 
-// check missiles collision against structures, cannons, and the player
-bool Collision::operator()(Missile &mi){
+// check bombs collision against structures, cannons, and the player
+bool Collision::operator()(Bomb &mi){
 	magnitude_t x = mi.getx(), y = mi.gety();
 	int s0 = x / rn.final_blockside_len;
 	int t0 = y / rn.final_blockside_len;
-	int s1 = (x + rn.missile_dim.first) / rn.final_blockside_len;
-	int t1 = (y + rn.missile_dim.second) / rn.final_blockside_len;
+	int s1 = (x + rn.bomb_dim.first) / rn.final_blockside_len;
+	int t1 = (y + rn.bomb_dim.second) / rn.final_blockside_len;
 
 	// out of bound
 	if (!inbound(s0,t0) || !inbound(s1,t1)) return true;
@@ -36,7 +36,7 @@ bool Collision::operator()(Missile &mi){
 	// check for cannons
 	// only width is different
 	s0 = (x + rn.final_blockside_len/4) / rn.final_blockside_len;
-	s1 = (x + rn.missile_dim.first + rn.final_blockside_len/4) / rn.final_blockside_len;
+	s1 = (x + rn.bomb_dim.first + rn.final_blockside_len/4) / rn.final_blockside_len;
 
 	// do a "rough" check -- overestimate because cannons are smaller than a strcture
 	// but the overestimate makes things more fun as cannons are easier to hit
@@ -58,7 +58,7 @@ bool Collision::operator()(Missile &mi){
 	// check collicsion with the player
 	int px = go.player.getx(), py = go.player.gety();
 	if (go.player.team != mi.team 
-		&& collide(x,y,rn.missile_dim, px,py,rn.player_dim)){
+		&& collide(x,y,rn.bomb_dim, px,py,rn.player_dim)){
 		go.player.dead = true;
 		return true;
 	}

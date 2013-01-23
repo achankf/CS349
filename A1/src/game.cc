@@ -118,7 +118,7 @@ void Game::setup(){
 
 	for (int x = 0; x < XBLOCK_NUM; x++){
 		for (int y = YBLOCK_NUM - 1; y >= 0; y--){ // search from the bottom
-			// requires that (x,y) doesn't contain a structure, and has at least 3 blocks to send the missiles
+			// requires that (x,y) doesn't contain a structure, and has at least 3 blocks to send the bombs
 			// and left and right to be empty
 			if (x <= 1 || x >= XBLOCK_NUM -1 || y <= 3 || y >= YBLOCK_NUM -2
 				|| structure_map[x][y] || structure_map[x][y-1] || structure_map[x][y-2] || structure_map[x][y-3]
@@ -143,14 +143,14 @@ void Game::update(Collision &cl, Renderer &rn){
 	player.fit_to_boundary(rn);
 	if (cl(player)) player.dead = true;
 
-	// update missiles position
-	for (auto it = missiles.begin(); it != missiles.end(); it++){
+	// update bombs position
+	for (auto it = bombs.begin(); it != bombs.end(); it++){
 		it->update_position();
 	}
-	// remove any missiles that are either being collided or out-of-bound
-	missiles.remove_if(cl);
+	// remove any bombs that are either being collided or out-of-bound
+	bombs.remove_if(cl);
 
-	// cannons fire missiles
+	// cannons fire bombs
 	for (int x = rn.focus_bound_low; x < rn.focus_bound_high && x < XBLOCK_NUM; x++){
 		if (cannon_height_map[x] == NO_CANNON) continue;
 		cannon_fire_count[x]--;
@@ -158,13 +158,13 @@ void Game::update(Collision &cl, Renderer &rn){
 
 		// resize cool-down time
 		cannon_fire_count[x] = random_fire_time();
-		// fire new missile
-		missiles.push_back(
-			Missile(true, 
+		// fire new bomb
+		bombs.push_back(
+			Bomb(true, 
 				(x * rn.final_blockside_len + rn.final_blockside_len / 2),
 				(cannon_height_map[x] - 1) * rn.final_blockside_len,
 				0, 0,
-				0, -MISSILE_INERTIA));
+				0, -BOMB_INERTIA));
 	}
 }
 

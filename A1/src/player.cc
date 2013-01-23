@@ -24,8 +24,8 @@ void Player::fire(Game &go){
 		return;
 	}
 	fire_cool_down = PLAYER_FIRE_COOL_DOWN;
-	go.missiles.push_back(
-		Missile(false, getx(),gety(), get_speedx(),get_speedy(),0,MISSILE_INERTIA));
+	go.bombs.push_back(
+		Bomb(false, getx(),gety(), get_speedx(),get_speedy(),0,BOMB_INERTIA));
 	go.num_fires++;
 }
 

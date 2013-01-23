@@ -48,13 +48,13 @@ void Renderer::update_attributes(Game &go, XInfo &xinfo, unsigned int new_width,
 	// player dimension
 	player_dim.first = (dim.second / PLAYER_WIDTH_PROP);
 	player_dim.second = (dim.second / PLAYER_HEIGHT_PROP);
-	// missile dimension
-	missile_dim.first = (dim.second / MISSILE_WIDTH_PROP);
-	missile_dim.second = (dim.second / MISSILE_HEIGHT_PROP);
+	// bomb dimension
+	bomb_dim.first = (dim.second / BOMB_WIDTH_PROP);
+	bomb_dim.second = (dim.second / BOMB_HEIGHT_PROP);
 
 	xinfo.new_pixmap(XInfo::GAME_SCREEN,dim);
 	redraw_player(xinfo);
-	redraw_missile(xinfo);
+	redraw_bomb(xinfo);
 	redraw_cannon(xinfo);
 	redraw_structure(go,xinfo);
 
@@ -103,14 +103,14 @@ void Renderer::repaint(Game &go, XInfo &xinfo){
 					y * final_blockside_len);
 	}
 
-	// draw the missiles
-	for (auto it = go.missiles.begin(), end = go.missiles.end(); it != end; it++){
+	// draw the bombs
+	for (auto it = go.bombs.begin(), end = go.bombs.end(); it != end; it++){
 		if (!within_focus_x(it->getx() / final_blockside_len, 
-			it->gety() / final_blockside_len, missile_dim.first)) continue;
-		XCopyArea(display, xinfo.pixmap[XInfo::PMISSILE],
+			it->gety() / final_blockside_len, bomb_dim.first)) continue;
+		XCopyArea(display, xinfo.pixmap[XInfo::PBOMB],
 			pixmap, gc,
 			0, 0, 
-			missile_dim.first, missile_dim.second,
+			bomb_dim.first, bomb_dim.second,
 			it->getx() - focus, it->gety());
 	}
 

@@ -88,12 +88,12 @@ void Renderer::draw_game_over(Game &go, XInfo &xinfo){
 	XFlush(xinfo.display);
 }
 
-void Renderer::redraw_missile(XInfo &xinfo){
+void Renderer::redraw_bomb(XInfo &xinfo){
 	// create a new pixmap
-	Pixmap pixmap = xinfo.new_pixmap(XInfo::PMISSILE, missile_dim);
+	Pixmap pixmap = xinfo.new_pixmap(XInfo::PBOMB, bomb_dim);
 	Display *display = xinfo.display;
 	GC gc = xinfo.gc[XInfo::DEFAULT];
-	XFillRectangle(display, pixmap, gc, 0, 0, missile_dim.first, missile_dim.second);
+	XFillRectangle(display, pixmap, gc, 0, 0, bomb_dim.first, bomb_dim.second);
 }
 
 void Renderer::redraw_player(XInfo &xinfo){

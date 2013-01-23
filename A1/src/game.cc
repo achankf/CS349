@@ -70,6 +70,7 @@ void Game::generate_structure_by_height(int height, int from, int to, bool build
 
 void Game::setup(){
 
+	// set up cool-down time for cannons
 	cannon_fire_count.reserve(XBLOCK_NUM);
 	for (int i = 0; i < XBLOCK_NUM; i++){
 		cannon_fire_count[i] = random_fire_time();
@@ -91,17 +92,17 @@ void Game::setup(){
 	generate_structure_by_height(1, XBLOCK_NUM / 3, XBLOCK_NUM, true, 100, 0, 30);
 	generate_structure_by_height(2, XBLOCK_NUM / 2, XBLOCK_NUM, true, 100, 0, 40);
 
+	// generate obsticles
 	for (int i = XBLOCK_NUM / 6 + 3; i < XBLOCK_NUM; i++){
 		for (int c = 0; c < 2; c++){
 			int j = rand() % YBLOCK_NUM;
 
 			// ignore if the surrounding is too packed
-			if (j < 2 
+			if (j < 1 
 				|| structure_map[i][j-1] 
-				|| structure_map[i][j-2] 
-				|| structure_map[i-1][j] 
-				|| structure_map[i-2][j]
-				|| structure_map[i-3][j]
+				|| structure_map[i-1][j-1] || structure_map[i-1][j] || structure_map[i-1][j+1] 
+				|| structure_map[i-2][j-1] || structure_map[i-2][j] || structure_map[i-2][j+1]
+				|| structure_map[i-3][j-1] || structure_map[i-3][j] || structure_map[i-3][j+1]
 			) continue;
 
 			structure_map[i][j] = true;

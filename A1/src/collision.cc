@@ -4,6 +4,9 @@
 #include "config.h"
 #include "movable.h"
 #include <iostream>
+using namespace std;
+
+
 Collision::Collision(Game &go, Renderer &rn)
 : go(go),
 	rn(rn)
@@ -11,8 +14,8 @@ Collision::Collision(Game &go, Renderer &rn)
 }
 
 bool Collision::inbound(int x, int y){
-	return x >= 0 && x <= XBLOCK_NUM
-		&& y >= 0 && y <= YBLOCK_NUM;
+	return x >= 0 && x < XBLOCK_NUM
+		&& y >= 0 && y < YBLOCK_NUM;
 }
 
 // check missiles collision against structures, cannons, and the player
@@ -22,12 +25,6 @@ bool Collision::operator()(Missile &mi){
 	int t0 = y / rn.final_blockside_len;
 	int s1 = (x + rn.missile_dim.first) / rn.final_blockside_len;
 	int t1 = (y + rn.missile_dim.second) / rn.final_blockside_len;
-	if (s0 < 0 || s0 >= XBLOCK_NUM
-		|| s1 < 0 || s1 >= XBLOCK_NUM
-		|| t0 < 0 || t0 >= YBLOCK_NUM
-		|| t1 < 0 || t1 >= YBLOCK_NUM){
-		return true;
-	}
 
 	// out of bound
 	if (!inbound(s0,t0) || !inbound(s1,t1)) return true;
@@ -41,6 +38,9 @@ bool Collision::operator()(Missile &mi){
 	s0 = (x + rn.final_blockside_len/4) / rn.final_blockside_len;
 	s1 = (x + rn.missile_dim.first + rn.final_blockside_len/4) / rn.final_blockside_len;
 
+	// do a "rough" check -- overestimate because cannons are smaller than a strcture
+	// but the overestimate makes things more fun as cannons are easier to hit
+	// think of it as area damage
 	if (go.cannon_height_map[s0] == t0){
 		go.cannon_height_map[s0] = NO_CANNON;
 		go.num_kills++;
@@ -55,14 +55,36 @@ bool Collision::operator()(Missile &mi){
 	// god_mode -- no need to check collision with the player
 	if (go.god_mode) return false;
 
+	// check collicsion with the player
 	int px = go.player.getx(), py = go.player.gety();
-	if (go.player.team != mi.team
-		&& x >= px && x <= px + rn.player_dim.first
-		&& y >= py && y <= py + rn.player_dim.second){
+	if (go.player.team != mi.team 
+		&& collide(x,y,rn.missile_dim, px,py,rn.player_dim)){
 		go.player.dead = true;
 		return true;
 	}
 	return false;
+}
+
+bool Collision::collide(int x, int y, pair<unsigned int, unsigned int> &dim,
+	int tarx, int tary, pair<unsigned int, unsigned int> &tardim){
+
+	int x1 = x + dim.first;
+	int y1 = y + dim.second;
+
+	int s0 = tarx;
+	int s1 = tarx + tardim.first;
+	int t0 = tary;
+	int t1 = tary + tardim.second;
+	
+	if (
+		((x >= s0 && x <= s1) || (x1 >= s0 && x1 <= s1))
+		&& ((y >= t0 && y <= t1) || (y1 >= t0 && y1 <= t1))
+	){
+		return true;
+	}
+
+	return false;
+	
 }
 
 // check player collision against structures
@@ -75,29 +97,33 @@ bool Collision::operator()(Player &pl){
 	int t0 = y / rn.final_blockside_len;
 	int s1 = (x + rn.player_dim.first) / rn.final_blockside_len;
 	int t1 = (y + rn.player_dim.second) / rn.final_blockside_len;
-	if (s0 < 0 || s0 >= XBLOCK_NUM
-		|| s1 < 0 || s1 >= XBLOCK_NUM
-		|| t0 < 0 || t0 >= YBLOCK_NUM
-		|| t1 < 0 || t1 >= YBLOCK_NUM){
-		return false;
-	}
 
-	if (go.structure_map[s0][t0] || go.structure_map[s1][t1]){
+	if (go.structure_map[s0][t0] 
+		|| go.structure_map[s1][t1]
+		|| go.structure_map[s0][t1]
+		|| go.structure_map[s1][t0]
+		){
 		return true;
 	}
 
-	s0 = (x + rn.final_blockside_len/4) / rn.final_blockside_len;
-	s1 = (x + rn.missile_dim.first + rn.final_blockside_len/4) / rn.final_blockside_len;
-
-	if (go.cannon_height_map[s0] == t0){
-		go.cannon_height_map[s0] = NO_CANNON;
-		go.num_kills++;
-		return true;
-	}
-	if (go.cannon_height_map[s1] == t1){
-		go.cannon_height_map[s1] = NO_CANNON;
-		go.num_kills++;
-		return true;
+	pair<unsigned int, unsigned int> cannon_dim(rn.final_blockside_len / 2, rn.final_blockside_len);
+	// do a "cheap" evaluation first then do the real collision check .. for all 4 cases
+	if (
+		(go.cannon_height_map[s0] == t0 && collide(x,y,rn.player_dim, cannon_x(s0),cannon_y(t0),cannon_dim))
+		|| (go.cannon_height_map[s1] == t1 && collide(x,y,rn.player_dim, cannon_x(s1),cannon_y(t1),cannon_dim))
+		|| (go.cannon_height_map[s0] == t1 && collide(x,y,rn.player_dim, cannon_x(s0),cannon_y(t1),cannon_dim))
+		|| (go.cannon_height_map[s1] == t0 && collide(x,y,rn.player_dim, cannon_x(s1),cannon_y(t0),cannon_dim))
+		){
+		// you can kill a cannon by crashing into it!!
+			go.num_kills++;
+			return true;
 	}
 	return false;
+}
+
+int Collision::cannon_x(int s){
+	return s * rn.final_blockside_len + rn.final_blockside_len / 4;
+}
+int Collision::cannon_y(int t){
+	return t * rn.final_blockside_len;
 }

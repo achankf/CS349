@@ -2,6 +2,7 @@
 #define __ALFRED_collision_h__
 
 #include <vector>
+#include <utility>
 
 class Game;
 class Renderer;
@@ -18,6 +19,9 @@ public:
 	bool operator()(Missile &mi);
 	bool operator()(Player &pl);
 	bool inbound(int x, int y);
+	bool collide(int x, int y, std::pair<unsigned int, unsigned int> &dim, int tarx, int tary, std::pair<unsigned int, unsigned int> &tardim);
+	int cannon_x(int s);
+	int cannon_y(int t);
 };
 
 #endif

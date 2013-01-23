@@ -62,4 +62,8 @@ typedef unsigned char cannon_fire_time_t;
 #include <string>
 extern const std::string TUTORIAL[];
 
+#ifdef DEBUG
+#include "func.h"
+#endif
+
 #endif

@@ -9,7 +9,7 @@ const std::string TUTORIAL[] = {
 "Alternatively, you can use the vi key bindings for directions -- h,j,k,l",
 "z/Z -- fire missiles",
 "x/X -- \"automatic\" brake (or if you think you are pro, then the arrow keys instead)",
-"c/C -- propel helicopter with very high speed",
+"c/C -- propel helicopter at a very high speed",
 "b/B -- total brake, helicopter halts immediately (each time inflicts a score penalty)",
 " ",
 "p/P -- suicide",

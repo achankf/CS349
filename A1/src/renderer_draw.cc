@@ -16,15 +16,6 @@ void Renderer::draw_structure(XInfo &xinfo, int xcoor, int ycoor){
 	XFillRectangle(display, pixmap, gc, xcoor, ycoor, final_blockside_len, final_blockside_len);
 }
 
-void Renderer::draw_cannon(XInfo &xinfo, int x, int y){
-	Display *display = xinfo.display;
-	GC gc = xinfo.gc[XInfo::DEFAULT];
-	Pixmap pixmap = xinfo.pixmap[XInfo::GAME_SCREEN];
-	x = x * final_blockside_len - focus;
-	y = y * final_blockside_len;
-	XDrawRectangle(display, pixmap, gc, x + final_blockside_len/4, y, final_blockside_len/2,	final_blockside_len);
-}
-
 void Renderer::draw_splash(Game &go, XInfo &xinfo){
 	// clean canvas
 	XFillRectangle(xinfo.display,

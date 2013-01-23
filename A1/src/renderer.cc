@@ -105,7 +105,7 @@ void Renderer::repaint(Game &go, XInfo &xinfo){
 
 	// draw the bombs
 	for (auto it = go.bombs.begin(), end = go.bombs.end(); it != end; it++){
-		if (!within_focus_x(it->getx() / final_blockside_len, 
+		if (!within_range(it->getx() / final_blockside_len, 
 			it->gety() / final_blockside_len, bomb_dim.first)) continue;
 		XCopyArea(display, xinfo.pixmap[XInfo::PBOMB],
 			pixmap, gc,
@@ -120,7 +120,7 @@ void Renderer::repaint(Game &go, XInfo &xinfo){
 		0, 0, dim.first, dim.second, 0, 0);
 }
 
-bool Renderer::within_focus_x(int x, int y, int width){
+bool Renderer::within_range(int x, int y, int width){
 	return x >= focus_bound_low 
 		&& (x * (int) final_blockside_len +width)/ (int)final_blockside_len <= focus_bound_high
 		&& y > 0;

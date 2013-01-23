@@ -3,6 +3,7 @@
 
 #include <string>
 #include <X11/Xlib.h>
+#include "config.h"
 
 class Game;
 
@@ -13,6 +14,8 @@ public: /* enum */
 		DEFAULT,
 		INVERSE_BACKGROUND,
 		TITLE_FONT,
+		GC_GREY,
+		GC_BLUE,
 		NUM_GC_TYPE
 	};
 	enum PIXMAP_TYPE{
@@ -36,6 +39,8 @@ public: /* member variables */
 	Pixmap pixmap[NUM_PIXMAP_TYPE];
 	std::pair<unsigned int, unsigned int> ddim;
 	Font font[NUM_FONT_TYPE];
+	XColor colours[C_SIZE];
+	Colormap colourmap;
 
 public: /* functions */
 	XInfo(int argc, char **argv);

@@ -9,6 +9,7 @@
 #include <cstring>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
+using namespace std;
 
 #define ALL_EVENT_MASKS ( ButtonPressMask | ButtonReleaseMask | KeyReleaseMask | StructureNotifyMask | KeyPressMask | ExposureMask)
 
@@ -54,7 +55,7 @@ XInfo::XInfo(int argc, char **argv){
 	XSetStandardProperties(
 		display,		// display containing the window
 		window,		// window whose properties are set
-		GAME_TITLE,	// window's title
+		GAME_TITLE.c_str(),	// window's title
 		"OW",				// icon's title
 		None,				// pixmap for the icon
 		argv, argc,			// applications command line args
@@ -79,6 +80,13 @@ XInfo::XInfo(int argc, char **argv){
 	XSetForeground(display, gc[TITLE_FONT], black);
 	XSetBackground(display, gc[TITLE_FONT], white);
 	XSetFont(display,gc[TITLE_FONT], font[F_TITLE]);
+ 
+	colourmap = XDefaultColormap(display, screen);
+	/* allocate colours */
+	for (int i = 0; i < C_SIZE; i++){
+		XParseColor(display, colourmap, COLOURS[i], colours + i);
+		XAllocColor(display, colourmap, colours + i);
+	}
 
 	/* allocate pixmaps */
 	int depth = DefaultDepth(display, DefaultScreen(display));

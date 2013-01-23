@@ -2,6 +2,7 @@
 #define __ALFRED_config_h__
 
 #include <X11/Xlib.h>
+#include <string>
 
 // screen
 #define DEFAULT_WIDTH 800
@@ -57,10 +58,17 @@ typedef float magnitude_t;
 typedef char height_t;
 typedef unsigned char cannon_fire_time_t;
 
-#define GAME_TITLE "Alfred Chan 255"
+//#define GAME_TITLE "Alfred Chan 255"
 
-#include <string>
+extern const std::string GAME_TITLE;
 extern const std::string TUTORIAL[];
+
+enum COLOUR_TYPE{
+	C_GREY,
+	C_BLUE,
+	C_SIZE
+};
+extern const char *COLOURS[];
 
 #ifdef DEBUG
 #include "func.h"

@@ -22,7 +22,7 @@ public: /* functions */
 	Renderer(Game &, XInfo &);
 	void update_attributes(Game &go, XInfo &xinfo, unsigned int new_width, unsigned int new_height, bool init = false);
 	void repaint(Game &, XInfo &);
-	bool within_focus_x(int x, int y, int width);
+	bool within_range(int x, int y, int width);
 	void redraw_bomb(XInfo &);
 	void redraw_player(XInfo &);
 	void redraw_cannon(XInfo &);

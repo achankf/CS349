@@ -1,8 +1,6 @@
-#include <cstring>
 #include <string>
 #include <sstream>
 #include "renderer.h"
-#include <iostream>
 using namespace std;
 
 #ifdef DEBUG
@@ -25,7 +23,7 @@ void Renderer::draw_splash(Game &go, XInfo &xinfo){
 
 	XDrawString(xinfo.display,xinfo.pixmap[XInfo::SPLASH_SCREEN],
 		xinfo.gc[XInfo::TITLE_FONT],
-		30,30,GAME_TITLE,strlen(GAME_TITLE));
+		30,30,GAME_TITLE.c_str(),GAME_TITLE.size());
 
 	int i;
 	for (i = 0; !TUTORIAL[i].empty(); i++){
@@ -46,7 +44,7 @@ void Renderer::draw_splash(Game &go, XInfo &xinfo){
 }
 
 void Renderer::draw_game_over(Game &go, XInfo &xinfo){
-	const char *SURVIVE = go.player.dead ? 
+	const string SURVIVE = go.player.dead ? 
 		"You are dead." : "Congratulations! You survived!";
 	// clean canvas
 	XFillRectangle(xinfo.display,
@@ -56,8 +54,7 @@ void Renderer::draw_game_over(Game &go, XInfo &xinfo){
 
 	XDrawString(xinfo.display,xinfo.pixmap[XInfo::SPLASH_SCREEN],
 		xinfo.gc[XInfo::TITLE_FONT],
-		30,50,SURVIVE,strlen(SURVIVE));
-		
+		30,50,SURVIVE.c_str(),SURVIVE.size());
 
 	std::stringstream ss;
 	ss << "Your score is " << go.score() <<'.';

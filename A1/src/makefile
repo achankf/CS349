@@ -7,7 +7,7 @@ DEBUG = -Werror
 DEBUG = -DDEBUG -Werror
 CXXFLAGS = $(DEBUG) -pedantic-errors -Wall -std=c++0x -march=native $(OLEVEL) -pipe
 OBJECTS = $(SOURCES:.cc=.o)
-EXE = start
+EXE = start.exe
 
 all: $(EXE)
 

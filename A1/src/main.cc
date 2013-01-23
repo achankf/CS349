@@ -117,12 +117,10 @@ void handle_keypress(Game &go, Renderer &rn, XInfo &xinfo, XEvent &event,
 }
 
 void handle_resize(XEvent &event,Game &go, Renderer &rn, XInfo &xinfo){
-#if 1
 	XWindowAttributes windowInfo;
 	XGetWindowAttributes(xinfo.display, xinfo.window, &windowInfo);
 	unsigned int new_width = windowInfo.width;
 	unsigned int new_height = windowInfo.height;
-#endif
 	rn.update_attributes(go, xinfo, new_width, new_height);
 
 	xinfo.change_window_dim(rn.dim);
@@ -138,6 +136,7 @@ ERROR_CODES event_loop(int argc, char **argv, XInfo &xinfo){
 	unsigned long lastRepaint = 0, end = 0;
 
 	bool redraw_splash = true;
+	bool redraw_game_over = true;
 
 	// event loop
 	for(XEvent event;;){
@@ -159,6 +158,7 @@ ERROR_CODES event_loop(int argc, char **argv, XInfo &xinfo){
 					break;
 				case Expose:
 					redraw_splash = true;
+					redraw_game_over = true;
 					break;
 				case ConfigureNotify:
 			//		handle_resize(event,go,rn,xinfo);
@@ -172,7 +172,10 @@ ERROR_CODES event_loop(int argc, char **argv, XInfo &xinfo){
 
 		// either draw splash screen or update game
 		if (go.game_over || go.player.dead){ // be it dead of alive
-			rn.draw_game_over(go,xinfo);
+			if (redraw_game_over){
+				rn.draw_game_over(go,xinfo);
+				redraw_game_over = false;
+			}
 		} else if (rn.show_splash){
 			if (redraw_splash){ // redraw only if the splash is damaged
 				rn.draw_splash(go,xinfo);
@@ -202,6 +205,7 @@ SKIP_DRAWING:
 
 int main(int argc, char **argv){
 	XInfo xinfo(argc, argv);
+	srand(now());
 	// a loop to infinite loops
 	// take advantage of scopings and destructors for retries
 	while(event_loop(argc, argv, xinfo) != EXIT);

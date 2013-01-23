@@ -29,15 +29,15 @@
 #define PLAYER_WIDTH_PROP 10
 #define PLAYER_HEIGHT_PROP 25
 
+// gameplay
+#define PLAYER_FIRE_COOL_DOWN 15
+
 // moving object magnitude
 #define ACCELERATION 0.3
 #define MAX_SPEED 10
 #define PROPEL_SPEED 50
 #define MISSLE_SPEED 2
 #define MISSILE_INERTIA 0.05
-
-// gameplay
-#define PLAYER_FIRE_COOL_DOWN 15
 
 /* a cannon spawns when (rand() % CANNON_TOTAL) < CANNON_SPAWN) */
 #define CANNON_SPAWN 30

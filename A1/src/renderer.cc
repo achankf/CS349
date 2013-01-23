@@ -103,6 +103,7 @@ void Renderer::repaint(Game &go, XInfo &xinfo){
 					y * final_blockside_len);
 	}
 
+	// draw the missiles
 	for (auto it = go.missiles.begin(), end = go.missiles.end(); it != end; it++){
 		if (!within_focus_x(it->getx() / final_blockside_len, 
 			it->gety() / final_blockside_len, missile_dim.first)) continue;

@@ -43,26 +43,28 @@ void update_game_helicopter_action(Game &go,bool keypressed_record[]){
 		go.player.move_backward();
 	if (keypressed_record[KEYP_FIRE])
 		go.player.fire(go);
-	if (keypressed_record[KEYP_BRAKE])
+	if (keypressed_record[KEYP_BRAKE]){
 		go.player.brake();
+		go.propel = false;
+	}
 }
 
 void handle_keypress_special(XEvent &event, bool keypressed_record[]){
 	int key_pressed = XLookupKeysym(&event.xkey, 0);
 	switch(key_pressed){
-		case 'k': // vim bindings :) -- fall-through
+		case 'k': // vi key bindings :) -- fall-through
 		case XK_Up:
 			keypressed_record[KEYP_UP] = !keypressed_record[KEYP_UP];
 			break;
-		case 'j': // vim bindings :) -- fall-through
+		case 'j': // vi key bindings :) -- fall-through
 		case XK_Down:
 			keypressed_record[KEYP_DOWN] = !keypressed_record[KEYP_DOWN];
 			break;
-		case 'h': // vim bindings :) -- fall-through
+		case 'h': // vi key bindings :) -- fall-through
 		case XK_Left:
 			keypressed_record[KEYP_LEFT] = !keypressed_record[KEYP_LEFT];
 			break;
-		case 'l': // vim bindings :) -- fall-through
+		case 'l': // vi key bindings :) -- fall-through
 		case XK_Right:
 			keypressed_record[KEYP_RIGHT] = !keypressed_record[KEYP_RIGHT];
 			break;
@@ -76,8 +78,7 @@ void handle_keypress_special(XEvent &event, bool keypressed_record[]){
 			break;
 	}
 }
-void handle_keypress(Game &go, Renderer &rn, XInfo &xinfo, XEvent &event,
-	bool *redraw_splash, bool keypressed_record[]){
+void handle_keypress(Game &go, Renderer &rn, XInfo &xinfo, XEvent &event, bool keypressed_record[]){
 	int key_pressed = XLookupKeysym(&event.xkey, 0);
 	handle_keypress_special(event,keypressed_record);
 	switch(key_pressed){
@@ -85,13 +86,10 @@ void handle_keypress(Game &go, Renderer &rn, XInfo &xinfo, XEvent &event,
 		case 'r':
 			throw RETRY;
 			break;
-		case 'X':
-		case 'x':
-			go.player.brake();
-			break;
-		case 'B':
+		case 'B': // emergency brake
 		case 'b':
-			go.player.emergency_brake(); // aka "easy" mode
+			go.propel = false;
+			go.player.emergency_brake();
 			go.num_b_brakes++;
 			break;
 		case 'Q':
@@ -99,7 +97,6 @@ void handle_keypress(Game &go, Renderer &rn, XInfo &xinfo, XEvent &event,
 			throw EXIT;
 		case 'F':
 		case 'f':
-			*redraw_splash = true;
 			rn.show_splash = !rn.show_splash;
 			break;
 		case 'P':
@@ -119,8 +116,11 @@ void handle_keypress(Game &go, Renderer &rn, XInfo &xinfo, XEvent &event,
 void handle_resize(XEvent &event,Game &go, Renderer &rn, XInfo &xinfo){
 	XWindowAttributes windowInfo;
 	XGetWindowAttributes(xinfo.display, xinfo.window, &windowInfo);
-	unsigned int new_width = windowInfo.width;
-	unsigned int new_height = windowInfo.height;
+	dim_t new_width = windowInfo.width;
+	dim_t new_height = windowInfo.height;
+
+	// check whether there's change
+	if (rn.dim.first == new_width && rn.dim.second == new_height) return;
 	rn.update_attributes(go, xinfo, new_width, new_height);
 
 	xinfo.change_window_dim(rn.dim);
@@ -135,9 +135,6 @@ ERROR_CODES event_loop(int argc, char **argv, XInfo &xinfo){
 	const unsigned long sleep_period = 1000000/FPS;
 	unsigned long lastRepaint = 0, end = 0;
 
-	bool redraw_splash = true;
-	bool redraw_game_over = true;
-
 	// event loop
 	for(XEvent event;;){
 		if (XPending(xinfo.display) > 0){
@@ -150,18 +147,11 @@ ERROR_CODES event_loop(int argc, char **argv, XInfo &xinfo){
 					break;
 				case KeyPress:
 					try{
-						handle_keypress(go, rn, xinfo, event, &redraw_splash, keypressed_record);
+						handle_keypress(go, rn, xinfo, event, keypressed_record);
 					} catch(ERROR_CODES err){
 						// "exit" or "retry" gracefully -- call deconstructors
 						return err; 
 					}
-					break;
-				case Expose:
-					redraw_splash = true;
-					redraw_game_over = true;
-					break;
-				case ConfigureNotify:
-			//		handle_resize(event,go,rn,xinfo);
 					break;
 			}
 		}
@@ -171,28 +161,21 @@ ERROR_CODES event_loop(int argc, char **argv, XInfo &xinfo){
 			goto SKIP_DRAWING;
 
 		// either draw splash screen or update game
-		if (go.game_over || go.player.dead){ // be it dead of alive
-			if (redraw_game_over){
-				rn.draw_game_over(go,xinfo);
-				redraw_game_over = false;
-			}
+		if (event.type == ConfigureNotify){
+			// consume the rest of the if
+		} else if (go.game_over || go.player.dead){ // be it dead of alive
+			rn.draw_game_over(go,xinfo);
 		} else if (rn.show_splash){
-			if (redraw_splash){ // redraw only if the splash is damaged
-				rn.draw_splash(go,xinfo);
-			}	
+			rn.draw_splash(go,xinfo);
 		} else {
 			// update game
 			update_game_helicopter_action(go,keypressed_record);
 			go.update(cl,rn);
 			rn.repaint(go,xinfo);
-			goto NO_HANDLE_RESIZE;
 		}
 
 		handle_resize(event,go,rn,xinfo);
 
-NO_HANDLE_RESIZE:
-		// reset expose flag
-		redraw_splash = false;
 		// update time
 		lastRepaint = now();
 

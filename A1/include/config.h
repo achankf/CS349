@@ -54,21 +54,15 @@
 
 #define NO_CANNON -1
 
+// new types defs
 typedef float magnitude_t;
 typedef char height_t;
 typedef unsigned char cannon_fire_time_t;
-
-//#define GAME_TITLE "Alfred Chan 255"
+typedef unsigned short int dim_t;
+typedef short int coor_t;
 
 extern const std::string GAME_TITLE;
 extern const std::string TUTORIAL[];
-
-enum COLOUR_TYPE{
-	C_GREY,
-	C_BLUE,
-	C_SIZE
-};
-extern const char *COLOURS[];
 
 #ifdef DEBUG
 #include "func.h"

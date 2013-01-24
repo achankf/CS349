@@ -11,7 +11,8 @@
 #include <X11/Xutil.h>
 using namespace std;
 
-#define ALL_EVENT_MASKS ( ButtonPressMask | ButtonReleaseMask | KeyReleaseMask | StructureNotifyMask | KeyPressMask | ExposureMask)
+#define ALL_EVENT_MASKS ( KeyReleaseMask | StructureNotifyMask | KeyPressMask | ExposureMask)
+const char *COLOURS[] = {"#094e00","#F58D1D","#6B6A69","#000080","#1a30ff","#0011b3","#4d5eff","#0016e6"};
 
 /* constructor */
 XInfo::XInfo(int argc, char **argv){
@@ -67,26 +68,34 @@ XInfo::XInfo(int argc, char **argv){
 	}
 
 	/* create graphic contexts */
-	XSetForeground(display, gc[DEFAULT], black);
-	XSetBackground(display, gc[DEFAULT], white);
-	XSetFillStyle(display, gc[DEFAULT], FillSolid);
-	XSetLineAttributes(display, gc[DEFAULT], 1, LineSolid, CapButt, JoinRound);
+	XSetForeground(display, gc[GC_DEFAULT], black);
+	XSetBackground(display, gc[GC_DEFAULT], white);
+	XSetFillStyle(display, gc[GC_DEFAULT], FillSolid);
+	XSetLineAttributes(display, gc[GC_DEFAULT], 1, LineSolid, CapButt, JoinRound);
 
-	XSetForeground(display, gc[INVERSE_BACKGROUND], white);
-	XSetBackground(display, gc[INVERSE_BACKGROUND], black);
+	XSetForeground(display, gc[GC_INVERSE_BACKGROUND], white);
+	XSetBackground(display, gc[GC_INVERSE_BACKGROUND], black);
 
 	/* allocate fonts */
-	font[F_TITLE] = XLoadFont(display,"*x16");
-	XSetForeground(display, gc[TITLE_FONT], black);
-	XSetBackground(display, gc[TITLE_FONT], white);
-	XSetFont(display,gc[TITLE_FONT], font[F_TITLE]);
+	title_font_struct = XLoadQueryFont(display,"-*-*-bold-*-*-*-*-*-*-*-*-*-*-*");
+	if (!title_font_struct){
+		title_font_struct = XLoadQueryFont(display,"fixed");
+	}
+	XSetFont(display,gc[GC_TITLE_FONT], title_font_struct->fid);
  
+	/* set up for colours and allocate gc for each */
 	colourmap = XDefaultColormap(display, screen);
-	/* allocate colours */
-	for (int i = 0; i < C_SIZE; i++){
+	for (int i = 0; i < NUM_COLOUR; i++){
 		XParseColor(display, colourmap, COLOURS[i], colours + i);
 		XAllocColor(display, colourmap, colours + i);
+		colour_gc[i] = XCreateGC(display, window, 0, 0);
+		XSetForeground(display, colour_gc[i], colours[i].pixel);
 	}
+
+	// set gc attributes for special rendering objects
+	XSetLineAttributes(display, gc[GC_HELICOPTER], 5, LineSolid, CapButt, JoinRound);
+	XSetForeground(display, gc[GC_HELICOPTER], colours[C_PLAYER].pixel);
+	XSetForeground(display, gc[GC_CANNON], colours[C_CANNON].pixel);
 
 	/* allocate pixmaps */
 	int depth = DefaultDepth(display, DefaultScreen(display));
@@ -100,42 +109,41 @@ XInfo::XInfo(int argc, char **argv){
 	/* Put the window on the screen. */
 	XMapRaised( display, window );
 	
-	XAutoRepeatOff(display);
 	XFlush(display);
 }
 
 XInfo::~XInfo(){
-	XAutoRepeatOn(display);
 	// free every gc's
 	for (int i = 0; i < NUM_GC_TYPE; i++){
 		XFree(gc[i]);
 	}
+	for (int i = 0; i < NUM_COLOUR; i++){
+		XFree(colour_gc[i]);
+	}
 	for (int i = 0; i < NUM_PIXMAP_TYPE; i++){
 		XFreePixmap(display,pixmap[i]);
 	}
-	for (int i = 0; i < NUM_FONT_TYPE; i++){
-		XUnloadFont(display,font[i]);
-	}
+	XFreeFont(display,title_font_struct);
 	XCloseDisplay(display);
 }
 
-unsigned int XInfo::dwidth(){
+dim_t XInfo::dwidth(){
 	return ddim.first;
 }
 
-unsigned int XInfo::dheight(){
+dim_t XInfo::dheight(){
 	return ddim.second;
 }
 
-void XInfo::change_window_dim(std::pair<unsigned int, unsigned int> &tar){
+void XInfo::change_window_dim(std::pair<dim_t, dim_t> &tar){
 	XResizeWindow(display,window,tar.first,tar.second);
 }
 
-Pixmap XInfo::new_pixmap(PIXMAP_TYPE pt, std::pair<unsigned int, unsigned int> &dim){
+Pixmap XInfo::new_pixmap(PIXMAP_TYPE pt, std::pair<dim_t, dim_t> &dim, GC_TYPE gc_type){
 	int depth = DefaultDepth(display, DefaultScreen(display));
 	XFreePixmap(display,pixmap[pt]);
 	pixmap[pt] = XCreatePixmap(display, window, dim.first, dim.second, depth);
 	// clean the pixmap
-	XFillRectangle(display, pixmap[pt], gc[INVERSE_BACKGROUND], 0, 0, dim.first,dim.second);
+	XFillRectangle(display, pixmap[pt], gc[gc_type], 0, 0, dim.first,dim.second);
 	return pixmap[pt];
 }

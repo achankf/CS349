@@ -16,13 +16,10 @@ Renderer::Renderer(Game &go, XInfo &xinfo) :
 	focus_bound_high(0),
 	show_splash(true)
 {
-	update_attributes(go, xinfo, DEFAULT_WIDTH, DEFAULT_HEIGHT, true);
+	update_attributes(go, xinfo, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 }
 
-void Renderer::update_attributes(Game &go, XInfo &xinfo, unsigned int new_width, unsigned int new_height, bool init){
-	// check whether there's change
-	if (!init && dim.first == new_width && dim.second == new_height) return;
-
+void Renderer::update_attributes(Game &go, XInfo &xinfo, dim_t new_width, dim_t new_height){
 	// make sure the width is in bound
 	if (new_width > xinfo.dwidth()){
 		dim.first = xinfo.dwidth();
@@ -57,6 +54,7 @@ void Renderer::update_attributes(Game &go, XInfo &xinfo, unsigned int new_width,
 	redraw_bomb(xinfo);
 	redraw_cannon(xinfo);
 	redraw_structure(go,xinfo);
+	redraw_splash(go,xinfo);
 
 #ifdef DEBUG
 	{
@@ -71,7 +69,7 @@ void Renderer::update_attributes(Game &go, XInfo &xinfo, unsigned int new_width,
 
 void Renderer::repaint(Game &go, XInfo &xinfo){
 	Display *display = xinfo.display;
-	GC gc = xinfo.gc[XInfo::DEFAULT];
+	GC gc = xinfo.gc[XInfo::GC_DEFAULT];
 	Pixmap pixmap = xinfo.pixmap[XInfo::GAME_SCREEN];
 
 	recalculate_focus_bound(go);
@@ -80,7 +78,7 @@ void Renderer::repaint(Game &go, XInfo &xinfo){
 
 	// clean canvas
 	XFillRectangle(display, pixmap,
-		xinfo.gc[XInfo::INVERSE_BACKGROUND],
+		xinfo.gc[XInfo::GC_INVERSE_BACKGROUND],
 		0, 0, dim.first, dim.second);
 
 	// draw structures (background)
@@ -116,13 +114,13 @@ void Renderer::repaint(Game &go, XInfo &xinfo){
 
 	// copy the buffer into the window
 	XCopyArea(xinfo.display, xinfo.pixmap[XInfo::GAME_SCREEN],
-		xinfo.window,  xinfo.gc[XInfo::DEFAULT],
+		xinfo.window,  xinfo.gc[XInfo::GC_DEFAULT],
 		0, 0, dim.first, dim.second, 0, 0);
 }
 
-bool Renderer::within_range(int x, int y, int width){
+bool Renderer::within_range(coor_t x, coor_t y, dim_t width){
 	return x >= focus_bound_low 
-		&& (x * (int) final_blockside_len +width)/ (int)final_blockside_len <= focus_bound_high
+		&& (x * final_blockside_len +width)/ final_blockside_len <= focus_bound_high
 		&& y > 0;
 }
 

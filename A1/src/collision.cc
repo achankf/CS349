@@ -13,7 +13,7 @@ Collision::Collision(Game &go, Renderer &rn)
 {
 }
 
-bool Collision::inbound(int x, int y){
+bool Collision::inbound(coor_t x, coor_t y){
 	return x >= 0 && x < XBLOCK_NUM
 		&& y >= 0 && y < YBLOCK_NUM;
 }
@@ -21,10 +21,10 @@ bool Collision::inbound(int x, int y){
 // check bombs collision against structures, cannons, and the player
 bool Collision::operator()(Bomb &mi){
 	magnitude_t x = mi.getx(), y = mi.gety();
-	int s0 = x / rn.final_blockside_len;
-	int t0 = y / rn.final_blockside_len;
-	int s1 = (x + rn.bomb_dim.first) / rn.final_blockside_len;
-	int t1 = (y + rn.bomb_dim.second) / rn.final_blockside_len;
+	coor_t s0 = x / rn.final_blockside_len;
+	coor_t t0 = y / rn.final_blockside_len;
+	coor_t s1 = (x + rn.bomb_dim.first) / rn.final_blockside_len;
+	coor_t t1 = (y + rn.bomb_dim.second) / rn.final_blockside_len;
 
 	// out of bound
 	if (!inbound(s0,t0) || !inbound(s1,t1)) return true;
@@ -56,7 +56,7 @@ bool Collision::operator()(Bomb &mi){
 	if (go.god_mode) return false;
 
 	// check collicsion with the player
-	int px = go.player.getx(), py = go.player.gety();
+	coor_t px = go.player.getx(), py = go.player.gety();
 	if (go.player.team != mi.team 
 		&& collide(x,y,rn.bomb_dim, px,py,rn.player_dim)){
 		go.player.dead = true;
@@ -65,16 +65,16 @@ bool Collision::operator()(Bomb &mi){
 	return false;
 }
 
-bool Collision::collide(int x, int y, pair<unsigned int, unsigned int> &dim,
-	int tarx, int tary, pair<unsigned int, unsigned int> &tardim){
+bool Collision::collide(coor_t x, coor_t y, pair<dim_t, dim_t> &dim,
+	coor_t tarx, coor_t tary, pair<dim_t, dim_t> &tardim){
 
-	int x1 = x + dim.first;
-	int y1 = y + dim.second;
+	coor_t x1 = x + dim.first;
+	coor_t y1 = y + dim.second;
 
-	int s0 = tarx;
-	int s1 = tarx + tardim.first;
-	int t0 = tary;
-	int t1 = tary + tardim.second;
+	coor_t s0 = tarx;
+	coor_t s1 = tarx + tardim.first;
+	coor_t t0 = tary;
+	coor_t t1 = tary + tardim.second;
 	
 	if (
 		((x >= s0 && x <= s1) || (x1 >= s0 && x1 <= s1))
@@ -93,10 +93,10 @@ bool Collision::operator()(Player &pl){
 	if (go.god_mode) return false;
 
 	magnitude_t x = pl.getx(), y = pl.gety();
-	int s0 = x / rn.final_blockside_len;
-	int t0 = y / rn.final_blockside_len;
-	int s1 = (x + rn.player_dim.first) / rn.final_blockside_len;
-	int t1 = (y + rn.player_dim.second) / rn.final_blockside_len;
+	coor_t s0 = x / rn.final_blockside_len;
+	coor_t t0 = y / rn.final_blockside_len;
+	coor_t s1 = (x + rn.player_dim.first) / rn.final_blockside_len;
+	coor_t t1 = (y + rn.player_dim.second) / rn.final_blockside_len;
 
 	if (go.structure_map[s0][t0] 
 		|| go.structure_map[s1][t1]
@@ -106,7 +106,7 @@ bool Collision::operator()(Player &pl){
 		return true;
 	}
 
-	pair<unsigned int, unsigned int> cannon_dim(rn.final_blockside_len / 2, rn.final_blockside_len);
+	pair<dim_t, dim_t> cannon_dim(rn.final_blockside_len / 2, rn.final_blockside_len);
 	// do a "cheap" evaluation first then do the real collision check .. for all 4 cases
 	if (
 		(go.cannon_height_map[s0] == t0 && collide(x,y,rn.player_dim, cannon_x(s0),cannon_y(t0),cannon_dim))
@@ -121,9 +121,9 @@ bool Collision::operator()(Player &pl){
 	return false;
 }
 
-int Collision::cannon_x(int s){
+coor_t Collision::cannon_x(coor_t s){
 	return s * rn.final_blockside_len + rn.final_blockside_len / 4;
 }
-int Collision::cannon_y(int t){
+coor_t Collision::cannon_y(coor_t t){
 	return t * rn.final_blockside_len;
 }

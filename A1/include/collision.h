@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <utility>
+#include "config.h"
 
 class Game;
 class Renderer;
@@ -15,13 +16,12 @@ class Collision{
 
 public:
 	Collision(Game &go, Renderer &rn);
-	Collision(Renderer &rn, int xblock_num, int yblock_num);
 	bool operator()(Bomb &mi);
 	bool operator()(Player &pl);
-	bool inbound(int x, int y);
-	bool collide(int x, int y, std::pair<unsigned int, unsigned int> &dim, int tarx, int tary, std::pair<unsigned int, unsigned int> &tardim);
-	int cannon_x(int s);
-	int cannon_y(int t);
+	bool inbound(coor_t x, coor_t y);
+	bool collide(coor_t x, coor_t y, std::pair<dim_t, dim_t> &dim, coor_t tarx, coor_t tary, std::pair<dim_t, dim_t> &tardim);
+	coor_t cannon_x(coor_t s);
+	coor_t cannon_y(coor_t t);
 };
 
 #endif

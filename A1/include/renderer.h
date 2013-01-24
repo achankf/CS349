@@ -11,25 +11,26 @@ class Game;
 
 class Renderer{
 public: /* members */
-	std::pair<unsigned int, unsigned int> dim;
+	std::pair<dim_t, dim_t> dim;
 	magnitude_t focus;
 	int focus_bound_low, focus_bound_high;
 	bool show_splash;
-	unsigned int final_blockside_len;
-	std::pair<unsigned int, unsigned int> player_dim, bomb_dim;
+	dim_t final_blockside_len;
+	std::pair<dim_t, dim_t> player_dim, bomb_dim;
 
 public: /* functions */
 	Renderer(Game &, XInfo &);
-	void update_attributes(Game &go, XInfo &xinfo, unsigned int new_width, unsigned int new_height, bool init = false);
+	void update_attributes(Game &go, XInfo &xinfo, dim_t new_width, dim_t new_height);
 	void repaint(Game &, XInfo &);
-	bool within_range(int x, int y, int width);
+	bool within_range(coor_t x, coor_t y, dim_t width);
 	void redraw_bomb(XInfo &);
 	void redraw_player(XInfo &);
 	void redraw_cannon(XInfo &);
 	void redraw_structure(Game &, XInfo &);
-	void draw_structure(XInfo &, int xcoor, int ycoor);
+	void draw_structure(XInfo &, coor_t xcoor, coor_t ycoor, int colour_id);
 	void draw_splash(Game &, XInfo &);
 	void draw_game_over(Game &,XInfo &);
+	void redraw_splash(Game &, XInfo &);
 private: /* functions */
 	void recalculate_focus_bound(Game &);
 };

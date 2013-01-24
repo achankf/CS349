@@ -3,7 +3,6 @@
 const std::string TUTORIAL[] = {
 "Objective -- bomb as many cannon platforms as possible",
 "Losing condition -- get hit by enemy missiles or hit on buildings",
-"Hint -- DO NOT spam missiles, as each missiles lowers your score",
 " ",
 "ARROW KEYS -- accelerate the helicopter in the direction of the key",
 "Alternatively, you can use the vi key bindings for directions -- h,j,k,l",

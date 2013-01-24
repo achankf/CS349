@@ -2,6 +2,17 @@ Before reading, set tabspace to 2
 	In vim:
 		set ts=2
 
+Author: Alfred Chan
+Title: Readme for CS349 Assignment 1
+
+Hints:
+	* while staying in the sky is safer, it also makes bomb more difficult to hit
+	* propel with 'c' when you are bored
+	* DO NOT spam missiles, as each missiles fired will lowers your score
+	* total brake 'b' may save your life
+	* if you survive, you get bonus points
+	* if you think you are so pro, then use the vi key bindings for direction and restrict yourself from using auto-brake 'x', total-brake 'b', and god-mode 'g'
+
 Enhancements:
 	* colours were added.
 			Helicopter is green.

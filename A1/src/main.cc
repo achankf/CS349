@@ -123,14 +123,16 @@ void handle_keypress(Game &go, Renderer &rn, XInfo &xinfo, XEvent &event, bool k
 	}
 }
 
-void handle_resize(XEvent &event,Game &go, Renderer &rn, XInfo &xinfo, pair<dim_t,dim_t> prev){
+void handle_resize(XEvent &event,Game &go, Renderer &rn, XInfo &xinfo, pair<dim_t,dim_t> prev, bool track_prev){
 	XWindowAttributes windowInfo;
 	XGetWindowAttributes(xinfo.display, xinfo.window, &windowInfo);
 	dim_t new_width = windowInfo.width;
 	dim_t new_height = windowInfo.height;
 
+	if (track_prev){
 	prev.first = new_width;
 	prev.second = new_height;
+	}
 
 	// check whether there's change
 	if ((rn.dim.first == new_width && rn.dim.second == new_height)
@@ -149,6 +151,7 @@ ERROR_CODES event_loop(int argc, char **argv, XInfo &xinfo){
 	const unsigned long sleep_period = 1000000/FPS;
 	unsigned long lastRepaint = 0, end = 0;
 	pair<dim_t,dim_t> prev(0,0);
+	bool track_prev = false;
 
 	// event loop
 	for(XEvent event;;){
@@ -177,6 +180,7 @@ ERROR_CODES event_loop(int argc, char **argv, XInfo &xinfo){
 
 		// either draw splash screen or update game
 		if (event.type == ConfigureNotify){
+			track_prev = false;
 			// consume the rest of the if
 		} else if (go.game_over || go.player.dead){ // be it dead of alive
 			rn.draw_game_over(go,xinfo);
@@ -189,7 +193,8 @@ ERROR_CODES event_loop(int argc, char **argv, XInfo &xinfo){
 			rn.repaint(go,xinfo);
 		}
 
-		handle_resize(event,go,rn,xinfo,prev);
+		handle_resize(event,go,rn,xinfo,prev,track_prev);
+		track_prev = true;
 
 		// update time
 		lastRepaint = now();

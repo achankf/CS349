@@ -123,16 +123,20 @@ void handle_keypress(Game &go, Renderer &rn, XInfo &xinfo, XEvent &event, bool k
 	}
 }
 
-void handle_resize(XEvent &event,Game &go, Renderer &rn, XInfo &xinfo){
+void handle_resize(XEvent &event,Game &go, Renderer &rn, XInfo &xinfo, pair<dim_t,dim_t> prev){
 	XWindowAttributes windowInfo;
 	XGetWindowAttributes(xinfo.display, xinfo.window, &windowInfo);
 	dim_t new_width = windowInfo.width;
 	dim_t new_height = windowInfo.height;
 
-	// check whether there's change
-	if (rn.dim.first == new_width && rn.dim.second == new_height) return;
-	rn.update_attributes(go, xinfo, new_width, new_height);
+	prev.first = new_width;
+	prev.second = new_height;
 
+	// check whether there's change
+	if ((rn.dim.first == new_width && rn.dim.second == new_height)
+		|| (new_width == prev.first && new_height == prev.second)) return;
+
+	rn.update_attributes(go, xinfo, new_width, new_height);
 	xinfo.change_window_dim(rn.dim);
 }
 
@@ -144,6 +148,7 @@ ERROR_CODES event_loop(int argc, char **argv, XInfo &xinfo){
 
 	const unsigned long sleep_period = 1000000/FPS;
 	unsigned long lastRepaint = 0, end = 0;
+	pair<dim_t,dim_t> prev(0,0);
 
 	// event loop
 	for(XEvent event;;){
@@ -184,7 +189,7 @@ ERROR_CODES event_loop(int argc, char **argv, XInfo &xinfo){
 			rn.repaint(go,xinfo);
 		}
 
-		handle_resize(event,go,rn,xinfo);
+		handle_resize(event,go,rn,xinfo,prev);
 
 		// update time
 		lastRepaint = now();

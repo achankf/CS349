@@ -128,7 +128,7 @@ void Renderer::recalculate_focus_bound(Game &go){
 	if (go.propel){
 		focus += PROPEL_SPEED;
 	} else {
-		focus += go.scroll_factor();
+		focus += SCROLL_FACTOR;
 	}
 	focus_bound_low = (focus - final_blockside_len) / final_blockside_len;
 	focus_bound_high = (dim.first + focus + final_blockside_len) / final_blockside_len;

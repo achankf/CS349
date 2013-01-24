@@ -23,7 +23,6 @@ class Game {
 	void update_scroll_factor();
 	void generate_structure_by_height(int height, int from, int to, bool build_structure, int rand_modulo, int base_rand, int rand_target);
 
-	float _scroll_factor;
 public: /* members */
 	Player player;
 	std::list <Bomb> bombs;
@@ -33,10 +32,9 @@ public: /* members */
 	/* using "maps" for speed and memory optimization -- not in separate class */
 
 	/* map for structures */
-	std::vector < std::vector< height_t > > structure_map; // a map of structures
+	std::vector < std::vector< height_t > > structure_map;
 
-	/* cannon-related maps */
-	// a list of cannons, based on the y-axis
+	/* cannon-related maps -- a list of cannons, based on the y-axis */
 	std::vector < height_t > cannon_height_map;
 	// counts how many "repaints" before a cannon fires
 	std::vector < cannon_fire_time_t > cannon_fire_count;
@@ -44,9 +42,7 @@ public: /* members */
 public: /* functions */
 	Game();
 	void update(Collision &cl, Renderer &rn);
-	//void normalize_coor(int &x, int &y);
 	int score();
-	float scroll_factor();
 };
 
 #endif

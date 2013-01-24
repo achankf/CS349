@@ -13,8 +13,6 @@
 
 // rendering
 #define SCROLL_FACTOR 1
-#define SCROLL_FACTOR_MAX 5
-#define SCROLL_DELTA 0.0001
 #define FPS 30
 
 // number of blocks in a level
@@ -34,8 +32,8 @@
 #define PLAYER_FIRE_COOL_DOWN 15
 
 // moving object magnitude
-#define ACCELERATION 0.3
-#define MAX_SPEED 10
+#define ACCELERATION 0.8
+#define MAX_SPEED 15
 #define PROPEL_SPEED 50
 #define MISSLE_SPEED 2
 #define BOMB_INERTIA 0.05

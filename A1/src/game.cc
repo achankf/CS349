@@ -13,7 +13,6 @@ cannon_fire_time_t Game::random_fire_time(){
 }
 
 Game::Game() : 
-	_scroll_factor(SCROLL_FACTOR),
 	player(DEFAULT_HEIGHT/2,50,0,0),
 	num_fires(0),
 	num_kills(0),
@@ -135,8 +134,6 @@ void Game::setup(){
 }
 
 void Game::update(Collision &cl, Renderer &rn){
-	update_scroll_factor();
-
 	// decrease cool down
 	player.fire_cool_down--;
 	player.update_position();
@@ -174,15 +171,4 @@ int Game::score(){
 		+ num_kills * KILL_BONUS
 		- num_fires * FIRE_PENALTY
 		- num_b_brakes * BRAKE_PENALTY);
-}
-
-void Game::update_scroll_factor(){
-	_scroll_factor += SCROLL_DELTA;
-	if (_scroll_factor > SCROLL_FACTOR_MAX ){
-		_scroll_factor = SCROLL_FACTOR_MAX;
-	}
-}
-
-float Game::scroll_factor(){
-	return _scroll_factor;
 }

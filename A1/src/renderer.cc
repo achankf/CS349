@@ -14,7 +14,9 @@ Renderer::Renderer(Game &go, XInfo &xinfo) :
 	focus(0),
 	focus_bound_low(0),
 	focus_bound_high(0),
-	show_splash(true)
+	show_splash(true),
+	scroll(0),
+	dynamic_scroll(0)
 {
 	update_attributes(go, xinfo, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 }
@@ -125,10 +127,16 @@ bool Renderer::within_range(coor_t x, coor_t y, dim_t width){
 }
 
 void Renderer::recalculate_focus_bound(Game &go){
+	dynamic_scroll += DYNAMIC_SCROLL_FACTOR;
+	magnitude_t temp;
 	if (go.propel){
 		focus += PROPEL_SPEED;
 	} else {
-		focus += SCROLL_FACTOR;
+		// make sure the scrolling is always positive and doesn't go very quickly
+		temp = SCROLL_FACTOR + dynamic_scroll + scroll;
+		if (temp < 0) focus += SCROLL_FACTOR;
+		else if (temp > MAX_SCROLL_FACTOR) focus += MAX_SCROLL_FACTOR;
+		else focus += temp;
 	}
 	focus_bound_low = (focus - final_blockside_len) / final_blockside_len;
 	focus_bound_high = (dim.first + focus + final_blockside_len) / final_blockside_len;

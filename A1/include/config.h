@@ -13,6 +13,8 @@
 
 // rendering
 #define SCROLL_FACTOR 1
+#define MAX_SCROLL_FACTOR 5
+#define DYNAMIC_SCROLL_FACTOR 0.001
 #define FPS 30
 
 // number of blocks in a level

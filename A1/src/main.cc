@@ -110,6 +110,16 @@ void handle_keypress(Game &go, Renderer &rn, XInfo &xinfo, XEvent &event, bool k
 		case 'c':
 		case 'C':
 			go.propel = !go.propel;
+			break;
+		case '[':
+			rn.scroll -= 0.5;
+			if (rn.scroll < -MAX_SCROLL_FACTOR) rn.scroll = -MAX_SCROLL_FACTOR;
+			break;
+		case ']':
+			rn.scroll += 0.5;
+			if (rn.scroll > MAX_SCROLL_FACTOR) rn.scroll = MAX_SCROLL_FACTOR;
+			break;
+			break;
 	}
 }
 

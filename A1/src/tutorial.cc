@@ -12,6 +12,8 @@ const std::string TUTORIAL[] = {
 "c/C -- propel helicopter at a very high speed",
 "b/B -- total brake, helicopter halts immediately (each time inflicts a score penalty)",
 " ",
+"[   -- decrease scrolling speed",
+"]   -- increase scrolling speed",
 "p/P -- suicide",
 "g/G -- grader (god) mode, aka you won't get killed unless you press the suicide button",
 "r/R -- restart the game",

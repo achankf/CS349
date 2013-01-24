@@ -77,7 +77,7 @@ XInfo::XInfo(int argc, char **argv){
 	XSetBackground(display, gc[GC_INVERSE_BACKGROUND], black);
 
 	/* allocate fonts */
-	title_font_struct = XLoadQueryFont(display,"-*-*-bold-*-*-*-*-*-*-*-*-*-*-*");
+	title_font_struct = XLoadQueryFont(display,"-*-*-bold-r-*-*-*-*-*-*-*-*-*-*");
 	if (!title_font_struct){
 		title_font_struct = XLoadQueryFont(display,"fixed");
 	}

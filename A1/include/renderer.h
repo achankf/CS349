@@ -17,6 +17,7 @@ public: /* members */
 	bool show_splash;
 	dim_t final_blockside_len;
 	std::pair<dim_t, dim_t> player_dim, bomb_dim;
+	magnitude_t scroll, dynamic_scroll;
 
 public: /* functions */
 	Renderer(Game &, XInfo &);

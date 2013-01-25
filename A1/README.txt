@@ -1,9 +1,19 @@
-Before reading, set tabspace to 2
+Before reading, you might want to set tabspace to 2, and no text wrap.
 	In vim:
 		set ts=2
+		set nowrap
 
 Author: Alfred Chan
 Title: Readme for CS349 Assignment 1
+
+Installation:
+Compile the game
+	make
+
+Or compile and run the game at once with
+	make run
+
+If you cannot compile, then you might want to see troubleshooting below. Though, I have tested the compilation in the Ubuntu VM.
 
 Hints:
 	* while staying in the sky is safer, it also makes bomb more difficult to hit
@@ -34,10 +44,6 @@ Enhancements:
 				#define XBLOCK_NUM 600
 				though don't change YBLOCK_NUM (or you'll need to change DEFAULT_HEIGHT, too, otherwise resizing may break)
 
-Installation:
-Run the game with
-	make -f run
-
 Troubleshooting:
 Please be warned that if your default library path doesn't contain X11, you have to adjust LDFLAGS in run (makefile)
 	LDFLAGS = -L$(LIBRARY_PATH_OF_X11) -lX11
@@ -50,3 +56,5 @@ For key controls, please refer to the splash screen.
 
 Memory leak:
 My codes do not use any new or malloc, and they call memory deallocation functions for each X allocation function, which are handled by the destructors. So, if there is any memory leak, it's Xlib's fault.
+
+Namely, the only leak that I found is due to font-loading. Xlib probably tried to load everything that is matched by the regex string, and did not free them, despite that I free the font struct pointer in the destructor.

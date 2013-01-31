@@ -7,15 +7,16 @@ CLASS_DIR = $(shell mkdir -p $(_CLASS_DIR_NAME); echo $(_CLASS_DIR_NAME))
 M4_DEFINE = -DM4_PACKAGE_NAME=$(CLASS_DIR)
 
 all: $(CLASSES) $(SOURCES)
-	cp *.class $(CLASS_DIR)
 
 %.java: %.m4
 	m4 $(M4_DEFINE) config $< > $@
+	cp $@ $(CLASS_DIR)
 
 %.class: %.java
-	javac $<
+	javac $(CLASS_DIR)/$<
+	cp $(CLASS_DIR)/$@ .
 
-.phony: clean run go
+.phony: clean run
 clean:
 	rm -rf *.{java,class}
 
@@ -23,8 +24,4 @@ cleanall: clean
 	rm -rf $(CLASS_DIR)
 
 run: $(CLASSES)
-	make # copy class files into CLASS_DIR
-	java $(CLASS_DIR)/Main
-
-go:
 	java $(CLASS_DIR)/Main

@@ -1,5 +1,0 @@
-The folder "m4_files" contains files that will generate Java codes by a m4 preprocessors.
-
-Since Java doesn't have a preprocessor like C, so I just use m4.
-
-Though, the markers do not need install m4 in their VM.

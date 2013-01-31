@@ -3,21 +3,28 @@ M4_MARCO=$(shell find -name "*.m4")
 SOURCES=$(M4_MARCO:.m4=.java)
 CLASSES = $(SOURCES:.java=.class)
 _CLASS_DIR_NAME = doozerSimulator
-CLASS_DIR = $(shell mkdir -p A2/$(_CLASS_DIR_NAME); echo $(_CLASS_DIR_NAME))
+CLASS_DIR = $(shell mkdir -p $(_CLASS_DIR_NAME); echo $(_CLASS_DIR_NAME))
 M4_DEFINE = -DM4_PACKAGE_NAME=$(CLASS_DIR)
 
-all: A2 $(SOURCES) A2/makefile
-
-A2:
-	mkdir -p A2
-
-A2/makefile: maketemplate
-	m4 $(M4_DEFINE) config $< > A2/makefile
+all: $(CLASSES) $(SOURCES)
+	cp *.class $(CLASS_DIR)
 
 %.java: %.m4
 	m4 $(M4_DEFINE) config $< > $@
-	cp $@ A2/$(CLASS_DIR)
 
-.phony: clean
+%.class: %.java
+	javac $<
+
+.phony: clean run go
 clean:
-	rm -rf A2 *.java
+	rm -rf *.{java,class}
+
+cleanall: clean
+	rm -rf $(CLASS_DIR)
+
+run: $(CLASSES)
+	make # copy class files into CLASS_DIR
+	java $(CLASS_DIR)/Main
+
+go:
+	java $(CLASS_DIR)/Main

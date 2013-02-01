@@ -1,1 +1,3 @@
 define(`M4_TITLE',`Alfred Chan 255')dnl
+define(`M4_WINDOW_WIDTH', 800)dnl
+define(`M4_WINDOW_HEIGHT', 600)dnl

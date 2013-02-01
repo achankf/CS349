@@ -9,6 +9,7 @@ final public class Main{
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		GameCanvas canvas = new GameCanvas();
 
+		frame.setSize(M4_WINDOW_WIDTH, M4_WINDOW_HEIGHT);
 		frame.setContentPane(canvas);
 		frame.pack();
     frame.setVisible(true);

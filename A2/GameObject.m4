@@ -1,6 +1,5 @@
 package M4_PACKAGE_NAME;
 
-import java.awt.Polygon;
 import java.awt.Point;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
@@ -23,4 +22,4 @@ public abstract class GameObject extends Point{
 	}
 
 	public abstract void draw(Graphics2D g);
-};
+}

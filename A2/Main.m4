@@ -1,7 +1,6 @@
 package M4_PACKAGE_NAME;
 
 import javax.swing.*;
-import M4_PACKAGE_NAME.*;
 
 final public class Main{
 	public static void createAndShowGUI(){

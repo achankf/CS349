@@ -1,16 +1,18 @@
-package M4_PACKAGE_NAME;
+package doozerSimulator;
 
 import javax.swing.*;
+import doozerSimulator.model.*;
+import doozerSimulator.view.*;
 
 final public class Main{
 	public static void createAndShowGUI(){
-		JFrame frame = new JFrame("M4_TITLE");
+		JFrame frame = new JFrame("Alfred Chan 255");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		GameCanvas canvas = new GameCanvas();
+		DoozerModel model = new DoozerModel();
+		JComponent canvas = new DoozerView(model);
 
-		frame.setSize(M4_WINDOW_WIDTH, M4_WINDOW_HEIGHT);
+		frame.setSize(Config.DEFAULT_DIM);
 		frame.setContentPane(canvas);
-		frame.pack();
     frame.setVisible(true);
 	}
 	public static void main(String []args){

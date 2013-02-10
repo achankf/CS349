@@ -1,4 +1,4 @@
-package M4_PACKAGE_NAME;
+package doozerSimulator;
 
 final public class Game{
 	private GameObject doozer;

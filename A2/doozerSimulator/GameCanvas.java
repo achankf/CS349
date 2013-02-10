@@ -1,4 +1,4 @@
-package M4_PACKAGE_NAME;
+package doozerSimulator;
 
 import javax.swing.JPanel;
 import java.awt.*;

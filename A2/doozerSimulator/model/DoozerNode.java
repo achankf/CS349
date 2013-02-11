@@ -53,4 +53,9 @@ public class DoozerNode{
 	public int getY(){
 		return pivot.y + getHeight()/2;
 	}
+
+	public Boolean contains(Point pt){
+		return pt.x >= getX() && pt.x <= getX() + getWidth()
+		&& pt.y <= getY() && pt.y >= getY() - getHeight();
+	}
 }

@@ -100,6 +100,7 @@ public class DoozerView extends JComponent {
 			g2d.setColor(Color.black);
 			g2d.fillOval(pivotX-5,pivotY-5,10,10);
 			g2d.rotate(node.getAngle(),pivotX,pivotY); 
+System.out.println("Node Angle:" + node.getAngle()+ " Degree:" +(node.getAngle() * 57.2957795));
 			//g2d.rotate(angle,pivotX,pivotY); 
 			g2d.setColor(Color.black);
 			//g2d.drawLine(prevX,prevY,x,y);
@@ -141,42 +142,46 @@ public class DoozerView extends JComponent {
 		private boolean canDragX = false;
 		private boolean canDragY = false;
 		private boolean select = false;
+		private DoozerNode selectedNode = null;
 
 		public Boolean contains(DoozerNode node, Point pt){
 			return false;
 		}
 
 		public void rotatePoint(Point pt, Point pivot, double angle){
-			double cost = Math.cos(-angle);
+			double cost = Math.cos(angle);
 			double sint = Math.sin(angle);
-			double tempX = fromX(pt.x) - fromX(pivot.x);
-			double tempY = fromY(pt.y) - fromY(pivot.y);
-			double newX = fromX(pt.x) * cost - pt.y * sint;
-			double newY = fromX(pt.x) * sint + pt.y * cost;
-System.out.println("pivot:" + pivot);
+			double tempX = pt.x - pivot.x;
+			double tempY = pt.y - pivot.y;
+			double newX = tempX * cost - tempY * sint + pivot.x;
+			double newY = tempX * sint + tempY * cost + pivot.y;
 			pt.setLocation(newX,newY);
 		}
 
 		public void mousePressed(MouseEvent e) {
-			System.out.println(fromX(e.getX()) + " " + fromY(e.getY()));
+a.clear();
+b.clear();
 			Point pt = new Point((int)fromX(e.getX()),(int)fromY(e.getY()));
 			select = false;
 			LinkedList<DoozerNode> nodeList = new LinkedList<DoozerNode>();
 			nodeList.add(model.getRoot());
 			a.add(new Point(pt));
+			Boolean hit = false;
+			int i =0;
 			while(!nodeList.isEmpty()){
 				DoozerNode node = nodeList.removeFirst();
 				Point pivot = node.getPivot();
 				rotatePoint(pt, pivot, node.getAngle());
-				System.out.println(pt);
-				int x = (int)fromX(pt.x);
-				int y = (int)fromY(pt.y);
-System.out.println("HIHI");
+				if (node.contains(pt) && !hit){
+					hit = true;
+					System.out.println("HIT " + i);
+				}
 b.add(new Point(pt));
 				
 				for(DoozerNode dn : node.getChildren()){
 					nodeList.addFirst(dn);
 				}
+				i++;
 			}
 			repaint();
 		}

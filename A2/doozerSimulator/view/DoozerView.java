@@ -6,6 +6,8 @@ import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.text.NumberFormat;
+import java.util.LinkedList;
+import java.lang.*;
 
 /**
  * A view of a right triangle that displays the triangle graphically and allows
@@ -13,9 +15,9 @@ import java.text.NumberFormat;
  */
 public class DoozerView extends JComponent {
 	private DoozerModel model;
+	private LinkedList<Point> a,b;
 
 	private double scale = 1.0; // how much should the triangle be scaled?
-
 	private boolean selected = false; // did the user select the triangle to
 	// resize it?
 
@@ -25,15 +27,15 @@ public class DoozerView extends JComponent {
 
 	public DoozerView(DoozerModel model) {
 		super();
+		this.a = new LinkedList<Point>();
+		this.b = new LinkedList<Point>();
 		this.model = model;
 		this.registerControllers();
 		this.model.addView(new IView() {
-
 			/** The model changed. Ask the system to repaint the triangle. */
 			public void updateView() {
 				repaint();
 			}
-
 		});
 	}
 
@@ -50,38 +52,63 @@ public class DoozerView extends JComponent {
 		Graphics2D g2d = (Graphics2D) g;
 		Insets insets = this.getInsets();
 
-	/*
-		this.scale = Math.min((this.getWidth() - insets.left - insets.right)
-				/ (TriangleModel.MAX_SIDE + 2),
-				(this.getHeight() - insets.top - insets.bottom)
-						/ (TriangleModel.MAX_SIDE + 2));
-	*/
+		for(Point pt : a){
+			g2d.fillOval(toX(pt.x)-5,toY(pt.y)-5,10,10);
+		}
+		for(Point pt : b){
+			g2d.setColor(Color.red);
+			g2d.fillOval(toX(pt.x)-5,toY(pt.y)-5,10,10);
+		}
+		
+		LinkedList<DoozerNode> nodeList = new LinkedList<DoozerNode>();
+		Point prevPivot = model.getFirstPivot();
+		nodeList.add(model.getRoot());
+		g2d.fillOval(toX(prevPivot.x)-5,toY(prevPivot.y)-5,10,10);
+		while(!nodeList.isEmpty()){
+			DoozerNode node = nodeList.removeFirst();
+			Point pivot = node.getPivot();
+			int x = toX(node.getX());
+			int y = toY(node.getY());
+			int pivotX = toX(pivot.x);
+			int pivotY = toY(pivot.y);
+			int prevX = toX(prevPivot.x);
+			int prevY = toY(prevPivot.y);
+			g2d.setColor(Color.black);
+			g2d.fillOval(pivotX-5,pivotY-5,10,10);
+			//g2d.rotate(angle,pivotX,pivotY); 
+			g2d.setColor(Color.black);
+			//g2d.drawLine(prevX,prevY,x,y);
+			g2d.drawRect(x,y,node.getWidth(),node.getHeight());
+			prevPivot = pivot;
+			//g2d.rotate(-angle,pivotX,pivotY);
+			for(DoozerNode dn : node.getChildren()){
+				nodeList.add(dn);
+			}
+		}
 
-		double base = 0;//this.model.getBase();
-		double height = 0;//this.model.getHeight();
-		double hypo = 0; //this.model.getHypotenuse();
-
-		int left = this.toX(0);
-		int right = this.toX(base);
-		int bottom = this.toY(0);
-		int top = this.toY(height);
-
-		// Draw the triangle
-		g.setColor(Color.black);
-		g.drawLine(left, bottom, right, bottom);
-		g.drawLine(right, bottom, right, top);
-		g.drawLine(left, bottom, right, top);
-
-		// Label the edges
-		g.drawString(formatter.format(base), left + (right - left) / 2, bottom);
-		g.drawString(formatter.format(height), right, top + (bottom - top) / 2);
-		g.drawString(formatter.format(hypo), left + (right - left) / 2 - 15,
-				top + (bottom - top) / 2 - 15);
-
-		if (this.selected) {
-			/** Draw "handles" for resizing the triangle. */
-			g.fillRect(right - 3, bottom - 3, 6, 6);
-			g.fillRect(right - 3, top - 3, 6, 6);
+		prevPivot = model.getFirstPivot();
+		nodeList.add(model.getRoot());
+		while(!nodeList.isEmpty()){
+			DoozerNode node = nodeList.removeFirst();
+			Point pivot = node.getPivot();
+			int x = toX(node.getX());
+			int y = toY(node.getY());
+			int pivotX = toX(pivot.x);
+			int pivotY = toY(pivot.y);
+			int prevX = toX(prevPivot.x);
+			int prevY = toY(prevPivot.y);
+			g2d.setColor(Color.black);
+			g2d.fillOval(pivotX-5,pivotY-5,10,10);
+			g2d.rotate(node.getAngle(),pivotX,pivotY); 
+			//g2d.rotate(angle,pivotX,pivotY); 
+			g2d.setColor(Color.black);
+			//g2d.drawLine(prevX,prevY,x,y);
+			g2d.drawRect(x,y,node.getWidth(),node.getHeight());
+			prevPivot = pivot;
+			//g2d.rotate(-angle,pivotX,pivotY);
+			for(DoozerNode dn : node.getChildren()){
+				nodeList.add(dn);
+			}
 		}
 	}
 
@@ -107,35 +134,50 @@ public class DoozerView extends JComponent {
 				/ this.scale;
 	}
 
-	/**
-	 * Does the given point (screen coordinates) lie on the right side of the
-	 * triangle?
-	 */
-	private boolean onRightSide(int x, int y) {
-		return false;
-		//return Math.abs(fromX(x) - this.model.getBase()) < 4 && fromY(y) >= 0
-		//		&& fromY(y) <= this.model.getHeight();
-	}
-
-	/**
-	 * Does the given point (screen coordinates) lie on the upper right corner
-	 * of the triangle?
-	 */
-	private boolean onTopCorner(int x, int y) {
-		return false;
-		//return Math.abs(fromX(x) - this.model.getBase()) < 4
-		//		&& Math.abs(fromY(y) - this.model.getHeight()) < 4;
-	}
-
 	private class MController extends MouseInputAdapter {
 		/*
 		 * Select or deselect the triangle.
 		 */
 		private boolean canDragX = false;
 		private boolean canDragY = false;
+		private boolean select = false;
+
+		public Boolean contains(DoozerNode node, Point pt){
+			return false;
+		}
+
+		public void rotatePoint(Point pt, Point pivot, double angle){
+			double cost = Math.cos(-angle);
+			double sint = Math.sin(angle);
+			double tempX = fromX(pt.x) - fromX(pivot.x);
+			double tempY = fromY(pt.y) - fromY(pivot.y);
+			double newX = fromX(pt.x) * cost - pt.y * sint;
+			double newY = fromX(pt.x) * sint + pt.y * cost;
+System.out.println("pivot:" + pivot);
+			pt.setLocation(newX,newY);
+		}
 
 		public void mousePressed(MouseEvent e) {
-			selected = onRightSide(e.getX(), e.getY());
+			System.out.println(fromX(e.getX()) + " " + fromY(e.getY()));
+			Point pt = new Point((int)fromX(e.getX()),(int)fromY(e.getY()));
+			select = false;
+			LinkedList<DoozerNode> nodeList = new LinkedList<DoozerNode>();
+			nodeList.add(model.getRoot());
+			a.add(new Point(pt));
+			while(!nodeList.isEmpty()){
+				DoozerNode node = nodeList.removeFirst();
+				Point pivot = node.getPivot();
+				rotatePoint(pt, pivot, node.getAngle());
+				System.out.println(pt);
+				int x = (int)fromX(pt.x);
+				int y = (int)fromY(pt.y);
+System.out.println("HIHI");
+b.add(new Point(pt));
+				
+				for(DoozerNode dn : node.getChildren()){
+					nodeList.addFirst(dn);
+				}
+			}
 			repaint();
 		}
 
@@ -145,20 +187,9 @@ public class DoozerView extends JComponent {
 		 */
 		public void mouseMoved(MouseEvent e) {
 			if (selected) {
-				if (onTopCorner(e.getX(), e.getY())) {
-					this.canDragX = true;
-					this.canDragY = true;
-					setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
-				} else if (onRightSide(e.getX(), e.getY())) {
-					this.canDragX = true;
-					this.canDragY = false;
-					setCursor(Cursor
-							.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
-				} else {
-					this.canDragX = false;
-					this.canDragY = false;
-					setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-				}
+					//setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+					//setCursor(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
+					//setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 			}
 		}
 

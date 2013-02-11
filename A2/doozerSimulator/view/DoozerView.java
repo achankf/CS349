@@ -18,7 +18,6 @@ public class DoozerView extends JComponent {
 	private LinkedList<Point> a,b;
 
 	private double scale = 1.0; // how much should the triangle be scaled?
-	private boolean selected = false; // did the user select the triangle to
 	// resize it?
 
 	// To format numbers consistently in the text fields.
@@ -64,6 +63,7 @@ public class DoozerView extends JComponent {
 		Point prevPivot = model.getFirstPivot();
 		nodeList.add(model.getRoot());
 		g2d.fillOval(toX(prevPivot.x)-5,toY(prevPivot.y)-5,10,10);
+
 		while(!nodeList.isEmpty()){
 			DoozerNode node = nodeList.removeFirst();
 			Point pivot = node.getPivot();
@@ -85,9 +85,9 @@ public class DoozerView extends JComponent {
 				nodeList.add(dn);
 			}
 		}
-
 		prevPivot = model.getFirstPivot();
 		nodeList.add(model.getRoot());
+
 		while(!nodeList.isEmpty()){
 			DoozerNode node = nodeList.removeFirst();
 			Point pivot = node.getPivot();
@@ -100,7 +100,7 @@ public class DoozerView extends JComponent {
 			g2d.setColor(Color.black);
 			g2d.fillOval(pivotX-5,pivotY-5,10,10);
 			g2d.rotate(node.getAngle(),pivotX,pivotY); 
-System.out.println("Node Angle:" + node.getAngle()+ " Degree:" +(node.getAngle() * 57.2957795));
+//System.out.println("Node Angle:" + node.getAngle()+ " Degree:" +(node.getAngle() * 57.2957795));
 			//g2d.rotate(angle,pivotX,pivotY); 
 			g2d.setColor(Color.black);
 			//g2d.drawLine(prevX,prevY,x,y);
@@ -139,9 +139,7 @@ System.out.println("Node Angle:" + node.getAngle()+ " Degree:" +(node.getAngle()
 		/*
 		 * Select or deselect the triangle.
 		 */
-		private boolean canDragX = false;
-		private boolean canDragY = false;
-		private boolean select = false;
+		private boolean selected = false;
 		private DoozerNode selectedNode = null;
 
 		public Boolean contains(DoozerNode node, Point pt){
@@ -161,19 +159,19 @@ System.out.println("Node Angle:" + node.getAngle()+ " Degree:" +(node.getAngle()
 		public void mousePressed(MouseEvent e) {
 a.clear();
 b.clear();
+			selected = false;
 			Point pt = new Point((int)fromX(e.getX()),(int)fromY(e.getY()));
-			select = false;
 			LinkedList<DoozerNode> nodeList = new LinkedList<DoozerNode>();
 			nodeList.add(model.getRoot());
 			a.add(new Point(pt));
-			Boolean hit = false;
 			int i =0;
 			while(!nodeList.isEmpty()){
 				DoozerNode node = nodeList.removeFirst();
 				Point pivot = node.getPivot();
 				rotatePoint(pt, pivot, node.getAngle());
-				if (node.contains(pt) && !hit){
-					hit = true;
+				if (node.contains(pt) && !selected){
+					selected = true;
+					selectedNode = node;
 					System.out.println("HIT " + i);
 				}
 b.add(new Point(pt));
@@ -192,20 +190,31 @@ b.add(new Point(pt));
 		 */
 		public void mouseMoved(MouseEvent e) {
 			if (selected) {
-					//setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+				setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
 					//setCursor(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
 					//setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+			} else {
+				setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 			}
 		}
 
 		/** The user is dragging the mouse. Resize appropriately. */
 		public void mouseDragged(MouseEvent e) {
-			if (this.canDragX) {
-				//model.setBase(fromX(e.getX()));
+			if (!selected || selectedNode == null) return;
+			Point pt = e.getPoint();
+			Point pivot = selectedNode.getPivot();
+System.out.println(e.getPoint());
+			double vx = fromX(pt.x - pivot.x);
+			double vy = pt.y - pivot.y;
+a.clear();
+a.add(new Point((int)vx,(int)vy));
+			double angle = Math.acos(vx / Math.sqrt(Math.pow(vx,2) + Math.pow(vy,2)));
+			if (vy < 0){
+				angle = -angle;
 			}
-			if (this.canDragY) {
-				//model.setHeight(fromY(e.getY()));
-			}
+			selectedNode.setAngle(angle);
+			//System.out.println(angle);
+			repaint();
 		} // mouseDragged
 	} // MController
 } // GraphicalView

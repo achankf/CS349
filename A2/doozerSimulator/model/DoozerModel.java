@@ -14,15 +14,16 @@ public class DoozerModel extends BaseModel{
 		firstPivot = new Point(0,250);
 		this.root = new DoozerNode(180,250,200,50);
 		DoozerNode nextCrane = new DoozerNode(340,250,200,50);
-		this.root.addChild(nextCrane);
+		this.root.addNext(nextCrane);
 		DoozerNode nextNextCrane = new DoozerNode(500,250,200,50);
 		root.setAngle(-1.0471975);
 		nextCrane.setAngle(0.4);
 		nextNextCrane.setAngle(0.4);
-		nextCrane.addChild(nextNextCrane);
+		nextCrane.addNext(nextNextCrane);
 		//recalculateAngle();
 	}
 
+/*
 	public void recalculateAngle(){
 		LinkedList<DoozerNode> nodeList = new LinkedList<DoozerNode>();
 		Point prevPivot = getFirstPivot();
@@ -41,6 +42,7 @@ System.out.println("Angle:"+angle);
 			}
 		}
 	}
+*/
 
 	public DoozerNode getRoot(){
 		return this.root;

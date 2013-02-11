@@ -59,13 +59,11 @@ public class DoozerView extends JComponent {
 			g2d.fillOval(toX(pt.x)-5,toY(pt.y)-5,10,10);
 		}
 		
-		LinkedList<DoozerNode> nodeList = new LinkedList<DoozerNode>();
 		Point prevPivot = model.getFirstPivot();
-		nodeList.add(model.getRoot());
 		g2d.fillOval(toX(prevPivot.x)-5,toY(prevPivot.y)-5,10,10);
 
-		while(!nodeList.isEmpty()){
-			DoozerNode node = nodeList.removeFirst();
+		DoozerNode node = model.getRoot();
+		while(true){
 			Point pivot = node.getPivot();
 			int x = toX(node.getX());
 			int y = toY(node.getY());
@@ -81,15 +79,13 @@ public class DoozerView extends JComponent {
 			g2d.drawRect(x,y,node.getWidth(),node.getHeight());
 			prevPivot = pivot;
 			//g2d.rotate(-angle,pivotX,pivotY);
-			for(DoozerNode dn : node.getChildren()){
-				nodeList.add(dn);
-			}
+			if (!node.hasNext()) break;
+			node = node.getNext();
 		}
-		prevPivot = model.getFirstPivot();
-		nodeList.add(model.getRoot());
 
-		while(!nodeList.isEmpty()){
-			DoozerNode node = nodeList.removeFirst();
+		prevPivot = model.getFirstPivot();
+		node = model.getRoot();
+		while(true){
 			Point pivot = node.getPivot();
 			int x = toX(node.getX());
 			int y = toY(node.getY());
@@ -100,16 +96,11 @@ public class DoozerView extends JComponent {
 			g2d.setColor(Color.black);
 			g2d.fillOval(pivotX-5,pivotY-5,10,10);
 			g2d.rotate(node.getAngle(),pivotX,pivotY); 
-//System.out.println("Node Angle:" + node.getAngle()+ " Degree:" +(node.getAngle() * 57.2957795));
-			//g2d.rotate(angle,pivotX,pivotY); 
 			g2d.setColor(Color.black);
-			//g2d.drawLine(prevX,prevY,x,y);
 			g2d.drawRect(x,y,node.getWidth(),node.getHeight());
 			prevPivot = pivot;
-			//g2d.rotate(-angle,pivotX,pivotY);
-			for(DoozerNode dn : node.getChildren()){
-				nodeList.add(dn);
-			}
+			if (!node.hasNext()) break;
+			node = node.getNext();
 		}
 	}
 
@@ -161,12 +152,10 @@ a.clear();
 b.clear();
 			selected = false;
 			Point pt = new Point((int)fromX(e.getX()),(int)fromY(e.getY()));
-			LinkedList<DoozerNode> nodeList = new LinkedList<DoozerNode>();
-			nodeList.add(model.getRoot());
 			a.add(new Point(pt));
 			int i =0;
-			while(!nodeList.isEmpty()){
-				DoozerNode node = nodeList.removeFirst();
+			DoozerNode node = model.getRoot();
+			while(true){
 				Point pivot = node.getPivot();
 				rotatePoint(pt, pivot, node.getAngle());
 				if (node.contains(pt) && !selected){
@@ -175,11 +164,9 @@ b.clear();
 					System.out.println("HIT " + i);
 				}
 b.add(new Point(pt));
-				
-				for(DoozerNode dn : node.getChildren()){
-					nodeList.addFirst(dn);
-				}
 				i++;
+				if (!node.hasNext()) break;
+				node = node.getNext();
 			}
 			repaint();
 		}
@@ -203,17 +190,45 @@ b.add(new Point(pt));
 			if (!selected || selectedNode == null) return;
 			Point pt = e.getPoint();
 			Point pivot = selectedNode.getPivot();
-System.out.println(e.getPoint());
-			double vx = fromX(pt.x - pivot.x);
+//System.out.println(e.getPoint());
+			double vx = pt.x - toX(pivot.x);
 			double vy = pt.y - pivot.y;
 a.clear();
 a.add(new Point((int)vx,(int)vy));
 			double angle = Math.acos(vx / Math.sqrt(Math.pow(vx,2) + Math.pow(vy,2)));
+//System.out.println(vx);
 			if (vy < 0){
 				angle = -angle;
 			}
+/*
+System.out.println(angle);
+			if (angle > selectedNode.getAngle() && selectedNode.getAngle() > -Math.PI / 2){
+System.out.println("1:"+selectedNode.getAngle() + " " + Math.PI / 2);
+				selectedNode.setAngle(selectedNode.getAngle() + 0.01);
+			} else if (angle < selectedNode.getAngle() && selectedNode.getAngle() > -Math.PI / 2){
+System.out.println("2:"+selectedNode.getAngle() + " " + Math.PI / 2);
+				selectedNode.setAngle(selectedNode.getAngle() - 0.01);
+			}
+*/
+/*
+			double ninetyDegree = Math.PI / 2;
+			if (angle > ninetyDegree){
+				angle = ninetyDegree;
+			} else if (angle < -ninetyDegree){
+				angle = -ninetyDegree;
+			}
+			if (angle * selectedNode.getAngle() < 0){
+				if(angle < 0){
+					selectedNode.setAngle(selectedNode.getAngle() - 0.01);
+				} else {
+					selectedNode.setAngle(selectedNode.getAngle() + 0.01);
+				}
+			}else {
+				selectedNode.setAngle(angle);
+			}
+*/
 			selectedNode.setAngle(angle);
-			//System.out.println(angle);
+			System.out.println(angle);
 			repaint();
 		} // mouseDragged
 	} // MController

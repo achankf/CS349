@@ -10,12 +10,12 @@ public class DoozerNode{
 	protected Dimension dim;
 	protected Point pivot;
 	protected double angle;
-	protected ArrayList<DoozerNode> children;
+	protected DoozerNode next;
 
 	public DoozerNode(int x, int y, int width, int height){
 		this.pivot = new Point(x,y);
 		this.dim = new Dimension(width,height);
-		this.children = new ArrayList<DoozerNode>();
+		this.next = null;
 	}
 
 	public int getHeight(){
@@ -30,12 +30,12 @@ public class DoozerNode{
 		return pivot;
 	}
 
-	public void addChild(DoozerNode node){
-		children.add(node);
+	public void addNext(DoozerNode node){
+		next = node;
 	}
 
-	public ArrayList<DoozerNode> getChildren(){
-		return children;
+	public DoozerNode getNext(){
+		return next;
 	}
 
 	public double getAngle(){
@@ -57,5 +57,9 @@ public class DoozerNode{
 	public Boolean contains(Point pt){
 		return pt.x >= getX() && pt.x <= getX() + getWidth()
 		&& pt.y <= getY() && pt.y >= getY() - getHeight();
+	}
+
+	public Boolean hasNext(){
+		return next != null;
 	}
 }

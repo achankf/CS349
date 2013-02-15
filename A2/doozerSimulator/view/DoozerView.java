@@ -50,6 +50,7 @@ public class DoozerView extends JComponent {
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
 		Insets insets = this.getInsets();
+System.out.println("PAINT");
 
 		for(Point pt : a){
 			g2d.fillOval(toX(pt.x)-5,toY(pt.y)-5,10,10);
@@ -190,45 +191,16 @@ b.add(new Point(pt));
 			if (!selected || selectedNode == null) return;
 			Point pt = e.getPoint();
 			Point pivot = selectedNode.getPivot();
-//System.out.println(e.getPoint());
 			double vx = pt.x;
 			double vy = pt.y;
-a.clear();
-a.add(new Point((int)vx,(int)vy));
+			a.clear();
+			a.add(new Point((int)vx,(int)vy));
 			double angle = Math.acos(vx / Math.sqrt(Math.pow(vx,2) + Math.pow(vy,2)));
-//System.out.println(vx);
 			if (vy < 0){
 				angle = -angle;
 			}
-/*
-System.out.println(angle);
-			if (angle > selectedNode.getAngle() && selectedNode.getAngle() > -Math.PI / 2){
-System.out.println("1:"+selectedNode.getAngle() + " " + Math.PI / 2);
-				selectedNode.setAngle(selectedNode.getAngle() + 0.01);
-			} else if (angle < selectedNode.getAngle() && selectedNode.getAngle() > -Math.PI / 2){
-System.out.println("2:"+selectedNode.getAngle() + " " + Math.PI / 2);
-				selectedNode.setAngle(selectedNode.getAngle() - 0.01);
-			}
-*/
-/*
-			double ninetyDegree = Math.PI / 2;
-			if (angle > ninetyDegree){
-				angle = ninetyDegree;
-			} else if (angle < -ninetyDegree){
-				angle = -ninetyDegree;
-			}
-			if (angle * selectedNode.getAngle() < 0){
-				if(angle < 0){
-					selectedNode.setAngle(selectedNode.getAngle() - 0.01);
-				} else {
-					selectedNode.setAngle(selectedNode.getAngle() + 0.01);
-				}
-			}else {
-				selectedNode.setAngle(angle);
-			}
-*/
 			selectedNode.setAngle(angle);
-			System.out.println(angle);
+//			System.out.println(angle);
 			repaint();
 		} // mouseDragged
 	} // MController

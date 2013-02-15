@@ -15,6 +15,7 @@ public class DoozerNode{
 	public DoozerNode(int x, int y, int width, int height){
 		this.pivot = new Point(x,y);
 		this.dim = new Dimension(width,height);
+		this.angle = 0;
 		this.next = null;
 	}
 

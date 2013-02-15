@@ -59,7 +59,7 @@ public class DoozerView extends JComponent {
 			g2d.fillOval(toX(pt.x)-5,toY(pt.y)-5,10,10);
 		}
 		
-		Point prevPivot = model.getFirstPivot();
+		Point prevPivot = model.getStartPoint();
 		g2d.fillOval(toX(prevPivot.x)-5,toY(prevPivot.y)-5,10,10);
 
 		DoozerNode node = model.getRoot();
@@ -83,7 +83,7 @@ public class DoozerView extends JComponent {
 			node = node.getNext();
 		}
 
-		prevPivot = model.getFirstPivot();
+		prevPivot = model.getStartPoint();
 		node = model.getRoot();
 		while(true){
 			Point pivot = node.getPivot();
@@ -191,8 +191,8 @@ b.add(new Point(pt));
 			Point pt = e.getPoint();
 			Point pivot = selectedNode.getPivot();
 //System.out.println(e.getPoint());
-			double vx = pt.x - toX(pivot.x);
-			double vy = pt.y - pivot.y;
+			double vx = pt.x;
+			double vy = pt.y;
 a.clear();
 a.add(new Point((int)vx,(int)vy));
 			double angle = Math.acos(vx / Math.sqrt(Math.pow(vx,2) + Math.pow(vy,2)));

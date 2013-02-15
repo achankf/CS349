@@ -200,7 +200,6 @@ b.add(new Point(pt));
 				angle = -angle;
 			}
 			selectedNode.setAngle(angle);
-//			System.out.println(angle);
 			repaint();
 		} // mouseDragged
 	} // MController

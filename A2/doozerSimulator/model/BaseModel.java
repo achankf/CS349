@@ -1,5 +1,6 @@
 package doozerSimulator.model;
 
+import doozerSimulator.view.IView;
 import java.util.ArrayList;
 
 public class BaseModel extends Object{

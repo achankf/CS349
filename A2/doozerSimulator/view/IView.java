@@ -1,4 +1,4 @@
-package doozerSimulator.model;
+package doozerSimulator.view;
 
 public interface IView {
 	/**

@@ -1,8 +1,8 @@
 package doozerSimulator;
 
 import javax.swing.*;
-import doozerSimulator.model.*;
-import doozerSimulator.view.*;
+import doozerSimulator.model.DoozerModel;
+import doozerSimulator.view.DoozerView;
 
 final public class Main{
 	public static void createAndShowGUI(){

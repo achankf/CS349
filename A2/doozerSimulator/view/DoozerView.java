@@ -49,53 +49,16 @@ public class DoozerView extends JComponent {
 		scale = scale == 0 ? 1 : scale;
 
 		Graphics2D g2d = (Graphics2D) g;
-	  for(Point pt : a){
-      g2d.fillOval(toX(pt.x)-5,toY(pt.y)-5,10,10);
-    }
-    for(Point pt : b){
-      g2d.setColor(Color.red);
-      g2d.fillOval(toX(pt.x)-5,toY(pt.y)-5,10,10);
-    }	
-
 		Doozer doozer = model.getDoozer();
-		for (int i = 0; i < doozer.getNumArms(); i++){
-			int x = toX((int)doozer.getArmX(i));
-			int y = toY((int)doozer.getArmY(i));
-			int pivotX = toX(doozer.getPivotX(i));
-			int pivotY = toY(doozer.getPivotY(i));
-			int width = (int)(doozer.getArmWidth() * scale);
-			int armHeight = (int)(doozer.getArmHeight() * scale);
-			g2d.setColor(Color.black);
-			g2d.fillOval(pivotX-5,pivotY-5,10,10);
-			g2d.setColor(Color.black);
-			g2d.drawRect(x,y,width,armHeight);
-//System.out.println(x + " " +y + " " + pivotX + " " +pivotY);
-		}
 		
-		{
-			int x = (int)toX(doozer.getBodyX());
-			int y = (int)toY(doozer.getBodyY());
-			double bodyWidth = doozer.getBodyWidth() * scale;
-			double bodyHeight = doozer.getBodyHeight() * scale;
-			g2d.drawRect(x,y,(int)bodyWidth,(int)bodyHeight);
-		}
-
-		AffineTransform before = g2d.getTransform();
-		for (int i = 0; i < doozer.getNumArms(); i++){
-			int x = toX((int)doozer.getArmX(i));
-			int y = toY((int)doozer.getArmY(i));
-			int pivotX = toX(doozer.getPivotX(i));
-			int pivotY = toY(doozer.getPivotY(i));
-			int width = (int)(doozer.getArmWidth() * scale);
-			int armHeight = (int)(doozer.getArmHeight() * scale);
-			g2d.setColor(Color.black);
-			g2d.fillOval(pivotX-5,pivotY-5,10,10);
-			g2d.rotate(doozer.getAngle(i),pivotX,pivotY); 
-			g2d.setColor(Color.black);
-			g2d.drawRect(x,y,width,armHeight);
-		}
-		g2d.setTransform(before);
-			g2d.fillOval(5,5,10,10);
+		doozer.drawAll(g2d, new Convert(scale){
+			public Point fromCanvas(Point pt){
+				return from(pt);
+			}
+			public Point toCanvas(Point pt){
+				return to(pt);
+			}
+		});
 	}
 
 	/** Convert from the model's X coordinate to the component's X coordinate. */
@@ -129,41 +92,28 @@ public class DoozerView extends JComponent {
 	}
 
 	private class MController extends MouseInputAdapter {
-		private int selected = Config.SELECTED_NULL;
+		private SelectedPair selected = null;
 
 		public void mousePressed(MouseEvent e) {
 			a.clear();
 			b.clear();
-			selected = Config.SELECTED_NULL;
+			selected = null;
 			Doozer doozer= model.getDoozer();
 			Point pt = new Point(from(e.getPoint()));
 			a.add(new Point(pt));
 			
-			if (doozer.containsBody(pt)){
-				System.out.println("HIT BODY");
-				return;
-			}
-
-			for (int i = 0; i < doozer.getNumArms(); i++){
-				Point pivot = new Point(doozer.getPivot(i));
-				model.rotatePoint(pt,pivot, doozer.getAngle(i));
-				if (doozer.containsArm(i,pt) && selected == Config.SELECTED_NULL){
-					selected = i;
-				}
-				b.add(new Point(pt));
-			}
-			repaint();
+			selected = doozer.containsAll(pt);
+	System.out.println(selected);
 		}
 
 		/** The user is dragging the mouse. Resize appropriately. */
 		public void mouseDragged(MouseEvent e) {
+/*
 			Doozer doozer = model.getDoozer();
 			Point pt = new Point(from(e.getPoint()));
 
 			switch (selected){
-				case Config.SELECTED_NULL:	return;
-				case Config.SELECTED_BODY:
-					doozer.moveBody(pt);
+				case null:	return;
 			}
 			for (int i = 0; i < selected; i++){
 				model.rotatePoint(pt, doozer.getPivot(i),doozer.getAngle(i));
@@ -171,6 +121,7 @@ public class DoozerView extends JComponent {
 			double angle = model.calculateAngle(doozer.componentPos(selected,pt));
 			doozer.setAngle(selected,angle);
 			repaint();
+*/
 		} // mouseDragged
 	} // MController
 } // GraphicalView

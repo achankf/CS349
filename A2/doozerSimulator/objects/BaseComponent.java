@@ -43,9 +43,22 @@ public abstract class BaseComponent extends Dimension{
 	}
 
 	public Boolean contains(int i, Point pt){
-		System.out.println (pt+ " " + getPoint(i) + " " + this);
 		return contains(pt, getPoint(i), this);
 	}
 
-	
+	public double calculateAngle(Point pt){
+		double angle = Math.acos(pt.x / Math.sqrt(Math.pow(pt.x,2) + Math.pow(pt.y,2)));
+		// negative due to the origin of canvas is location on the top-left
+		return -(pt.y < 0 ? -angle : angle);
+	}
+
+	public void rotatePoint(Point pt, Point pivot, double angle){
+		double cost = Math.cos(angle);
+		double sint = Math.sin(angle);
+		double tempX = pt.x - pivot.x;
+		double tempY = pt.y - pivot.y;
+		double newX = tempX * cost - tempY * sint + pivot.x;
+		double newY = tempX * sint + tempY * cost + pivot.y;
+		pt.setLocation(newX,newY);
+	}
 }

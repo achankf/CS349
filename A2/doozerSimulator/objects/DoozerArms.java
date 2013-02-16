@@ -15,6 +15,17 @@ public final class DoozerArms extends BaseComponent{
 		System.arraycopy(providedAngles,0,armAngles,0, providedAngles.length);
 	}
 
+	@Override
+	public SelectedPair containsAll(Point pt){
+		Point temp = new Point(pt);
+		for (int i = 0; i < getNumComp(); i++){
+			Point pivot = new Point(getPivot(i));
+			rotatePoint(temp, pivot, armAngles[i]);
+			if (contains(i,temp)) return new SelectedPair(this,i);
+		}
+		return null;
+	}
+
 	public void move(Point pt){
 
 	}

@@ -6,9 +6,7 @@ import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.text.NumberFormat;
 import java.util.LinkedList;
-import java.lang.*;
 
 /**
  * A view of a right triangle that displays the triangle graphically and allows
@@ -17,13 +15,7 @@ import java.lang.*;
 public class DoozerView extends JComponent {
 	private DoozerModel model;
 	private LinkedList<Point> a,b;
-
-	private double scale = 0.5; // how much should the triangle be scaled?
-	// resize it?
-
-	// To format numbers consistently in the text fields.
-	private static final NumberFormat formatter = NumberFormat
-			.getNumberInstance();
+	private double scale = 1.0;
 
 	public DoozerView(DoozerModel model) {
 		super();
@@ -49,6 +41,10 @@ public class DoozerView extends JComponent {
 	/** Paint the triangle, and "handles" for resizing if it was selected. */
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		Insets insets = this.getInsets();
+		this.scale = Math.min((this.getWidth() - insets.left - insets.right) / 1024.0,
+			(this.getHeight() - insets.top - insets.bottom) / 768.0);
+		scale = scale == 0 ? 1 : scale;
 
 		Graphics2D g2d = (Graphics2D) g;
 	  for(Point pt : a){
@@ -137,20 +133,6 @@ public class DoozerView extends JComponent {
 				b.add(new Point(pt));
 			}
 			repaint();
-		}
-
-		/**
-		 * The mouse moved. Check if it's over the dragable regions and adjust
-		 * the cursor accordingly.
-		 */
-		public void mouseMoved(MouseEvent e) {
-			if (selected != -1) {
-				setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
-					//setCursor(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
-					//setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-			} else {
-				setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-			}
 		}
 
 		/** The user is dragging the mouse. Resize appropriately. */

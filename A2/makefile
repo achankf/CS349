@@ -6,7 +6,7 @@ JAR = doozer.jar
 
 all: $(JAR)
 
-$(JAR): $(CLASSES)
+$(JAR): $(CLASSES) $(SOURCES)
 	jar cvfe $(JAR) doozerSimulator.Main doozerSimulator/
 
 %.class: %.java
@@ -16,5 +16,5 @@ $(JAR): $(CLASSES)
 clean:
 	rm -rf $(CLASS_DIR)/*.class $(CLASS_DIR)/model/*.class $(CLASS_DIR)/view/*.class *.jar
 
-run: $(CLASSES)
+run: $(JAR)
 	java -jar $(JAR)

@@ -18,4 +18,8 @@ public class GameObject extends Point{
 		}
 		return ret;
 	}
+
+	public void addComp(BaseComponent bc){
+		compList.add(bc);
+	}
 }

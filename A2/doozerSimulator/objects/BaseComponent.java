@@ -7,11 +7,15 @@ import java.awt.Graphics2D;
 public abstract class BaseComponent extends Dimension{
 	private Point ptRef;
 
-	public abstract void move(Point pt);
+	public abstract void move(int i, Point pt);
 	public abstract double getX(int i);
 	public abstract double getY(int i);
 	public abstract int getNumComp();
 	public abstract void draw(Graphics2D g2d, Convert convert);
+
+	protected void setPtRef(int x, int y){
+		ptRef.setLocation(x,y);
+	}
 
 	protected double getRefX(){
 		return ptRef.getX();

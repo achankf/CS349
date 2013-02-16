@@ -6,20 +6,28 @@ import java.awt.Graphics2D;
 import doozerSimulator.Draw;
 
 public final class DoozerBody extends BaseComponent{
-	DoozerBody(Point ptRef, int width, int height){
+	public DoozerBody(Point ptRef, int width, int height){
 		super(ptRef,width,height);
 	}
 
-	public void move(Point pt){
-
+	public void move(int i, Point pt){
+		int newPtX = (int)getRefX();
+		if (pt.x > getRefX()){
+			newPtX += 1;
+		} else if (pt.x < getRefX()){
+			newPtX -= 1;
+		}
+		setPtRef(newPtX, (int)getRefY());
 	}
 
 	public double getX(int i){
 		return this.getRefX() - this.getWidth()/2;
 	}
+
 	public double getY(int i){
 		return this.getRefY() + this.getHeight() / 5;
 	}
+
 	public int getNumComp(){
 		return 1;
 	}

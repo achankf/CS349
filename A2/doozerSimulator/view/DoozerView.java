@@ -95,33 +95,18 @@ public class DoozerView extends JComponent {
 		private SelectedPair selected = null;
 
 		public void mousePressed(MouseEvent e) {
-			a.clear();
-			b.clear();
-			selected = null;
 			Doozer doozer= model.getDoozer();
 			Point pt = new Point(from(e.getPoint()));
-			a.add(new Point(pt));
-			
 			selected = doozer.containsAll(pt);
-	System.out.println(selected);
 		}
 
 		/** The user is dragging the mouse. Resize appropriately. */
 		public void mouseDragged(MouseEvent e) {
-/*
+			if (selected == null) return;
 			Doozer doozer = model.getDoozer();
 			Point pt = new Point(from(e.getPoint()));
-
-			switch (selected){
-				case null:	return;
-			}
-			for (int i = 0; i < selected; i++){
-				model.rotatePoint(pt, doozer.getPivot(i),doozer.getAngle(i));
-			}
-			double angle = model.calculateAngle(doozer.componentPos(selected,pt));
-			doozer.setAngle(selected,angle);
+			selected.comp.move(selected.i, pt);
 			repaint();
-*/
 		} // mouseDragged
 	} // MController
 } // GraphicalView

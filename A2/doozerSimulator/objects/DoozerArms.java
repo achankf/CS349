@@ -20,10 +20,14 @@ public final class DoozerArms extends BaseComponent{
 	@Override
 	public SelectedPair containsAll(Point pt){
 		Point temp = new Point(pt);
-		for (int i = 0; i < getNumComp(); i++){
+		int i = 0;
+		for (; i < getNumComp(); i++){
 			Point pivot = new Point(getPivot(i));
 			rotatePoint(temp, pivot, armAngles[i]);
 			if (contains(i,temp)) return new SelectedPair(this,i);
+		}
+		if (contains(temp, getMagnetPoint(), mdim)){
+			return new SelectedPair(this,-1);
 		}
 		return null;
 	}

@@ -13,8 +13,8 @@ public class DoozerModel extends BaseModel{
 
 	public DoozerModel(){
 		objectList = new ArrayList <GameObject>();
-		double [] angles = {-1.0471975,0.4,0.4};
-		doozer = new Doozer(100,300,200,50,angles);
+		double [] angles = {-1.0471975,0.4,0.4,0.1};
+		doozer = new Doozer(200,300,200,50, 200,100,angles);
 		objectList.add(doozer);
 	}
 

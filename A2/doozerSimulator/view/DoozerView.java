@@ -1,11 +1,13 @@
 package doozerSimulator.view;
 
+import doozerSimulator.Config;
 import doozerSimulator.model.*;
 import doozerSimulator.objects.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.AffineTransform;
 import java.util.LinkedList;
 
 /**
@@ -69,6 +71,16 @@ public class DoozerView extends JComponent {
 			g2d.drawRect(x,y,width,armHeight);
 //System.out.println(x + " " +y + " " + pivotX + " " +pivotY);
 		}
+		
+		{
+			int x = (int)toX(doozer.getBodyX());
+			int y = (int)toY(doozer.getBodyY());
+			double bodyWidth = doozer.getBodyWidth() * scale;
+			double bodyHeight = doozer.getBodyHeight() * scale;
+			g2d.drawRect(x,y,(int)bodyWidth,(int)bodyHeight);
+		}
+
+		AffineTransform before = g2d.getTransform();
 		for (int i = 0; i < doozer.getNumArms(); i++){
 			int x = toX((int)doozer.getArmX(i));
 			int y = toY((int)doozer.getArmY(i));
@@ -82,6 +94,8 @@ public class DoozerView extends JComponent {
 			g2d.setColor(Color.black);
 			g2d.drawRect(x,y,width,armHeight);
 		}
+		g2d.setTransform(before);
+			g2d.fillOval(5,5,10,10);
 	}
 
 	/** Convert from the model's X coordinate to the component's X coordinate. */
@@ -115,19 +129,25 @@ public class DoozerView extends JComponent {
 	}
 
 	private class MController extends MouseInputAdapter {
-		private int selected = -1;
+		private int selected = Config.SELECTED_NULL;
 
 		public void mousePressed(MouseEvent e) {
 			a.clear();
 			b.clear();
-			selected = -1;
+			selected = Config.SELECTED_NULL;
 			Doozer doozer= model.getDoozer();
-			Point pt = new Point((int)fromX(e.getX()),(int)fromY(e.getY()));
+			Point pt = new Point(from(e.getPoint()));
 			a.add(new Point(pt));
+			
+			if (doozer.containsBody(pt)){
+				System.out.println("HIT BODY");
+				return;
+			}
+
 			for (int i = 0; i < doozer.getNumArms(); i++){
 				Point pivot = new Point(doozer.getPivot(i));
 				model.rotatePoint(pt,pivot, doozer.getAngle(i));
-				if (doozer.contains(i,pt) && selected == -1){
+				if (doozer.containsArm(i,pt) && selected == Config.SELECTED_NULL){
 					selected = i;
 				}
 				b.add(new Point(pt));
@@ -137,9 +157,14 @@ public class DoozerView extends JComponent {
 
 		/** The user is dragging the mouse. Resize appropriately. */
 		public void mouseDragged(MouseEvent e) {
-			if (selected == -1) return;
 			Doozer doozer = model.getDoozer();
 			Point pt = new Point(from(e.getPoint()));
+
+			switch (selected){
+				case Config.SELECTED_NULL:	return;
+				case Config.SELECTED_BODY:
+					doozer.moveBody(pt);
+			}
 			for (int i = 0; i < selected; i++){
 				model.rotatePoint(pt, doozer.getPivot(i),doozer.getAngle(i));
 			}

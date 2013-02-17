@@ -78,6 +78,10 @@ public abstract class BaseComponent extends Dimension{
 		pt.setLocation(newX,newY);
 	}
 
+	public void drawPicked(Graphics2D g2d, Convert convert){
+		draw(g2d,convert);
+	}
+
 	@Override
 	public String toString(){
 		return "Point:" + ptRef + " dim:" + getWidth() + "," + getHeight();

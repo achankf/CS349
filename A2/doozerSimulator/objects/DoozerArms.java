@@ -10,14 +10,14 @@ import doozerSimulator.Draw;
 public final class DoozerArms extends BaseComponent{
 	private double [] armAngles;
 	Dimension mdim;
-	BaseComponent pickup = null;
-	Point magnetTip;
+	Point magnetTip, magnetTipAccept;
 
 	public DoozerArms(Point ptRef, int width, int height, double [] providedAngles){
 		super(ptRef,width,height);
 		armAngles = providedAngles;
 		mdim = new Dimension(width/15,(int)(height*2));
 		magnetTip = new Point(0,0);
+		magnetTipAccept = new Point(0,0);
 	}
 
 	@Override
@@ -39,17 +39,6 @@ public final class DoozerArms extends BaseComponent{
 		for (int j = 0; j < armAngles.length; j++){
 			rotatePoint(pt,getPivot(j),armAngles[j]);
 		}
-	}
-
-	public Point findPickUp(Point pt){
-		Point temp = new Point(pt);
-		int i = 0;
-		for (; i < getNumComp(); i++){
-			Point pivot = new Point(getPivot(i));
-			rotatePoint(temp, pivot, armAngles[i]);
-		}
-System.out.println(temp);
-		return temp;
 	}
 
 	public void move(int i, Point pt, AffineTransform at){
@@ -120,6 +109,10 @@ System.out.println(temp);
 		return magnetTip;
 	}
 
+	public Point getMagnetTipAccept(){
+		return magnetTipAccept;
+	}
+
 	public void draw(Graphics2D g2d, Convert convert){
 		AffineTransform before = g2d.getTransform();
 		Point pt, pivot;
@@ -134,23 +127,30 @@ System.out.println(temp);
 		}
 		pt = convert.toCanvas(getMagnetPoint());
 		Draw.drawRect(g2d, pt, convert.scaleDim(mdim));
-		Point tt = new Point((int)(pt.x + convert.scale(mdim.getWidth())), (int)(pt.y));
 
-/*
-		if (pickup != null){
+		Point tt = new Point((int)(pt.x + convert.scale(mdim.getWidth())), (int)(pt.y + convert.scale(mdim.getHeight() / 2)));
+		magnetTipAccept = new Point((int)(tt.x + convert.scale(20)), (int)tt.y);
+		g2d.getTransform().transform(tt,tt);
+		g2d.getTransform().transform(magnetTipAccept,magnetTipAccept);
+		magnetTip = convert.fromCanvas(tt);
+		magnetTipAccept = convert.fromCanvas(magnetTipAccept);
+
+System.out.println(pickup!=null);
+		if (pickup!=null){
+			pickup.setPtRef((int)magnetTip.x, (int)magnetTip.y);
 			pickup.setTransform(g2d.getTransform());
-			tt = convert.fromCanvas(tt);
-			pickup.setPtRef((int)tt.x,(int)(tt.y + mdim.getHeight() - pickup.getHeight()));
-			tt = convert.toCanvas(tt);
 		}
+/*
+		tt = convert.toCanvas(tt);
+		magnetTip = convert.toCanvas(magnetTip);
 */
 
-		g2d.getTransform().transform(tt,tt);
 		g2d.setTransform(before);
-		magnetTip = tt;
-	}
-
-	public void pickUp(BaseComponent c){
-		pickup = c;
+g2d.setColor(Color.BLUE);
+Draw.point(g2d,convert.toCanvas(magnetTip),10);
+Draw.point(g2d,convert.toCanvas(magnetTipAccept),10);
+g2d.setColor(Color.RED);
+//Draw.point(g2d,(magnetTip),10);
+//Draw.point(g2d,(magnetTipAccept),10);
 	}
 }

@@ -1,15 +1,19 @@
 package doozerSimulator.objects;
 
 import java.util.ArrayList;
+import java.awt.geom.AffineTransform;
+import java.awt.Point;
 
 public class CandyFactory extends GameObject{
 	public CandyFactory(){}
 
-	public void findPickUp(Selected s){
-	//	System.out.println(s.i + " point:" + s.pt + " pivot:" + s.pivot + " angle:"+ s.angle);
+	public BaseComponent findPickUp(Point pt, AffineTransform at){
 		for (BaseComponent bc : compList){
-			//System.out.println(bc.getX());
+			if(bc.contains(0,pt)){
+				return bc;
+			}
 		}
+		return null;
 	}
 
 	public BaseComponent first(){

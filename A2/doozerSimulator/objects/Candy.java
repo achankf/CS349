@@ -7,7 +7,6 @@ import java.awt.geom.AffineTransform;
 import doozerSimulator.Draw;
 
 public final class Candy extends BaseComponent{
-	Boolean pickup = false;
 
 	public Candy(Point ptRef, int width, int height){
 		super(ptRef,width,height);
@@ -15,11 +14,6 @@ public final class Candy extends BaseComponent{
 	}
 
 	public void move(int i, Point pt, AffineTransform at){
-		if (!pickup) return;
-		if (at != null){
-			trans.setTransform(at);
-		}
-		setPtRef((int)pt.x,(int)(pt.y - getHeight()));
 	}
 
 	public int getNumComp(){

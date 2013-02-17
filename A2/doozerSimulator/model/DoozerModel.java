@@ -53,14 +53,13 @@ public class DoozerModel extends BaseModel{
 	}
 
 	public void pickUp(BaseComponent c){
-		arm.pickUp(c);
-		body.pickUp(c);
+		arm.setPickUp(c);
+		body.setPickUp(c);
 	}
 
-	public void findPickUp(Selected s){
-		Point pt = arm.getMagnetPoint();
-		System.out.println(arm.getMagnetPoint());
-		factory.findPickUp(s);
+	public void findPickUp(){
+		if (arm.getPickUp() != null) return;
+		pickUp(factory.findPickUp(arm.getMagnetTipAccept(),arm.getTransform()));
 	}
 
 	public BaseComponent getFirst(){

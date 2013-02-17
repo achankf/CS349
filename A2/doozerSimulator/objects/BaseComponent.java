@@ -7,7 +7,8 @@ import java.awt.Graphics2D;
 
 public abstract class BaseComponent extends Dimension{
 	private Point ptRef;
-	public AffineTransform trans;
+	protected AffineTransform trans;
+	protected BaseComponent pickup;
 
 	public abstract void move(int i, Point pt, AffineTransform at);
 	public abstract int getNumComp();
@@ -53,6 +54,10 @@ public abstract class BaseComponent extends Dimension{
 		trans.setTransform(at);
 	}
 
+	public AffineTransform getTransform(){
+		return trans;
+	}
+
 	public Selected containsAll(Point pt){
 		for (int i = 0; i < getNumComp(); i++){
 			if (contains(i,pt)) return new Selected(this,i,null,null,0);
@@ -85,12 +90,17 @@ public abstract class BaseComponent extends Dimension{
 		pt.setLocation(newX,newY);
 	}
 
-	public void drawPicked(Graphics2D g2d, Convert convert){
-		draw(g2d,convert);
-	}
-
 	@Override
 	public String toString(){
 		return "Point:" + ptRef + " dim:" + getWidth() + "," + getHeight();
+	}
+
+	public void setPickUp(BaseComponent bc){
+System.out.println("HIHI");
+		pickup = bc;
+	}
+
+	public BaseComponent getPickUp(){
+		return pickup;
 	}
 }

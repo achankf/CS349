@@ -107,12 +107,14 @@ public class DoozerView extends JComponent {
 			if (selected == null) return;
 			if (selected.i == -1) return;
 			Point pt = new Point(from(e.getPoint()));
-			selected.comp.move(selected.i, pt, null);
+			AffineTransform at = null;
 			if (magnetOn){
-				model.pickUp(model.getFirst());
+				model.findPickUp();
+				//model.pickUp(model.getFirst());
 			} else {
 				model.pickUp(null);
 			}
+			selected.comp.move(selected.i, pt, at);
 			repaint();
 		} // mouseDragged
 	} // MController

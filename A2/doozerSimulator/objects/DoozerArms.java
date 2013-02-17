@@ -132,14 +132,13 @@ public final class DoozerArms extends BaseComponent{
 		magnetTipAccept = new Point((int)(tt.x + convert.scale(20)), (int)tt.y);
 		g2d.getTransform().transform(tt,tt);
 		g2d.getTransform().transform(magnetTipAccept,magnetTipAccept);
+		if (pickup!=null){
+			pickup.setPtRef((int)tt.x, (int)tt.y);
+			pickup.setTransform(g2d.getTransform());
+		}
 		magnetTip = convert.fromCanvas(tt);
 		magnetTipAccept = convert.fromCanvas(magnetTipAccept);
 
-System.out.println(pickup!=null);
-		if (pickup!=null){
-			pickup.setPtRef((int)magnetTip.x, (int)magnetTip.y);
-			pickup.setTransform(g2d.getTransform());
-		}
 /*
 		tt = convert.toCanvas(tt);
 		magnetTip = convert.toCanvas(magnetTip);

@@ -8,7 +8,9 @@ import java.util.LinkedList;
 import doozerSimulator.objects.*;
 
 public class DoozerModel extends BaseModel{
-	ArrayList <GameObject> objectList;
+	protected ArrayList <GameObject> objectList;
+	private DoozerArms arm;
+	private CandyFactory factory;
 
 	public DoozerModel(){
 		objectList = new ArrayList <GameObject>();
@@ -19,14 +21,15 @@ public class DoozerModel extends BaseModel{
 			Point doozerLoc = new Point(200,100);
 			Doozer doozer = new Doozer();
 			doozer.addComp(new DoozerBody(doozerLoc,200,100));
-			doozer.addComp(new DoozerArms(doozerLoc,200,50,angles));
+			arm = new DoozerArms(doozerLoc,200,50,angles);
+			doozer.addComp(arm);
 			objectList.add(doozer);
 		}
 
 		// create candies
 		{
 			Point pt = new Point(500,100);
-			CandyFactory factory = new CandyFactory();
+			factory = new CandyFactory();
 			factory.addComp(new Candy(pt, 30, 100));
 			objectList.add(factory);
 		}
@@ -38,12 +41,28 @@ public class DoozerModel extends BaseModel{
 		}
 	}
 
-	public SelectedPair containsAll(Point pt){
-		SelectedPair ret = null;
+	public Selected containsAll(Point pt){
+		Selected ret = null;
 		for (GameObject go : objectList){
 			ret = go.containsAll(pt);
 			if (ret != null) return ret;
 		}
 		return ret;
+	}
+
+	public void pickUp(BaseComponent c){
+		arm.pickUp(c);
+	}
+
+	public void findPickUp(Selected s){
+		Point pt = arm.getMagnetPoint();
+		//arm.rotatePoint(pt);
+factory.printall();
+		System.out.println(arm.getMagnetPoint());
+		factory.findPickUp(s);
+	}
+
+	public BaseComponent getFirst(){
+		return factory.first();
 	}
 }

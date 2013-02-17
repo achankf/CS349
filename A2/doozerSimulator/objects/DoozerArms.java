@@ -1,6 +1,7 @@
 package doozerSimulator.objects;
 
 import java.awt.Point;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
@@ -9,6 +10,7 @@ import doozerSimulator.Draw;
 public final class DoozerArms extends BaseComponent{
 	private double [] armAngles;
 	Dimension mdim;
+	BaseComponent pickup = null;
 
 	public DoozerArms(Point ptRef, int width, int height, double [] providedAngles){
 		super(ptRef,width,height);
@@ -18,18 +20,35 @@ public final class DoozerArms extends BaseComponent{
 	}
 
 	@Override
-	public SelectedPair containsAll(Point pt){
+	public Selected containsAll(Point pt){
 		Point temp = new Point(pt);
 		int i = 0;
 		for (; i < getNumComp(); i++){
 			Point pivot = new Point(getPivot(i));
 			rotatePoint(temp, pivot, armAngles[i]);
-			if (contains(i,temp)) return new SelectedPair(this,i);
+			if (contains(i,temp)) return new Selected(this,i,temp,pivot,armAngles[i]);
 		}
 		if (contains(temp, getMagnetPoint(), mdim)){
-			return new SelectedPair(this,-1);
+			return new Selected(this,-1,null,null,0);
 		}
 		return null;
+	}
+
+	public void rotateNPoint(int i, Point pt){
+		for (int j = 0; j < armAngles.length; j++){
+			rotatePoint(pt,getPivot(j),armAngles[j]);
+		}
+	}
+
+	public Point findPickUp(Point pt){
+		Point temp = new Point(pt);
+		int i = 0;
+		for (; i < getNumComp(); i++){
+			Point pivot = new Point(getPivot(i));
+			rotatePoint(temp, pivot, armAngles[i]);
+		}
+System.out.println(temp);
+		return temp;
 	}
 
 	public void move(int i, Point pt){
@@ -37,6 +56,9 @@ public final class DoozerArms extends BaseComponent{
 				rotatePoint(pt, getPivot(j),armAngles[j]);
 			}
 			armAngles[i] = calculateAngle(componentPos(i,pt));
+			if (pickup != null){
+//				pickup.setPtRef(pt.x,pt.y);
+			}
 	}
 
 	@Override
@@ -54,6 +76,18 @@ public final class DoozerArms extends BaseComponent{
 
 	public Point getMagnetPoint(){
 		return new Point((int)getMagnetX(), (int)getMagnetY());
+	}
+
+	public Point getRelMagPt(Convert convert){
+		int x = (int)getRefX();
+		int y = (int)getRefY();
+		for (int i = 0; i < armAngles.length; i++){
+			x = x + (int)(convert.scale(getWidth()) * Math.cos(armAngles[i]));
+			y = y + (int)(convert.scale(getHeight()) * Math.sin(armAngles[i]));
+		}
+		x -= convert.scale(getWidth() +this.getWidth()/8);
+		y -= convert.scale(getHeight()+this.getHeight()/2);
+		return new Point(x,y);
 	}
 
 	@Override
@@ -88,7 +122,24 @@ public final class DoozerArms extends BaseComponent{
 		Point pt;
 		Point pivot;
 		int i = 0;
+Point temp = new Point(500,100);
+rotateNPoint(armAngles.length, temp);
+		Draw.point(g2d,convert.toCanvas(temp),10);
+		g2d.setColor(Color.RED);
+			Draw.drawRect(g2d, convert.toCanvas(new Point((int)temp.x, (int)(temp.y+ convert.scale(30)))), convert.scaleDim(new Dimension(100,30)));
 		for (; i < getNumComp(); i++){
+			pt = convert.toCanvas(getPoint(i));
+			pivot = convert.toCanvas(getPivot(i));
+			Dimension dim = convert.scaleDim(this);
+			Draw.point(g2d, pivot,10);
+			Draw.drawRect(g2d, pt, dim);
+		}
+		pt = convert.toCanvas(getMagnetPoint());
+		Draw.drawRect(g2d, pt, convert.scaleDim(mdim));
+		Draw.point(g2d,pt,10);
+		g2d.setColor(Color.BLACK);
+
+		for (i=0; i < getNumComp(); i++){
 			pt = convert.toCanvas(getPoint(i));
 			pivot = convert.toCanvas(getPivot(i));
 			Dimension dim = convert.scaleDim(this);
@@ -98,6 +149,20 @@ public final class DoozerArms extends BaseComponent{
 		}
 		pt = convert.toCanvas(getMagnetPoint());
 		Draw.drawRect(g2d, pt, convert.scaleDim(mdim));
+		Draw.point(g2d,pt,10);
+		Draw.point(g2d, (new Point(pt.x+((int)convert.scale(10)), pt.y+((int)convert.scale(100)))),10);
+
+		if (pickup!=null){
+			pt = convert.fromCanvas(pt);
+			pickup.setPtRef(pt.x,pt.y);
+			pickup.draw(g2d,convert);
+		}
+		//Draw.drawRect(g2d, convert.toCanvas((new Point(500,100))), convert.scaleDim(new Dimension(30,100)));
 		g2d.setTransform(before);
+System.out.println("PT:" + pt + " " + convert.fromCanvas(pt));
+	}
+
+	public void pickUp(BaseComponent c){
+		pickup = c;
 	}
 }

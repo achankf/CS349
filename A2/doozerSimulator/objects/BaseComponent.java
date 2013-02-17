@@ -18,6 +18,13 @@ public abstract class BaseComponent extends Dimension{
 		return ptRef.y;
 	}
 
+	public double getX(){
+		return ptRef.x;
+	}
+	public double getY(){
+		return ptRef.y;
+	}
+
 	protected void setPtRef(int x, int y){
 		ptRef.setLocation(x,y);
 	}
@@ -39,9 +46,9 @@ public abstract class BaseComponent extends Dimension{
 		return new Point((int)getX(i),(int)getY(i));
 	}
 
-	public SelectedPair containsAll(Point pt){
+	public Selected containsAll(Point pt){
 		for (int i = 0; i < getNumComp(); i++){
-			if (contains(i,pt)) return new SelectedPair(this,i);
+			if (contains(i,pt)) return new Selected(this,i,null,null,0);
 		}
 		return null;
 	}
@@ -69,5 +76,10 @@ public abstract class BaseComponent extends Dimension{
 		double newX = tempX * cost - tempY * sint + pivot.x;
 		double newY = tempX * sint + tempY * cost + pivot.y;
 		pt.setLocation(newX,newY);
+	}
+
+	@Override
+	public String toString(){
+		return "Point:" + ptRef + " dim:" + getWidth() + "," + getHeight();
 	}
 }

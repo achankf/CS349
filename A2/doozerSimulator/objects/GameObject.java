@@ -11,8 +11,8 @@ public class GameObject{
 		compList = new ArrayList<BaseComponent>();
 	}
 
-	public SelectedPair containsAll(Point pt){
-		SelectedPair ret = null;
+	public Selected containsAll(Point pt){
+		Selected ret = null;
 		for (BaseComponent bc : compList){
 			ret = bc.containsAll(pt);
 			if (ret != null) return ret;

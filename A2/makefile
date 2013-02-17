@@ -4,10 +4,11 @@ CLASSES = $(SOURCES:.java=.class)
 CLASS_DIR=doozerSimulator
 JAR = doozer.jar
 
-all: $(JAR)
+#all: $(JAR)
+all: $(CLASSES)
 
-$(JAR): $(CLASSES) $(SOURCES)
-	jar cvfe $(JAR) doozerSimulator.Main doozerSimulator/
+#$(JAR): $(CLASSES) $(SOURCES)
+#	jar cvfe $(JAR) doozerSimulator.Main `find doozerSimulator/ -name *.class`
 
 %.class: %.java
 	javac $<
@@ -16,5 +17,7 @@ $(JAR): $(CLASSES) $(SOURCES)
 clean:
 	rm -rf $(CLASS_DIR)/*.class $(CLASS_DIR)/model/*.class $(CLASS_DIR)/view/*.class *.jar $(CLASS_DIR)/objects/*.class
 
-run: $(JAR)
-	java -jar $(JAR)
+#run: $(JAR)
+#	java -jar $(JAR)
+run:$(CLASSES)
+	java doozerSimulator.Main

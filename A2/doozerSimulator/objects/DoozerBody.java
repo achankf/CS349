@@ -11,13 +11,7 @@ public final class DoozerBody extends BaseComponent{
 	}
 
 	public void move(int i, Point pt){
-		int newPtX = (int)getRefX();
-		if (pt.x > getRefX()){
-			newPtX += 1;
-		} else if (pt.x < getRefX()){
-			newPtX -= 1;
-		}
-		setPtRef(newPtX, (int)getRefY());
+		setPtRef(pt.x, (int)getRefY());
 	}
 
 	@Override

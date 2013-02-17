@@ -91,7 +91,7 @@ public class DoozerView extends JComponent {
 	}
 
 	private class MController extends MouseInputAdapter {
-		private SelectedPair selected = null;
+		private Selected selected = null;
 		private Boolean magnetOn = false;
 
 		public void mousePressed(MouseEvent e) {
@@ -109,7 +109,10 @@ public class DoozerView extends JComponent {
 			Point pt = new Point(from(e.getPoint()));
 			selected.comp.move(selected.i, pt);
 			if (magnetOn){
-System.out.println("Magnet ON");
+				model.pickUp(model.getFirst());
+		//		model.getFirst().setPtRef();
+			} else {
+				model.pickUp(null);
 			}
 			repaint();
 		} // mouseDragged

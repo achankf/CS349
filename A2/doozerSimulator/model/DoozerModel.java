@@ -10,17 +10,19 @@ import doozerSimulator.objects.*;
 public class DoozerModel extends BaseModel{
 	protected ArrayList <GameObject> objectList;
 	private DoozerArms arm;
+	private DoozerBody body;
 	private CandyFactory factory;
 
 	public DoozerModel(){
 		objectList = new ArrayList <GameObject>();
+		double [] angles = {-1.0471975,0.4,0.4,0.1};
 
 		// create the doozer
 		{
-			double [] angles = {-1.0471975,0.4,0.4,0.1};
 			Point doozerLoc = new Point(200,100);
 			Doozer doozer = new Doozer();
-			doozer.addComp(new DoozerBody(doozerLoc,200,100));
+			body = new DoozerBody(doozerLoc,200,100);
+			doozer.addComp(body);
 			arm = new DoozerArms(doozerLoc,200,50,angles);
 			doozer.addComp(arm);
 			objectList.add(doozer);
@@ -52,6 +54,7 @@ public class DoozerModel extends BaseModel{
 
 	public void pickUp(BaseComponent c){
 		arm.pickUp(c);
+		body.pickUp(c);
 	}
 
 	public void findPickUp(Selected s){

@@ -1,11 +1,13 @@
 package doozerSimulator.objects;
 
 import java.awt.Point;
+import java.awt.geom.AffineTransform;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 
 public abstract class BaseComponent extends Dimension{
 	private Point ptRef;
+	public AffineTransform trans;
 
 	public abstract void move(int i, Point pt);
 	public abstract int getNumComp();
@@ -40,10 +42,15 @@ public abstract class BaseComponent extends Dimension{
 	public BaseComponent(Point ptRef, int width, int height){
 		super(width,height);
 		this.ptRef = ptRef;
+		this.trans = new AffineTransform();
 	}
 
 	public Point getPoint(int i){
 		return new Point((int)getX(i),(int)getY(i));
+	}
+
+	public void setTransform(AffineTransform at){
+		trans.setTransform(at);
 	}
 
 	public Selected containsAll(Point pt){

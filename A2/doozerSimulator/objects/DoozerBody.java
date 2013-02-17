@@ -6,11 +6,16 @@ import java.awt.Graphics2D;
 import doozerSimulator.Draw;
 
 public final class DoozerBody extends BaseComponent{
+		BaseComponent pickup = null;
+
 	public DoozerBody(Point ptRef, int width, int height){
 		super(ptRef,width,height);
 	}
 
 	public void move(int i, Point pt){
+		if (pickup!=null){
+			pickup.setPtRef((int)(pickup.getX(0) + pt.x - getRefX()), (int)(pickup.getY(0)));
+		}
 		setPtRef(pt.x, (int)getRefY());
 	}
 
@@ -32,5 +37,9 @@ public final class DoozerBody extends BaseComponent{
 		Point coor = convert.toCanvas(getPoint(0));
 		Dimension dim = convert.scaleDim(this);
 		Draw.drawRect(g2d,coor,dim);
+	}
+
+	public void pickUp(BaseComponent c){
+		pickup = c;
 	}
 }

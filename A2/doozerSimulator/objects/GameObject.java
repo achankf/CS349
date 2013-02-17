@@ -2,12 +2,13 @@ package doozerSimulator.objects;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.awt.Graphics2D;
 
-public class GameObject extends Point{
+public class GameObject{
 	protected ArrayList<BaseComponent> compList;
 
-	public GameObject(int x, int y){
-		super(x,y);
+	public GameObject(){
+		compList = new ArrayList<BaseComponent>();
 	}
 
 	public SelectedPair containsAll(Point pt){
@@ -17,6 +18,12 @@ public class GameObject extends Point{
 			if (ret != null) return ret;
 		}
 		return ret;
+	}
+
+	public void drawAll(Graphics2D g2d, Convert convert){
+		for (BaseComponent bo : compList){
+			bo.draw(g2d,convert);
+		}
 	}
 
 	public void addComp(BaseComponent bc){

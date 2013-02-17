@@ -8,10 +8,15 @@ public abstract class BaseComponent extends Dimension{
 	private Point ptRef;
 
 	public abstract void move(int i, Point pt);
-	public abstract double getX(int i);
-	public abstract double getY(int i);
 	public abstract int getNumComp();
 	public abstract void draw(Graphics2D g2d, Convert convert);
+
+	public double getX(int i){
+		return ptRef.x;
+	}
+	public double getY(int i){
+		return ptRef.y;
+	}
 
 	protected void setPtRef(int x, int y){
 		ptRef.setLocation(x,y);

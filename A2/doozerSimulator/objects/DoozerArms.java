@@ -39,6 +39,7 @@ public final class DoozerArms extends BaseComponent{
 			armAngles[i] = calculateAngle(componentPos(i,pt));
 	}
 
+	@Override
 	public double getX(int i){
 		return this.getRefX() + this.getWidth() *i - i * this.getWidth()/8;
 	}
@@ -55,6 +56,7 @@ public final class DoozerArms extends BaseComponent{
 		return new Point((int)getMagnetX(), (int)getMagnetY());
 	}
 
+	@Override
 	public double getY(int i){
 		return this.getRefY();
 	}

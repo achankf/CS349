@@ -20,10 +20,12 @@ public final class DoozerBody extends BaseComponent{
 		setPtRef(newPtX, (int)getRefY());
 	}
 
+	@Override
 	public double getX(int i){
 		return this.getRefX() - this.getWidth()/2;
 	}
 
+	@Override
 	public double getY(int i){
 		return this.getRefY() + this.getHeight() / 5;
 	}

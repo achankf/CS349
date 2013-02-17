@@ -49,9 +49,8 @@ public class DoozerView extends JComponent {
 		scale = scale == 0 ? 1 : scale;
 
 		Graphics2D g2d = (Graphics2D) g;
-		Doozer doozer = model.getDoozer();
 		
-		doozer.drawAll(g2d, new Convert(scale){
+		model.drawAll(g2d, new Convert(scale){
 			public Point fromCanvas(Point pt){
 				return from(pt);
 			}
@@ -96,9 +95,8 @@ public class DoozerView extends JComponent {
 		private Boolean magnetOn = false;
 
 		public void mousePressed(MouseEvent e) {
-			Doozer doozer= model.getDoozer();
 			Point pt = new Point(from(e.getPoint()));
-			selected = doozer.containsAll(pt);
+			selected = model.containsAll(pt);
 			if (selected != null && selected.i == -1){
 				magnetOn = !magnetOn;
 			}
@@ -108,7 +106,6 @@ public class DoozerView extends JComponent {
 		public void mouseDragged(MouseEvent e) {
 			if (selected == null) return;
 			if (selected.i == -1) return;
-			Doozer doozer = model.getDoozer();
 			Point pt = new Point(from(e.getPoint()));
 			selected.comp.move(selected.i, pt);
 			if (magnetOn){

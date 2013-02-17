@@ -9,18 +9,41 @@ import doozerSimulator.objects.*;
 
 public class DoozerModel extends BaseModel{
 	ArrayList <GameObject> objectList;
-	Doozer doozer;
 
 	public DoozerModel(){
 		objectList = new ArrayList <GameObject>();
-		double [] angles = {-1.0471975,0.4,0.4,0.1};
-		doozer = new Doozer(200,300);
-		doozer.addComp(new DoozerBody(doozer,200,100));
-		doozer.addComp(new DoozerArms(doozer,200,50,angles));
-		objectList.add(doozer);
+
+		// create the doozer
+		{
+			double [] angles = {-1.0471975,0.4,0.4,0.1};
+			Point doozerLoc = new Point(200,100);
+			Doozer doozer = new Doozer();
+			doozer.addComp(new DoozerBody(doozerLoc,200,100));
+			doozer.addComp(new DoozerArms(doozerLoc,200,50,angles));
+			objectList.add(doozer);
+		}
+
+		// create candies
+		{
+			Point pt = new Point(500,100);
+			CandyFactory factory = new CandyFactory();
+			factory.addComp(new Candy(pt, 30, 100));
+			objectList.add(factory);
+		}
 	}
 
-	public Doozer getDoozer(){
-		return doozer;
+	public void drawAll(Graphics2D g2d, Convert convert){
+		for (GameObject go : objectList){
+			go.drawAll(g2d, convert);
+		}
+	}
+
+	public SelectedPair containsAll(Point pt){
+		SelectedPair ret = null;
+		for (GameObject go : objectList){
+			ret = go.containsAll(pt);
+			if (ret != null) return ret;
+		}
+		return ret;
 	}
 }

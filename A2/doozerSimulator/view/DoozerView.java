@@ -107,10 +107,9 @@ public class DoozerView extends JComponent {
 			if (selected == null) return;
 			if (selected.i == -1) return;
 			Point pt = new Point(from(e.getPoint()));
-			selected.comp.move(selected.i, pt);
+			selected.comp.move(selected.i, pt, null);
 			if (magnetOn){
 				model.pickUp(model.getFirst());
-		//		model.getFirst().setPtRef();
 			} else {
 				model.pickUp(null);
 			}

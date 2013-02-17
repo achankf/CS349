@@ -16,4 +16,8 @@ public abstract class Convert{
 	public Dimension scaleDim(Dimension dim){
 		return new Dimension((int)scale(dim.getWidth()), (int)scale(dim.getHeight()));
 	}
+
+	public double getScale(){
+		return scaleFactor;
+	}
 }

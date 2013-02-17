@@ -32,7 +32,7 @@ public class DoozerModel extends BaseModel{
 		{
 			Point pt = new Point(500,100);
 			factory = new CandyFactory();
-			factory.addComp(new Candy(pt, 100, 100));
+			factory.addComp(new Candy(pt, 50, 100));
 			objectList.add(factory);
 		}
 	}
@@ -59,13 +59,15 @@ public class DoozerModel extends BaseModel{
 
 	public void findPickUp(Selected s){
 		Point pt = arm.getMagnetPoint();
-		//arm.rotatePoint(pt);
-factory.printall();
 		System.out.println(arm.getMagnetPoint());
 		factory.findPickUp(s);
 	}
 
 	public BaseComponent getFirst(){
 		return factory.first();
+	}
+
+	public Point getMagnetTip(){
+		return arm.getMagnetTip();
 	}
 }

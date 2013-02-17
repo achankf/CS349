@@ -1,6 +1,7 @@
 package doozerSimulator.objects;
 
 import java.awt.Point;
+import java.awt.geom.AffineTransform;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import doozerSimulator.Draw;
@@ -12,7 +13,7 @@ public final class DoozerBody extends BaseComponent{
 		super(ptRef,width,height);
 	}
 
-	public void move(int i, Point pt){
+	public void move(int i, Point pt, AffineTransform at){
 		if (pickup!=null){
 			pickup.setPtRef((int)(pickup.getX(0) + pt.x - getRefX()), (int)(pickup.getY(0)));
 		}

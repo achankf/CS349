@@ -9,7 +9,7 @@ public abstract class BaseComponent extends Dimension{
 	private Point ptRef;
 	public AffineTransform trans;
 
-	public abstract void move(int i, Point pt);
+	public abstract void move(int i, Point pt, AffineTransform at);
 	public abstract int getNumComp();
 	public abstract void draw(Graphics2D g2d, Convert convert);
 

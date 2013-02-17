@@ -15,10 +15,4 @@ public class CandyFactory extends GameObject{
 	public BaseComponent first(){
 		return compList.get(0);
 	}
-
-	public void printall(){
-		for (BaseComponent bc : compList){
-			System.out.println(bc);
-		}
-	}
 }

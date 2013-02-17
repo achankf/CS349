@@ -11,11 +11,13 @@ public final class DoozerArms extends BaseComponent{
 	private double [] armAngles;
 	Dimension mdim;
 	BaseComponent pickup = null;
+	Point magnetTip;
 
 	public DoozerArms(Point ptRef, int width, int height, double [] providedAngles){
 		super(ptRef,width,height);
 		armAngles = providedAngles;
 		mdim = new Dimension(width/15,(int)(height*2));
+		magnetTip = new Point(0,0);
 	}
 
 	@Override
@@ -50,7 +52,7 @@ System.out.println(temp);
 		return temp;
 	}
 
-	public void move(int i, Point pt){
+	public void move(int i, Point pt, AffineTransform at){
 		AffineTransform trans = new AffineTransform();
 		for (int j = 0; j < i; j++){
 			rotatePoint(pt, getPivot(j),armAngles[j]);
@@ -114,72 +116,38 @@ System.out.println(temp);
 		return new Point((int)x,(int)y);
 	}
 
+	public Point getMagnetTip(){
+		return magnetTip;
+	}
+
 	public void draw(Graphics2D g2d, Convert convert){
 		AffineTransform before = g2d.getTransform();
-		AffineTransform [] transs = new AffineTransform [armAngles.length+1];
-		Point pt;
-		Point pivot;
-		int i;
+		Point pt, pivot;
 
-		if (pickup != null){
-			Point temp = pickup.getPoint(0);
-			for (i = 0; i < getNumComp(); i++){
-				pivot = new Point(getPivot(i));
-				rotatePoint(temp, pivot, -armAngles[i]);
-			}
-			Point point = pickup.getPoint(0);
-			g2d.getTransform().transform(point,point);
-		}
-
-		
-/*
-		for (i = 0; i < getNumComp(); i++){
+		for (int i=0; i < getNumComp(); i++){
 			pt = convert.toCanvas(getPoint(i));
 			pivot = convert.toCanvas(getPivot(i));
 			Dimension dim = convert.scaleDim(this);
 			Draw.point(g2d, pivot,10);
-			Draw.drawRect(g2d, pt, dim);
-		}
-		pt = convert.toCanvas(getMagnetPoint());
-		Draw.drawRect(g2d, pt, convert.scaleDim(mdim));
-		Draw.point(g2d,pt,10);
-		g2d.setColor(Color.BLACK);
-*/
-
-		for (i=0; i < getNumComp(); i++){
-			pt = convert.toCanvas(getPoint(i));
-			pivot = convert.toCanvas(getPivot(i));
-			Dimension dim = convert.scaleDim(this);
-			Draw.point(g2d, pivot,10);
-
-			transs[i] = g2d.getTransform();
-
 			Draw.rotate(g2d, armAngles[i], pivot); 
 			Draw.drawRect(g2d, pt, dim);
 		}
 		pt = convert.toCanvas(getMagnetPoint());
 		Draw.drawRect(g2d, pt, convert.scaleDim(mdim));
-		Point tt = new Point((int)(pt.x + convert.scale(mdim.getWidth())), (int)(pt.y + convert.scale(mdim.getHeight()/2)));
-Draw.point(g2d,tt,20);
-/*
-		tt = convert.fromCanvas(tt);
-		double ang = calculateAngle(tt);
-		transs[getNumComp()] = new AffineTransform();
-		transs[getNumComp()].rotate(ang, (int)tt.x,(int)tt.y);
-*/
+		Point tt = new Point((int)(pt.x + convert.scale(mdim.getWidth())), (int)(pt.y));
 
+/*
 		if (pickup != null){
 			pickup.setTransform(g2d.getTransform());
 			tt = convert.fromCanvas(tt);
-			System.out.println(tt + " " + pickup.getX(0));
-			//pickup.setPtRef((int)tt.x,(int)tt.y);
-			Point point = pickup.getPoint(0);
-			g2d.getTransform().transform(point,point);
-			pickup.draw(g2d,convert);
-			//pickup.drawPicked(g2d,convert);
+			pickup.setPtRef((int)tt.x,(int)(tt.y + mdim.getHeight() - pickup.getHeight()));
+			tt = convert.toCanvas(tt);
 		}
+*/
 
+		g2d.getTransform().transform(tt,tt);
 		g2d.setTransform(before);
+		magnetTip = tt;
 	}
 
 	public void pickUp(BaseComponent c){

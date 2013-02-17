@@ -32,7 +32,7 @@ public class DoozerModel extends BaseModel{
 		{
 			Point pt = new Point(500,100);
 			factory = new CandyFactory();
-			factory.addComp(new Candy(pt, 30, 100));
+			factory.addComp(new Candy(pt, 100, 100));
 			objectList.add(factory);
 		}
 	}

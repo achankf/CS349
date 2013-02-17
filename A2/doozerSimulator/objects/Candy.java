@@ -31,6 +31,7 @@ public final class Candy extends BaseComponent{
 	@Override
 	public void drawPicked(Graphics2D g2d, Convert convert){
 		Point coor = convert.toCanvas(getPoint(0));
+Draw.point(g2d,coor,15);
 		Dimension dim = convert.scaleDim(new Dimension((int)this.getHeight(), (int)this.getWidth()));
 		Draw.drawRect(g2d,coor,dim);
 	}

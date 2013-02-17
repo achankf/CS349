@@ -15,8 +15,6 @@ public final class DoozerArms extends BaseComponent{
 	public DoozerArms(Point ptRef, int width, int height, double [] providedAngles){
 		super(ptRef,width,height);
 		armAngles = providedAngles;
-//		armAngles = new double [providedAngles.length];
-//		System.arraycopy(providedAngles,0,armAngles,0, providedAngles.length);
 		mdim = new Dimension(width/15,(int)(height*2));
 	}
 
@@ -58,17 +56,6 @@ System.out.println(temp);
 			rotatePoint(pt, getPivot(j),armAngles[j]);
 		}
 		armAngles[i] = calculateAngle(componentPos(i,pt));
-/*
-		for (int j = 0; j < armAngles.length; j++){
-			Point pivot = getPivot(j);
-			trans.rotate(armAngles[j],pivot.x, pivot.y);
-		}
-		if (pickup != null){
-			pt = pickup.getPoint(0);
-			//trans.transform(pt,pt);
-			//pickup.setPtRef(pt.x,pt.y);
-		}
-*/
 	}
 
 	@Override
@@ -129,8 +116,7 @@ System.out.println(temp);
 
 	public void draw(Graphics2D g2d, Convert convert){
 		AffineTransform before = g2d.getTransform();
-		AffineTransform [] inverse = new AffineTransform [armAngles.length];
-		AffineTransform [] transs = new AffineTransform [armAngles.length];
+		AffineTransform [] transs = new AffineTransform [armAngles.length+1];
 		Point pt;
 		Point pivot;
 		int i;
@@ -143,13 +129,10 @@ System.out.println(temp);
 			}
 			Point point = pickup.getPoint(0);
 			g2d.getTransform().transform(point,point);
-			//Draw.point(g2d,convert.toCanvas(point),20);
-			Draw.point(g2d,convert.toCanvas(temp),20);
-			//pickup.setPtRef(point.x,point.y);
-			pickup.drawPicked(g2d,convert);
 		}
 
 		
+/*
 		for (i = 0; i < getNumComp(); i++){
 			pt = convert.toCanvas(getPoint(i));
 			pivot = convert.toCanvas(getPivot(i));
@@ -161,6 +144,7 @@ System.out.println(temp);
 		Draw.drawRect(g2d, pt, convert.scaleDim(mdim));
 		Draw.point(g2d,pt,10);
 		g2d.setColor(Color.BLACK);
+*/
 
 		for (i=0; i < getNumComp(); i++){
 			pt = convert.toCanvas(getPoint(i));
@@ -169,66 +153,33 @@ System.out.println(temp);
 			Draw.point(g2d, pivot,10);
 
 			transs[i] = g2d.getTransform();
-			transs[i].rotate(-armAngles[i], pivot.x,pivot.y); 
-			
 
 			Draw.rotate(g2d, armAngles[i], pivot); 
-
-			//transs[i] = g2d.getTransform();
-
-try{
-inverse[i] = g2d.getTransform().createInverse();
-			pivot = (getPivot(i));
-			Point tempp = convert.toCanvas(getPoint(i));
-			g2d.getTransform().inverseTransform(tempp,tempp);
-			Draw.point(g2d, tempp,10);
-
-			tempp = convert.toCanvas(getPoint(i));
-//			g2d.getTransform().transform(tempp,tempp);
-g2d.setColor(Color.RED);
-			Draw.point(g2d, tempp,10);
-g2d.setColor(Color.BLACK);
-} catch (Exception e){
-
-}
 			Draw.drawRect(g2d, pt, dim);
 		}
 		pt = convert.toCanvas(getMagnetPoint());
 		Draw.drawRect(g2d, pt, convert.scaleDim(mdim));
-		Draw.point(g2d,pt,10);
-		Draw.point(g2d, (new Point(pt.x+((int)convert.scale(10)), pt.y+((int)convert.scale(100)))),10);
+		Point tt = new Point((int)(pt.x + convert.scale(mdim.getWidth())), (int)(pt.y + convert.scale(mdim.getHeight()/2)));
+Draw.point(g2d,tt,20);
+/*
+		tt = convert.fromCanvas(tt);
+		double ang = calculateAngle(tt);
+		transs[getNumComp()] = new AffineTransform();
+		transs[getNumComp()].rotate(ang, (int)tt.x,(int)tt.y);
+*/
 
 		if (pickup != null){
-			Point temp = pickup.getPoint(0);
-			for (i=0; i < getNumComp(); i++){
-				pivot = new Point(getPivot(i));
-				rotatePoint(temp, pivot, -armAngles[i]);
-			}
+			pickup.setTransform(g2d.getTransform());
+			tt = convert.fromCanvas(tt);
+			System.out.println(tt + " " + pickup.getX(0));
+			//pickup.setPtRef((int)tt.x,(int)tt.y);
 			Point point = pickup.getPoint(0);
 			g2d.getTransform().transform(point,point);
-			//Draw.point(g2d,convert.toCanvas(point),20);
-			//pickup.setPtRef(point.x,point.y);
-			Draw.point(g2d,convert.toCanvas(temp),20);
-			pickup.drawPicked(g2d,convert);
+			pickup.draw(g2d,convert);
+			//pickup.drawPicked(g2d,convert);
 		}
 
-		//Draw.drawRect(g2d, convert.toCanvas((new Point(500,100))), convert.scaleDim(new Dimension(30,100)));
 		g2d.setTransform(before);
-if (pickup!=null){
-			pickup.drawPicked(g2d,convert);
-	g2d.setColor(Color.YELLOW);
-	for(i = 0; i < inverse.length; i++){
-		Point tempp = convert.toCanvas(pickup.getPoint(i));
-		Point tempp2 = convert.toCanvas(getPivot(i));
-		transs[i].transform(tempp,tempp);
-		transs[i].transform(tempp2,tempp2);
-		Draw.point(g2d,(tempp),15);
-		Draw.point(g2d,(tempp2),15);
-	}
-	pickup.setTransform(transs[i-1]);
-	g2d.setColor(Color.BLACK);
-}
-
 	}
 
 	public void pickUp(BaseComponent c){

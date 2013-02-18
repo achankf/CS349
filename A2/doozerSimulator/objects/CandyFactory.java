@@ -25,7 +25,7 @@ public class CandyFactory extends GameObject{
 		return compList.get(0);
 	}
 
-	private Boolean rectangleOverlap(BaseComponent bc1, BaseComponent bc2, DoozerView view){
+	private Boolean rectangleOverlap(BaseComponent bc1, BaseComponent bc2){
 		int x1 = (int)bc1.getRefX();
 		int y1 = (int)bc1.getRefY();
 		int x2 = (int)bc2.getRefX();
@@ -41,14 +41,14 @@ public class CandyFactory extends GameObject{
 	}
 
 	@Override
-	public void update(DoozerView view){
+	public void update(){
 		for (BaseComponent bc : compList){
 			int i = 0;
 			for (BaseComponent bc2 : compList){
 				if (bc == bc2 || bc2 == pickup) continue;
-				if (rectangleOverlap(bc,bc2,view)) i++;
+				if (rectangleOverlap(bc,bc2)) i++;
 			}
-			if (i == 0) bc.update(view);
+			if (i == 0) bc.update();
 		}
 	}
 

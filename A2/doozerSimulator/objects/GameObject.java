@@ -31,9 +31,9 @@ public class GameObject{
 		compList.add(bc);
 	}
 
-	public void update(DoozerView view){
+	public void update(){
 		for (BaseComponent bc : compList){
-			bc.update(view);
+			bc.update();
 		}
 	}
 }

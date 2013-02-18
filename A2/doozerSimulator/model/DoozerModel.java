@@ -76,9 +76,9 @@ public class DoozerModel extends BaseModel{
 		return arm.getMagnetTip();
 	}
 
-	public void update(DoozerView view){
+	public void update(){
 		for (GameObject go : objectList){
-			go.update(view);
+			go.update();
 		}
 	}
 }

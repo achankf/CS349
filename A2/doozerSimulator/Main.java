@@ -29,7 +29,7 @@ final public class Main{
 		});
 		ActionListener listener = new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				model.update(canvas);
+				model.update();
 				canvas.repaint();
 			}
 		};

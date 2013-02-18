@@ -32,7 +32,7 @@ public final class Candy extends BaseComponent{
 	}
 
 	@Override
-	public void update(DoozerView view){
+	public void update(){
 		if (getRefY() - getHeight() > Config.LAND_HEIGHT){
 			setPtRef((int)getRefX(),(int)(getRefY() - 1));
 		}

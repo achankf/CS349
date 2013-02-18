@@ -108,5 +108,5 @@ System.out.println("CALLING CONTAINS ALL");
 		return pickup;
 	}
 
-	public void update(DoozerView view){}
+	public void update(){}
 }

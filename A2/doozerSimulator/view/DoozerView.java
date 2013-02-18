@@ -103,7 +103,7 @@ public class DoozerView extends JComponent {
 			selected = model.containsAll(pt);
 			if (selected != null && selected.i == -1){
 				magnetOn = !magnetOn;
-System.out.println(selected.i + " " + magnetOn);
+				System.out.println("Magnet Online: " + magnetOn);
 				if (!magnetOn){
 					model.pickUp(null);
 				}
@@ -119,7 +119,6 @@ System.out.println(selected.i + " " + magnetOn);
 			if (magnetOn){
 				model.findPickUp();
 			}
-System.out.println("MAGNET:" + magnetOn);
 			selected.comp.move(selected.i, pt, at);
 			repaint();
 		} // mouseDragged

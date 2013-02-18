@@ -12,6 +12,10 @@ public final class Draw{
 		g2d.fillRect((int)coor.getX(),(int)coor.getY(),(int)dim.getWidth(),(int)dim.getHeight());
 	}
 
+	public static void drawRect(Graphics2D g2d, Point coor, Dimension dim){
+		g2d.fillRect((int)coor.getX(),(int)coor.getY(),(int)dim.getWidth(),(int)dim.getHeight());
+	}
+
 	public static Color getColor(Random r){
 		return new Color(r.nextInt(256), r.nextInt(256), r.nextInt(256));
 	}

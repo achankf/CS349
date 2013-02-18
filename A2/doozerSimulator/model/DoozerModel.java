@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import doozerSimulator.objects.*;
+import doozerSimulator.*;
 import doozerSimulator.view.*;
 
 public class DoozerModel extends BaseModel{
@@ -20,23 +21,22 @@ public class DoozerModel extends BaseModel{
 		double [] angles = {-1.0471975,0.4,0.4,0.1};
 
 		// create the doozer
-		{
-			Point doozerLoc = new Point(200,80);
-			doozer = new Doozer();
-			body = new DoozerBody(doozerLoc,200,100);
-			doozer.addComp(body);
-			arm = new DoozerArms(doozerLoc,200,20,angles);
-			doozer.addComp(arm);
-		}
+		Point doozerLoc = new Point(200,80);
+		doozer = new Doozer();
+		body = new DoozerBody(doozerLoc,
+			(int)Config.DOOZER_BODY_DIM.getWidth(),
+			(int)Config.DOOZER_BODY_DIM.getHeight());
+		doozer.addComp(body);
+		arm = new DoozerArms(doozerLoc,
+			(int)Config.DOOZER_ARM_DIM.getWidth(),
+			(int)Config.DOOZER_ARM_DIM.getHeight(),
+			angles);
+		doozer.addComp(arm);
 
 		// create candies
-		{
-			factory = new CandyFactory();
-			factory.produceCandy(500,100,100,100);
-			factory.produceCandy(700,200,100,200);
-			factory.produceCandy(600,50,100,50);
-			factory.produceCandy(600,100,100,50);
-		}
+		factory = new CandyFactory();
+		factory.massProduceCandy(Config.NUM_CANDIES);
+
 		objectList.add(factory);
 		objectList.add(doozer);
 	}
@@ -49,10 +49,16 @@ public class DoozerModel extends BaseModel{
 
 	public Selected containsAll(Point pt){
 		Selected ret = null;
+		for (int i = objectList.size() -1 ; i >= 0; i--){
+			ret = objectList.get(i).containsAll(pt);
+			if (ret != null) return ret;
+		}
+/*
 		for (GameObject go : objectList){
 			ret = go.containsAll(pt);
 			if (ret != null) return ret;
 		}
+*/
 		return ret;
 	}
 

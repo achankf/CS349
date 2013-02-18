@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.awt.geom.AffineTransform;
 import java.awt.Point;
 import doozerSimulator.view.*;
+import doozerSimulator.*;
 import java.awt.Rectangle;
+import java.util.Random;
 
 public class CandyFactory extends GameObject{
 	protected Candy pickup = null;
@@ -13,6 +15,17 @@ public class CandyFactory extends GameObject{
 
 	public void produceCandy(int x, int y, int width, int height){
 		addComp(new Candy(new Point(x,y), width,height));
+	}
+
+	public void massProduceCandy(int num){
+		Random r = new Random();
+		int minX = (int)(Config.DEFAULT_DIM.getWidth() / 2);
+		int startY = (int)Config.DEFAULT_DIM.getHeight();
+		for (int i = 0; i < num; i++){
+			produceCandy(minX + r.nextInt(minX), startY, 
+				r.nextInt(Config.CANDY_RANDOM_BOUND) + (int)Config.DEFAULT_CANDY_MIN_DIM.getWidth(),
+				r.nextInt(Config.CANDY_RANDOM_BOUND) + (int)Config.DEFAULT_CANDY_MIN_DIM.getHeight());
+		}
 	}
 
 	public BaseComponent findPickUp(Point pt, AffineTransform at){
@@ -45,6 +58,7 @@ public class CandyFactory extends GameObject{
 	@Override
 	public void update(){
 		for (BaseComponent bc : compList){
+			if (bc == pickup) continue;
 			int i = 0;
 			for (BaseComponent bc2 : compList){
 				if (bc == bc2 || bc2 == pickup) continue;

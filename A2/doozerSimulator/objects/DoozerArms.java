@@ -147,7 +147,6 @@ public final class DoozerArms extends BaseComponent{
 		if (pickup!=null){
 			pickup.setPtRef((int)magnetTip.x, (int)magnetTip.y);
 		}
-System.out.println(pickup!=null);
 
 		g2d.setTransform(before);
 		if (pickup == null){

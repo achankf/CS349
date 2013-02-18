@@ -3,6 +3,7 @@ package doozerSimulator.objects;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.awt.Graphics2D;
+import doozerSimulator.view.*;
 
 public class GameObject{
 	protected ArrayList<BaseComponent> compList;
@@ -28,5 +29,11 @@ public class GameObject{
 
 	public void addComp(BaseComponent bc){
 		compList.add(bc);
+	}
+
+	public void update(DoozerView view){
+		for (BaseComponent bc : compList){
+			bc.update(view);
+		}
 	}
 }

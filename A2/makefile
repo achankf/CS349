@@ -5,10 +5,10 @@ CLASS_DIR=doozerSimulator
 JAR = doozer.jar
 
 #all: $(JAR)
-all: $(CLASSES)
+all: $(JAR) $(CLASSES)
 
-#$(JAR): $(CLASSES) $(SOURCES)
-#	jar cvfe $(JAR) doozerSimulator.Main `find doozerSimulator/ -name *.class`
+$(JAR): $(CLASSES) $(SOURCES)
+	jar cvfe $(JAR) doozerSimulator.Main `find doozerSimulator/ -name *.class`
 
 %.class: %.java
 	javac $<

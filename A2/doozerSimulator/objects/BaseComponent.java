@@ -5,6 +5,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.util.LinkedList;
+import doozerSimulator.view.*;
 
 public abstract class BaseComponent extends Dimension{
 	private Point ptRef;
@@ -106,4 +107,6 @@ System.out.println("CALLING CONTAINS ALL");
 	public BaseComponent getPickUp(){
 		return pickup;
 	}
+
+	public void update(DoozerView view){}
 }

@@ -33,6 +33,10 @@ public class DoozerView extends JComponent {
 		});
 	}
 
+	public double getScale(){
+		return scale;
+	}
+
 	/** Register event Controllers for mouse clicks and motion. */
 	private void registerControllers() {
 		MouseInputListener mil = new MController();
@@ -61,23 +65,23 @@ public class DoozerView extends JComponent {
 	}
 
 	/** Convert from the model's X coordinate to the component's X coordinate. */
-	protected int toX(double modelX) {
+	public int toX(double modelX) {
 		return (int) (modelX * this.scale) + this.getInsets().left;
 	}
 
 	/** Convert from the model's Y coordinate to the component's Y coordinate. */
-	protected int toY(double modelY) {
+	public int toY(double modelY) {
 		return this.getHeight() - (int) (modelY * this.scale) - 1
 				- this.getInsets().bottom;
 	}
 
 	/** Convert from the component's X coordinate to the model's X coordinate. */
-	protected double fromX(int x) {
+	public double fromX(int x) {
 		return (x - this.getInsets().left) / this.scale;
 	}
 
 	/** Convert from the component's Y coordinate to the model's Y coordinate. */
-	protected double fromY(int y) {
+	public double fromY(int y) {
 		return (this.getHeight() - 1 - this.getInsets().bottom - y)
 				/ this.scale;
 	}
@@ -99,6 +103,9 @@ public class DoozerView extends JComponent {
 			selected = model.containsAll(pt);
 			if (selected != null && selected.i == -1){
 				magnetOn = !magnetOn;
+				if (!magnetOn){
+					model.pickUp(null);
+				}
 			}
 		}
 
@@ -110,8 +117,6 @@ public class DoozerView extends JComponent {
 			AffineTransform at = null;
 			if (magnetOn){
 				model.findPickUp();
-			} else {
-				model.pickUp(null);
 			}
 			selected.comp.move(selected.i, pt, at);
 			repaint();

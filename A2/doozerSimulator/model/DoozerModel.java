@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import doozerSimulator.objects.*;
+import doozerSimulator.view.*;
 
 public class DoozerModel extends BaseModel{
 	protected ArrayList <GameObject> objectList;
@@ -19,7 +20,7 @@ public class DoozerModel extends BaseModel{
 
 		// create the doozer
 		{
-			Point doozerLoc = new Point(200,100);
+			Point doozerLoc = new Point(200,80);
 			Doozer doozer = new Doozer();
 			body = new DoozerBody(doozerLoc,200,100);
 			doozer.addComp(body);
@@ -33,8 +34,10 @@ public class DoozerModel extends BaseModel{
 			Point pt = new Point(500,100);
 			factory = new CandyFactory();
 			factory.addComp(new Candy(pt, 50, 100));
-			pt = new Point(700,100);
+			pt = new Point(700,200);
 			factory.addComp(new Candy(pt, 100, 200));
+			pt = new Point(600,50);
+			factory.addComp(new Candy(pt, 100, 50));
 			objectList.add(factory);
 		}
 	}
@@ -57,6 +60,7 @@ public class DoozerModel extends BaseModel{
 	public void pickUp(BaseComponent c){
 		arm.setPickUp(c);
 		body.setPickUp(c);
+		factory.setPickUp((Candy)c);
 	}
 
 	public void findPickUp(){
@@ -70,5 +74,11 @@ public class DoozerModel extends BaseModel{
 
 	public Point getMagnetTip(){
 		return arm.getMagnetTip();
+	}
+
+	public void update(DoozerView view){
+		for (GameObject go : objectList){
+			go.update(view);
+		}
 	}
 }

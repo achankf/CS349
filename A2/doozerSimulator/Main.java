@@ -33,7 +33,7 @@ final public class Main{
 				canvas.repaint();
 			}
 		};
-		Timer t = new Timer(100/30,listener);
+		Timer t = new Timer(1000/30,listener);
 		t.start();
 	}
 }

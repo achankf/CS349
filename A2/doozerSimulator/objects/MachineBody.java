@@ -7,9 +7,9 @@ import java.awt.Graphics2D;
 import doozerSimulator.*;
 import java.awt.Color;
 
-public final class DoozerBody extends BaseComponent{
+public final class MachineBody extends BaseComponent{
 
-	public DoozerBody(Point ptRef, int width, int height){
+	public MachineBody(Point ptRef, int width, int height){
 		super(ptRef,width,height);
 	}
 

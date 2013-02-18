@@ -8,12 +8,12 @@ import java.awt.geom.AffineTransform;
 import doozerSimulator.Draw;
 import java.util.Random;
 
-public final class DoozerArms extends BaseComponent{
+public final class MachineArms extends BaseComponent{
 	private double [] armAngles;
 	Dimension mdim;
 	Point magnetTip, magnetTipAccept;
 
-	public DoozerArms(Point ptRef, int width, int height, double [] providedAngles){
+	public MachineArms(Point ptRef, int width, int height, double [] providedAngles){
 		super(ptRef,width,height);
 		armAngles = providedAngles;
 		mdim = new Dimension(width/15,(int)(height*2));

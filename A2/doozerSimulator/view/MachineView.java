@@ -15,12 +15,12 @@ import java.text.DecimalFormat;
  * A view of a right triangle that displays the triangle graphically and allows
  * the user to change the size by dragging the image with a mouse.
  */
-public class DoozerView extends JComponent {
-	private DoozerModel model;
+public class MachineView extends JComponent {
+	private MachineModel model;
 	private LinkedList<Point> a,b;
 	private double scale = 1.0;
 
-	public DoozerView(DoozerModel model) {
+	public MachineView(MachineModel model) {
 		super();
 		this.a = new LinkedList<Point>();
 		this.b = new LinkedList<Point>();

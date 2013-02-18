@@ -1,13 +1,13 @@
 package doozerSimulator;
 
 import javax.swing.*;
-import doozerSimulator.model.DoozerModel;
-import doozerSimulator.view.DoozerView;
+import doozerSimulator.model.MachineModel;
+import doozerSimulator.view.MachineView;
 import java.awt.event.*;
 
 final public class Main{
-	public static DoozerModel model = new DoozerModel(System.nanoTime());
-	public static DoozerView canvas = new DoozerView(model);
+	public static MachineModel model = new MachineModel(System.nanoTime());
+	public static MachineView canvas = new MachineView(model);
 
 	private class GameOver extends Exception{
 	}

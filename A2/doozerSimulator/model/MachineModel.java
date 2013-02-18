@@ -9,18 +9,18 @@ import doozerSimulator.objects.*;
 import doozerSimulator.*;
 import doozerSimulator.view.*;
 
-public class DoozerModel extends BaseModel{
+public class MachineModel extends BaseModel{
 	protected ArrayList <GameObject> objectList;
-	private Doozer doozer;
-	private DoozerArms arm;
-	private DoozerBody body;
+	private Machine doozer;
+	private MachineArms arm;
+	private MachineBody body;
 	private CandyFactory factory;
 	private Boolean gameover = false;
 
 	private long initTime;
 	private long latestTime;
 
-	public DoozerModel(long initTime){
+	public MachineModel(long initTime){
 		objectList = new ArrayList <GameObject>();
 		double [] angles = {-1.0471975,0.4,0.4,0.1};
 		this.initTime = initTime;
@@ -28,12 +28,12 @@ public class DoozerModel extends BaseModel{
 
 		// create the doozer
 		Point doozerLoc = new Point(200,80);
-		doozer = new Doozer();
-		body = new DoozerBody(doozerLoc,
+		doozer = new Machine();
+		body = new MachineBody(doozerLoc,
 			(int)Config.DOOZER_BODY_DIM.getWidth(),
 			(int)Config.DOOZER_BODY_DIM.getHeight());
 		doozer.addComp(body);
-		arm = new DoozerArms(doozerLoc,
+		arm = new MachineArms(doozerLoc,
 			(int)Config.DOOZER_ARM_DIM.getWidth(),
 			(int)Config.DOOZER_ARM_DIM.getHeight(),
 			angles);

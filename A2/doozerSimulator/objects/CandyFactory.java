@@ -9,6 +9,7 @@ public class CandyFactory extends GameObject{
 
 	public BaseComponent findPickUp(Point pt, AffineTransform at){
 		for (BaseComponent bc : compList){
+			System.out.println("BC: "+bc.getPoint(0));
 			if(bc.contains(0,pt)){
 				return bc;
 			}

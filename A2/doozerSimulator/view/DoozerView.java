@@ -110,7 +110,6 @@ public class DoozerView extends JComponent {
 			AffineTransform at = null;
 			if (magnetOn){
 				model.findPickUp();
-				//model.pickUp(model.getFirst());
 			} else {
 				model.pickUp(null);
 			}

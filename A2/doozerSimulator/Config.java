@@ -13,8 +13,10 @@ public class Config{
 	public final static int SPAWN_NUMBER= 2;
 	public final static int SPAWN_TIME = 10000;
 
-	public final static Dimension DOOZER_BODY_DIM = new Dimension (150,100);
-	public final static Dimension DOOZER_ARM_DIM = new Dimension (200,25);
+	public final static Dimension MACHINE_BODY_DIM = new Dimension (150,100);
+	public final static Dimension MACHINE_ARM_DIM = new Dimension (180,25);
+
+	public final static int RENDER_POINT_SIZE = 10;
 
 	public final static int SELECTED_NULL = -1;
 	public final static int SELECTED_BODY = -2;

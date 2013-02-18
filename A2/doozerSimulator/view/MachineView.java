@@ -67,6 +67,7 @@ public class MachineView extends JComponent {
 			}
 		});
 
+		g2d.setColor(Color.BLACK);
 		g2d.setFont(new Font(null, Font.PLAIN, 18));
 		DecimalFormat df = new DecimalFormat("##.##");
 
@@ -120,7 +121,7 @@ public class MachineView extends JComponent {
 				magnetOn = !magnetOn;
 				System.out.println("Magnet Online: " + magnetOn);
 				if (!magnetOn){
-					model.pickUp(null);
+					model.release();
 				}
 			}
 		}

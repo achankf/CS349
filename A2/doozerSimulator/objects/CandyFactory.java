@@ -83,6 +83,15 @@ public class CandyFactory extends GameObject{
 		return false;
 	}
 
+	public Boolean pickupNotOverlap(){
+		if (pickup == null) return true;
+		for (BaseComponent bc : compList){
+			if (bc == pickup) continue;
+			if (rectangleOverlap(pickup,bc)) return false;
+		}
+		return true;
+	}
+
 	public void setPickUp(Candy c){
 		pickup = c;
 	}

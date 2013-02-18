@@ -5,7 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
-import doozerSimulator.Draw;
+import doozerSimulator.*;
 import java.util.Random;
 
 public final class MachineArms extends BaseComponent{
@@ -131,7 +131,7 @@ public final class MachineArms extends BaseComponent{
 			Dimension dim = convert.scaleDim(this);
 			Draw.rotate(g2d, armAngles[i], pivot); 
 			Draw.drawRect(g2d, pt, dim,colorPicker);
-			Draw.point(g2d, pivot,10);
+			Draw.point(g2d, pivot, (int)convert.scale(Config.RENDER_POINT_SIZE));
 		}
 		pt = convert.toCanvas(getMagnetPoint());
 		Draw.drawRect(g2d, pt, convert.scaleDim(mdim),colorPicker);
@@ -151,7 +151,7 @@ public final class MachineArms extends BaseComponent{
 		g2d.setTransform(before);
 		if (pickup == null){
 			g2d.setColor(Color.BLUE);
-			Draw.point(g2d,convert.toCanvas(magnetTipAccept),10);
+			Draw.point(g2d,convert.toCanvas(magnetTipAccept), (int)convert.scale(Config.RENDER_POINT_SIZE));
 		}
 	}
 }

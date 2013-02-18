@@ -27,15 +27,15 @@ public class MachineModel extends BaseModel{
 		this.latestTime = initTime;
 
 		// create the doozer
-		Point doozerLoc = new Point(200,80);
+		Point doozerLoc = new Point(0,(int)(Config.MACHINE_BODY_DIM.getHeight()/2));//Config.LAND_HEIGHT);
 		doozer = new Machine();
 		body = new MachineBody(doozerLoc,
-			(int)Config.DOOZER_BODY_DIM.getWidth(),
-			(int)Config.DOOZER_BODY_DIM.getHeight());
+			(int)Config.MACHINE_BODY_DIM.getWidth(),
+			(int)Config.MACHINE_BODY_DIM.getHeight());
 		doozer.addComp(body);
 		arm = new MachineArms(doozerLoc,
-			(int)Config.DOOZER_ARM_DIM.getWidth(),
-			(int)Config.DOOZER_ARM_DIM.getHeight(),
+			(int)Config.MACHINE_ARM_DIM.getWidth(),
+			(int)Config.MACHINE_ARM_DIM.getHeight(),
 			angles);
 		doozer.addComp(arm);
 
@@ -105,5 +105,14 @@ public class MachineModel extends BaseModel{
 
 	public Boolean gameOver(){
 		return gameover;
+	}
+
+	public void release(){
+		if (factory.pickupNotOverlap()){
+			System.out.println("Candy Released");
+			pickUp(null);
+		} else {
+			System.out.println("Cannot overlap candies");
+		}
 	}
 }

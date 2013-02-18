@@ -136,6 +136,15 @@ public final class DoozerArms extends BaseComponent{
 
 		Point magnetTip = new Point((int)(pt.x + convert.scale(mdim.getWidth())), (int)(pt.y + convert.scale(mdim.getHeight() / 2)));
 		magnetTipAccept = new Point((int)(magnetTip.x + convert.scale(20)), (int)magnetTip.y);
+
+/*
+		if (pickup!=null){
+			pickup.setTransform(g2d.getTransform());
+			Point temp = convert.fromCanvas(magnetTip);
+			pickup.setPtRef((int)temp.x, (int)temp.y);
+		}
+*/
+
 		g2d.getTransform().transform(magnetTip,magnetTip);
 		g2d.getTransform().transform(magnetTipAccept,magnetTipAccept);
 		magnetTip = convert.fromCanvas(magnetTip);
@@ -143,18 +152,13 @@ public final class DoozerArms extends BaseComponent{
 
 		if (pickup!=null){
 			pickup.setPtRef((int)magnetTip.x, (int)magnetTip.y);
-			pickup.draw(g2d,convert);
-			//pickup.setTransform(temp);
 		}
-		AffineTransform temp = g2d.getTransform();
+
 		g2d.setTransform(before);
-g2d.setColor(Color.BLUE);
 		if (pickup == null){
-			//Draw.point(g2d,convert.toCanvas(magnetTip),10);
+			g2d.setColor(Color.BLUE);
 			Draw.point(g2d,convert.toCanvas(magnetTipAccept),10);
+			g2d.setColor(Color.BLACK);
 		}
-g2d.setColor(Color.RED);
-//Draw.point(g2d,(magnetTip),10);
-//Draw.point(g2d,(magnetTipAccept),10);
 	}
 }

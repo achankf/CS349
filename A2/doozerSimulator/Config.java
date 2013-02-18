@@ -11,8 +11,7 @@ public class Config{
 	// spawning
 	public final static int NUM_CANDIES = 5;
 	public final static int SPAWN_NUMBER= 2;
-	//public final static int SPAWN_TIME = 10000;
-	public final static int SPAWN_TIME = 1000;
+	public final static int SPAWN_TIME = 10000;
 
 	public final static Dimension DOOZER_BODY_DIM = new Dimension (150,100);
 	public final static Dimension DOOZER_ARM_DIM = new Dimension (200,25);

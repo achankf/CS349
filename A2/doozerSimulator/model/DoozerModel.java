@@ -10,6 +10,7 @@ import doozerSimulator.view.*;
 
 public class DoozerModel extends BaseModel{
 	protected ArrayList <GameObject> objectList;
+	private Doozer doozer;
 	private DoozerArms arm;
 	private DoozerBody body;
 	private CandyFactory factory;
@@ -21,25 +22,23 @@ public class DoozerModel extends BaseModel{
 		// create the doozer
 		{
 			Point doozerLoc = new Point(200,80);
-			Doozer doozer = new Doozer();
+			doozer = new Doozer();
 			body = new DoozerBody(doozerLoc,200,100);
 			doozer.addComp(body);
 			arm = new DoozerArms(doozerLoc,200,20,angles);
 			doozer.addComp(arm);
-			objectList.add(doozer);
 		}
 
 		// create candies
 		{
-			Point pt = new Point(500,100);
 			factory = new CandyFactory();
-			factory.addComp(new Candy(pt, 50, 100));
-			pt = new Point(700,200);
-			factory.addComp(new Candy(pt, 100, 200));
-			pt = new Point(600,50);
-			factory.addComp(new Candy(pt, 100, 50));
-			objectList.add(factory);
+			factory.produceCandy(500,100,100,100);
+			factory.produceCandy(700,200,100,200);
+			factory.produceCandy(600,50,100,50);
+			factory.produceCandy(600,100,100,50);
 		}
+		objectList.add(factory);
+		objectList.add(doozer);
 	}
 
 	public void drawAll(Graphics2D g2d, Convert convert){

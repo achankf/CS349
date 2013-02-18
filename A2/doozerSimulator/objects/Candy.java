@@ -7,11 +7,15 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import doozerSimulator.*;
 import doozerSimulator.view.*;
+import java.util.Random;
 
 public final class Candy extends BaseComponent{
+	int seed;
 
 	public Candy(Point ptRef, int width, int height){
 		super(ptRef,width,height);
+		Random r = new Random();
+		seed = r.nextInt();
 		trans = new AffineTransform();
 	}
 
@@ -23,18 +27,24 @@ public final class Candy extends BaseComponent{
 	}
 
 	public void draw(Graphics2D g2d, Convert convert){
-		//AffineTransform before = g2d.getTransform();
-		//g2d.setTransform(trans);
 		Point coor = convert.toCanvas(getPoint(0));
 		Dimension dim = convert.scaleDim(this);
-		Draw.drawRect(g2d,coor,dim);
-		//g2d.setTransform(before);
+		colorPicker.setSeed(seed);
+		Draw.drawRect(g2d,coor,dim,colorPicker);
 	}
 
 	@Override
 	public void update(){
-		if (getRefY() - getHeight() > Config.LAND_HEIGHT){
-			setPtRef((int)getRefX(),(int)(getRefY() - 1));
+		double x = getRefX();
+		double y = getRefY();
+		if (x + getWidth() > Config.DEFAULT_DIM.getWidth()){
+			x = Config.DEFAULT_DIM.getWidth() - getWidth();
+		}
+		if (y - getHeight() > Config.LAND_HEIGHT){
+			if (y - Config.FALL_SPEED > 0)
+				setPtRef((int)x,(int)(y - Config.FALL_SPEED));
+			else 
+				setPtRef((int)x,(int)(0));
 		}
 	}
 }

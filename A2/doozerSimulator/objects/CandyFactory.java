@@ -11,9 +11,12 @@ public class CandyFactory extends GameObject{
 
 	public CandyFactory(){}
 
+	public void produceCandy(int x, int y, int width, int height){
+		addComp(new Candy(new Point(x,y), width,height));
+	}
+
 	public BaseComponent findPickUp(Point pt, AffineTransform at){
 		for (BaseComponent bc : compList){
-			System.out.println("BC: "+bc.getPoint(0));
 			if(bc.contains(0,pt)){
 				return bc;
 			}
@@ -35,9 +38,8 @@ public class CandyFactory extends GameObject{
 		int xx2 = x2 + (int)(bc2.getWidth());
 		int yy2 = y2 - (int)(bc2.getHeight());
 
-		int xxx = (x1 + xx1) /2;
-		return ((x1 > x2 && x1 < xx2 || xx1 > x2 && xx1 < xx2 || xxx > x2 && xxx < xx2)
-			 && (yy1 < y2));
+		// check candies that are above and overlap the target
+		return yy1 > yy2 && (yy2 < y1 && yy1 < y2 && xx2 > x1 && xx1 > x2);
 	}
 
 	@Override

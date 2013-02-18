@@ -4,15 +4,16 @@ import java.awt.Point;
 import java.awt.geom.AffineTransform;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
-import java.util.LinkedList;
+import java.awt.Color;
+import java.util.Random;
 import doozerSimulator.view.*;
 
 public abstract class BaseComponent extends Dimension{
 	private Point ptRef;
+	protected Random colorPicker;
+	protected int seed;
 	protected AffineTransform trans;
 	protected BaseComponent pickup;
-	protected Boolean released = false;
-	protected LinkedList<Point> a,b;
 
 	public abstract void move(int i, Point pt, AffineTransform at);
 	public abstract int getNumComp();
@@ -48,8 +49,8 @@ public abstract class BaseComponent extends Dimension{
 		super(width,height);
 		this.ptRef = ptRef;
 		this.trans = new AffineTransform();
-		this.a = new LinkedList<Point>();
-		this.b = new LinkedList<Point>();
+		this.colorPicker = new Random();
+		this.seed = colorPicker.nextInt();
 	}
 
 	public Point getPoint(int i){
@@ -65,9 +66,6 @@ public abstract class BaseComponent extends Dimension{
 	}
 
 	public Selected containsAll(Point pt){
-a.clear();
-b.clear();
-System.out.println("CALLING CONTAINS ALL");
 		for (int i = 0; i < getNumComp(); i++){
 			if (contains(i,pt)) return new Selected(this,i,null,null,0);
 		}

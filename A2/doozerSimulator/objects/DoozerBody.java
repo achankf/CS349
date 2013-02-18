@@ -4,7 +4,8 @@ import java.awt.Point;
 import java.awt.geom.AffineTransform;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
-import doozerSimulator.Draw;
+import doozerSimulator.*;
+import java.util.Random;
 
 public final class DoozerBody extends BaseComponent{
 
@@ -34,8 +35,15 @@ public final class DoozerBody extends BaseComponent{
 	}
 
 	public void draw(Graphics2D g2d, Convert convert){
+		colorPicker.setSeed(seed);
+		double x = getX(0);
+		if (x < 0){
+			setPtRef((int)(0 + this.getWidth() / 2),(int)getRefY());
+		} else if (x + getWidth() > Config.DEFAULT_DIM.getWidth()){
+			setPtRef((int)(Config.DEFAULT_DIM.getWidth() - this.getWidth()),(int)getRefY());
+		}
 		Point coor = convert.toCanvas(getPoint(0));
 		Dimension dim = convert.scaleDim(this);
-		Draw.drawRect(g2d,coor,dim);
+		Draw.drawRect(g2d,coor,dim,colorPicker);
 	}
 }

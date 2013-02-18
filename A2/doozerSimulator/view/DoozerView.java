@@ -48,8 +48,8 @@ public class DoozerView extends JComponent {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Insets insets = this.getInsets();
-		this.scale = Math.min((this.getWidth() - insets.left - insets.right) / 1024.0,
-			(this.getHeight() - insets.top - insets.bottom) / 768.0);
+		this.scale = Math.min((this.getWidth() - insets.left - insets.right) / Config.DEFAULT_DIM.getWidth(),
+			(this.getHeight() - insets.top - insets.bottom) / Config.DEFAULT_DIM.getHeight());
 		scale = scale == 0 ? 1 : scale;
 
 		Graphics2D g2d = (Graphics2D) g;
@@ -103,6 +103,7 @@ public class DoozerView extends JComponent {
 			selected = model.containsAll(pt);
 			if (selected != null && selected.i == -1){
 				magnetOn = !magnetOn;
+System.out.println(selected.i + " " + magnetOn);
 				if (!magnetOn){
 					model.pickUp(null);
 				}
@@ -118,6 +119,7 @@ public class DoozerView extends JComponent {
 			if (magnetOn){
 				model.findPickUp();
 			}
+System.out.println("MAGNET:" + magnetOn);
 			selected.comp.move(selected.i, pt, at);
 			repaint();
 		} // mouseDragged

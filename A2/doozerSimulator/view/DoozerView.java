@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.util.LinkedList;
+import java.text.DecimalFormat;
 
 /**
  * A view of a right triangle that displays the triangle graphically and allows
@@ -48,12 +49,25 @@ public class DoozerView extends JComponent {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Insets insets = this.getInsets();
+
+		// calculate the scale
 		this.scale = Math.min((this.getWidth() - insets.left - insets.right) / Config.DEFAULT_DIM.getWidth(),
 			(this.getHeight() - insets.top - insets.bottom) / Config.DEFAULT_DIM.getHeight());
 		scale = scale == 0 ? 1 : scale;
 
 		Graphics2D g2d = (Graphics2D) g;
+
+		g2d.setFont(new Font(null, Font.PLAIN, 18));
+		DecimalFormat df = new DecimalFormat("##.##");
+
+		if (model.gameOver()){
+			g2d.drawString("Game Over!", 50, 200);
+			g2d.drawString("Time Elapsed:" + df.format(model.getTimeElapsed()) + " seconds", 100, 250);
+		} else {
+			g2d.drawString("Time Elapsed:" + df.format(model.getTimeElapsed()) + " seconds", 0, 30);
+		}
 		
+		// call draw methods in model
 		model.drawAll(g2d, new Convert(scale){
 			public Point fromCanvas(Point pt){
 				return from(pt);
@@ -99,6 +113,7 @@ public class DoozerView extends JComponent {
 		private Boolean magnetOn = false;
 
 		public void mousePressed(MouseEvent e) {
+			if (model.gameOver()) return;
 			Point pt = new Point(from(e.getPoint()));
 			selected = model.containsAll(pt);
 			if (selected != null && selected.i == -1){
@@ -112,6 +127,7 @@ public class DoozerView extends JComponent {
 
 		/** The user is dragging the mouse. Resize appropriately. */
 		public void mouseDragged(MouseEvent e) {
+			if (model.gameOver()) return;
 			if (selected == null) return;
 			if (selected.i == -1) return;
 			Point pt = new Point(from(e.getPoint()));

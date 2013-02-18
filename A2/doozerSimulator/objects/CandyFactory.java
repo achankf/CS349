@@ -68,6 +68,21 @@ public class CandyFactory extends GameObject{
 		}
 	}
 
+	public Boolean aboveTop(){
+		for (BaseComponent bc : compList){
+			if (bc == pickup) continue;
+			int i = 0;
+			for (BaseComponent bc2 : compList){
+				if (bc == bc2 || bc2 == pickup) continue;
+				if (rectangleOverlap(bc,bc2)) i++;
+			}
+			if (i != 0 && bc.getRefY() == Config.DEFAULT_DIM.getHeight()){
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public void setPickUp(Candy c){
 		pickup = c;
 	}

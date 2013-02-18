@@ -8,6 +8,7 @@ Imagine this game as a variant of Tetris, where candy blocks are dropped from th
 
 I challenge you to play over 100 seconds, and if you are a pro then 150 seconds.
 (hint: try to move the candies towards the machine)
+P.S. My best record was 250.48 seconds.
 
 Enhancement:
 	* Tetris-like gameplay (the time elapsed is the score)

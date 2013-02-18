@@ -90,13 +90,7 @@ public abstract class BaseComponent extends Dimension{
 		pt.setLocation(newX,newY);
 	}
 
-	@Override
-	public String toString(){
-		return "Point:" + ptRef + " dim:" + getWidth() + "," + getHeight();
-	}
-
 	public void setPickUp(BaseComponent bc){
-System.out.println("HIHI");
 		pickup = bc;
 	}
 

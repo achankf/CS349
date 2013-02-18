@@ -47,6 +47,12 @@ public final class DoozerArms extends BaseComponent{
 			rotatePoint(pt, getPivot(j),armAngles[j]);
 		}
 		armAngles[i] = calculateAngle(componentPos(i,pt));
+		double pi2 = Math.PI/2;
+		if (armAngles[i] > pi2){
+			armAngles[i] = pi2;
+		} else if (armAngles[i] < -pi2){
+			armAngles[i] = -pi2;
+		}
 	}
 
 	@Override
@@ -128,26 +134,29 @@ public final class DoozerArms extends BaseComponent{
 		pt = convert.toCanvas(getMagnetPoint());
 		Draw.drawRect(g2d, pt, convert.scaleDim(mdim));
 
-		Point tt = new Point((int)(pt.x + convert.scale(mdim.getWidth())), (int)(pt.y + convert.scale(mdim.getHeight() / 2)));
-		magnetTipAccept = new Point((int)(tt.x + convert.scale(20)), (int)tt.y);
-		g2d.getTransform().transform(tt,tt);
+		Point magnetTip = new Point((int)(pt.x + convert.scale(mdim.getWidth())), (int)(pt.y + convert.scale(mdim.getHeight() / 2)));
+		magnetTipAccept = new Point((int)(magnetTip.x + convert.scale(20)), (int)magnetTip.y);
+		g2d.getTransform().transform(magnetTip,magnetTip);
 		g2d.getTransform().transform(magnetTipAccept,magnetTipAccept);
-		if (pickup!=null){
-			pickup.setPtRef((int)tt.x, (int)tt.y);
-			pickup.setTransform(g2d.getTransform());
-		}
-		magnetTip = convert.fromCanvas(tt);
+		magnetTip = convert.fromCanvas(magnetTip);
 		magnetTipAccept = convert.fromCanvas(magnetTipAccept);
 
+		if (pickup!=null){
+			pickup.setPtRef((int)magnetTip.x, (int)magnetTip.y);
+			pickup.draw(g2d,convert);
+			//pickup.setTransform(temp);
+		}
 /*
-		tt = convert.toCanvas(tt);
+		magnetTip = convert.toCanvas(magnetTip);
 		magnetTip = convert.toCanvas(magnetTip);
 */
-
+		AffineTransform temp = g2d.getTransform();
 		g2d.setTransform(before);
 g2d.setColor(Color.BLUE);
-Draw.point(g2d,convert.toCanvas(magnetTip),10);
+if (pickup == null){
+//Draw.point(g2d,convert.toCanvas(magnetTip),10);
 Draw.point(g2d,convert.toCanvas(magnetTipAccept),10);
+}
 g2d.setColor(Color.RED);
 //Draw.point(g2d,(magnetTip),10);
 //Draw.point(g2d,(magnetTipAccept),10);

@@ -23,7 +23,7 @@ public class DoozerModel extends BaseModel{
 			Doozer doozer = new Doozer();
 			body = new DoozerBody(doozerLoc,200,100);
 			doozer.addComp(body);
-			arm = new DoozerArms(doozerLoc,200,50,angles);
+			arm = new DoozerArms(doozerLoc,200,20,angles);
 			doozer.addComp(arm);
 			objectList.add(doozer);
 		}
@@ -33,6 +33,8 @@ public class DoozerModel extends BaseModel{
 			Point pt = new Point(500,100);
 			factory = new CandyFactory();
 			factory.addComp(new Candy(pt, 50, 100));
+			pt = new Point(700,100);
+			factory.addComp(new Candy(pt, 100, 200));
 			objectList.add(factory);
 		}
 	}

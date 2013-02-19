@@ -10,15 +10,17 @@ import java.util.Random;
 
 public class CandyFactory extends GameObject{
 	protected Candy pickup = null;
+	Random r;
 
-	public CandyFactory(){}
+	public CandyFactory(){
+		r = new Random();
+	}
 
 	public void produceCandy(int x, int y, int width, int height){
 		addComp(new Candy(new Point(x,y), width,height));
 	}
 
 	public void massProduceCandy(int num){
-		Random r = new Random();
 		int minX = (int)(Config.DEFAULT_DIM.getWidth() / 2);
 		int startY = (int)Config.DEFAULT_DIM.getHeight();
 		for (int i = 0; i < num; i++){

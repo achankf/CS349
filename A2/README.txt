@@ -18,3 +18,4 @@ Hint:
 	* the point in front of the magnet indicates where you can pick up a block
 	* you can only move each arm for 180 degree
 	* candies only fall from the right of the window, so try to move the candies to the left
+	* you can pick ANY candy you want! If there is nothing below a candy, it will fall down to fill in the gaps.

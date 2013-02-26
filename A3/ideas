@@ -1,0 +1,21 @@
+
+DrawableObject
+	- Polygon
+	+ draw(Point coordinate)
+
+AnimationPath
+	- List of Points
+	- Reference to the current Point
+	- List of DrawableObject's
+
+Model
+	- List of DrawableObjects
+	- List of AnimationPaths
+	+ addObject(DrawableObject obj)
+	+ eraseObject(DrawableObject obj)
+	+ addPath(AnimationPath path)
+	+ erasePath(AnimationPath path)
+
+Mode (Interface implements MouseAdapter)
+	+ mousePressed
+	+ mouseDragged

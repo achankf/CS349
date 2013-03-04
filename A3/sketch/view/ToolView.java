@@ -7,13 +7,7 @@ import javax.swing.JComponent;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.event.MouseInputListener;
 import java.awt.event.MouseEvent;
-
-class MController extends MouseInputAdapter{
-	public void mousePressed(MouseEvent e) {
-	}
-	public void mouseDragged(MouseEvent e) {
-	}
-}
+import java.awt.*;
 
 public class ToolView extends JComponent{
 
@@ -26,9 +20,24 @@ public class ToolView extends JComponent{
 		registerControllers();
 	}
 
+	public void paintComponent(Graphics g) {
+		Graphics2D g2d = (Graphics2D) g;
+		g2d.drawRect(0,0,100,100);
+	}
+
 	private void registerControllers() {
 		MouseInputListener mil = new MController();
 		this.addMouseListener(mil);
 		this.addMouseMotionListener(mil);
+	}
+
+	class MController extends MouseInputAdapter{
+		long prevTime = System.nanoTime();
+	
+		public void mousePressed(MouseEvent e) {
+		}
+
+		public void mouseDragged(MouseEvent e) {
+		}
 	}
 }

@@ -8,13 +8,6 @@ import java.awt.event.MouseEvent;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.event.MouseInputListener;
 
-class MController extends MouseInputAdapter{
-	public void mousePressed(MouseEvent e) {
-	}
-	public void mouseDragged(MouseEvent e) {
-	}
-}
-
 public class SliderView extends JSlider{
 
 	public SliderView(){
@@ -30,5 +23,15 @@ public class SliderView extends JSlider{
 		MouseInputListener mil = new MController();
 		this.addMouseListener(mil);
 		this.addMouseMotionListener(mil);
+	}
+
+	class MController extends MouseInputAdapter{
+		long prevTime = System.nanoTime();
+	
+		public void mousePressed(MouseEvent e) {
+		}
+
+		public void mouseDragged(MouseEvent e) {
+		}
 	}
 }

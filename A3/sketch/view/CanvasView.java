@@ -11,6 +11,7 @@ public class CanvasView extends JComponent implements IView{
 	public CanvasView(SketchModel model){
 		super();
 		this.model = model;
+		this.setForeground(Color.BLACK);
 		this.setBackground(Color.WHITE);
 	}
 

@@ -26,6 +26,6 @@ Mode (Interface implements MouseAdapter)
 IView
 	+ update()
 
-CanvasView extends IView
-ToolView extends IView
-TimeSliderView extends IView
+CanvasView implement IView
+ToolView implement IView
+TimeSliderView implement IView

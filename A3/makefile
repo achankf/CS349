@@ -7,6 +7,8 @@ JAR = sketch.jar
 #all: $(JAR)
 all: $(JAR) $(CLASSES)
 
+.SUFFIXES : .class .java
+
 $(JAR): $(CLASSES) $(SOURCES)
 	jar cvfe $(JAR) sketch.Main `find sketch/ -name *.class`
 

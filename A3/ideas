@@ -1,21 +1,31 @@
 
 DrawableObject
-	- Polygon
-	+ draw(Point coordinate)
+	- Polygon shape
+	- Boolean highlighted
+	- List of Point path
+	+ draw(Graphics2d g2d, Point coordinate)
+	+ setPath(AnimationPath path)
 
-AnimationPath
-	- List of Points
-	- Reference to the current Point
-	- List of DrawableObject's
+BaseModel extends Object
+	- List of IView
+	+ addView(IView view)
+	+ removeView(IView view)
+	+ updateAllViews()
 
-Model
+SketchModel
+	- int timeCurrent
+	- int timeLast
 	- List of DrawableObjects
-	- List of AnimationPaths
 	+ addObject(DrawableObject obj)
-	+ eraseObject(DrawableObject obj)
-	+ addPath(AnimationPath path)
-	+ erasePath(AnimationPath path)
+	+ removeObject(DrawableObject obj)
 
 Mode (Interface implements MouseAdapter)
 	+ mousePressed
 	+ mouseDragged
+
+IView
+	+ update()
+
+CanvasView extends IView
+ToolView extends IView
+TimeSliderView extends IView

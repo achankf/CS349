@@ -17,7 +17,7 @@ $(JAR): $(CLASSES) $(SOURCES)
 
 .phony: clean run
 clean:
-	rm -rf $(CLASS_DIR)/*.class $(CLASS_DIR)/model/*.class $(CLASS_DIR)/view/*.class *.jar
+	find -name "*.class" -exec rm {} \;
 
 #run: $(JAR)
 #	java -jar $(JAR)

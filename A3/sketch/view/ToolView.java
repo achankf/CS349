@@ -4,7 +4,7 @@ import sketch.model.IView;
 import sketch.model.SketchModel;
 import javax.swing.JComponent;
 
-public class ToolView extends JComponent implements IView{
+public class ToolView extends JComponent{
 	SketchModel model;
 
 	public ToolView(SketchModel model){
@@ -15,8 +15,5 @@ public class ToolView extends JComponent implements IView{
 				repaint();
 			}
 		});
-	}
-
-	public void updateView(){
 	}
 }

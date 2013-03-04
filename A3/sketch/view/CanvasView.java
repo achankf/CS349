@@ -5,7 +5,7 @@ import sketch.model.SketchModel;
 import javax.swing.JComponent;
 import java.awt.Color;
 
-public class CanvasView extends JComponent implements IView{
+public class CanvasView extends JComponent{
 	SketchModel model;
 
 	public CanvasView(SketchModel model){
@@ -18,8 +18,5 @@ public class CanvasView extends JComponent implements IView{
 				repaint();
 			}
 		});
-	}
-
-	public void updateView(){
 	}
 }

@@ -27,10 +27,10 @@ class SketchFrame extends JFrame{
 }
 
 public final class Main{
-	private static SketchModel model = new SketchModel();
-	private static CanvasView canvas = new CanvasView(model);
-	private static ToolView tool = new ToolView(model);
-	private static SliderView slider = new SliderView(model);
+	public static final SketchModel model = new SketchModel();
+	private static CanvasView canvas = new CanvasView();
+	private static ToolView tool = new ToolView();
+	private static SliderView slider = new SliderView();
 
 	public static void main(String[] args){
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {

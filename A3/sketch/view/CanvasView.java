@@ -2,21 +2,36 @@ package sketch.view;
 
 import sketch.model.IView;
 import sketch.model.SketchModel;
+import sketch.Main;
 import javax.swing.JComponent;
+import javax.swing.event.MouseInputAdapter;
+import javax.swing.event.MouseInputListener;
+import java.awt.event.MouseEvent;
 import java.awt.Color;
 
-public class CanvasView extends JComponent{
-	SketchModel model;
+class MController extends MouseInputAdapter{
+	public void mousePressed(MouseEvent e) {
+	}
+	public void mouseDragged(MouseEvent e) {
+	}
+}
 
-	public CanvasView(SketchModel model){
-		super();
-		this.model = model;
+public final class CanvasView extends JComponent{
+
+	public CanvasView(){
 		this.setForeground(Color.BLACK);
 		this.setBackground(Color.WHITE);
-		this.model.addView(new IView(){
+		Main.model.addView(new IView(){
 			public void updateView(){
 				repaint();
 			}
 		});
+		registerControllers();
+	}
+
+	private void registerControllers() {
+		MouseInputListener mil = new MController();
+		this.addMouseListener(mil);
+		this.addMouseMotionListener(mil);
 	}
 }

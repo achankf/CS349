@@ -13,6 +13,11 @@ public class CanvasView extends JComponent implements IView{
 		this.model = model;
 		this.setForeground(Color.BLACK);
 		this.setBackground(Color.WHITE);
+		this.model.addView(new IView(){
+			public void updateView(){
+				repaint();
+			}
+		});
 	}
 
 	public void updateView(){

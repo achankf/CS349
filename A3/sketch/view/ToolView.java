@@ -10,6 +10,11 @@ public class ToolView extends JComponent implements IView{
 	public ToolView(SketchModel model){
 		super();
 		this.model = model;
+		this.model.addView(new IView(){
+			public void updateView(){
+				repaint();
+			}
+		});
 	}
 
 	public void updateView(){

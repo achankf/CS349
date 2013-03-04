@@ -1,14 +1,14 @@
 package sketch;
 
-import sketch.model.*;
+import sketch.model.SketchModel;
 import sketch.view.*;
 
-import javax.swing.*;
+import javax.swing.JPanel;
+import javax.swing.JFrame;
 import java.awt.BorderLayout;
 
 class SketchPanel extends JPanel{
 	public SketchPanel(CanvasView canvas, ToolView tool, SliderView slider){
-		super();
 		this.setLayout(new BorderLayout());
 		this.add(tool, BorderLayout.NORTH);
 		this.add(canvas, BorderLayout.CENTER);

@@ -10,10 +10,12 @@ public class SketchModel extends BaseModel{
 
 	public void addObject(DrawableObject obj){
 		objList.add(obj);
+		updateAllViews();
 	}
 
 	public void removeObject(DrawableObject obj){
 		objList.remove(obj);
+		updateAllViews();
 	}
 
 	public LinkedList<DrawableObject> getObjLst(){

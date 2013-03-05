@@ -9,17 +9,10 @@ import javax.swing.event.MouseInputListener;
 import java.awt.event.MouseEvent;
 import java.awt.*;
 
-class MController extends MouseInputAdapter{
-	long prevTime = System.nanoTime();
-
-	public void mousePressed(MouseEvent e) {
-	}
-
-	public void mouseDragged(MouseEvent e) {
-	}
-}
-
 public final class CanvasView extends JComponent{
+	public final MouseInputAdapter drawMode = new DrawMode();
+	public final MouseInputAdapter eraseMode = new EraseMode();
+	public final MouseInputAdapter selectMode = new SelectMode();
 
 	public CanvasView(){
 		this.setForeground(Color.BLACK);
@@ -29,7 +22,7 @@ public final class CanvasView extends JComponent{
 				repaint();
 			}
 		});
-		registerControllers();
+		setDrawMode();
 	}
 
 	public void paintComponent(Graphics g) {
@@ -41,13 +34,24 @@ public final class CanvasView extends JComponent{
 		}
 	}
 
-	private void registerControllers() {
-		MouseInputListener mil = new MController();
+	public void setDrawMode(){
+		registerControllers(drawMode);
+	}
+
+	public void setSelectMode(){
+		registerControllers(selectMode);
+	}
+
+	public void setEraseMode(){
+		registerControllers(eraseMode);
+	}
+
+	private void registerControllers(MouseInputListener mil) {
 		this.addMouseListener(mil);
 		this.addMouseMotionListener(mil);
 	}
 
-	class MController extends MouseInputAdapter{
+	class DrawMode extends MouseInputAdapter{
 		DrawableObject obj = null;
 		long prevTime = System.nanoTime();
 	
@@ -66,9 +70,25 @@ public final class CanvasView extends JComponent{
 		public void mouseReleased(MouseEvent e) {
 			obj.finalize();
 			obj = null;
-			if (System.nanoTime() - prevTime < Config.TICK_PER_NANOSEC) return;
-			prevTime = System.nanoTime();
 			repaint();
  		}
+	}
+
+	class SelectMode extends MouseInputAdapter{
+		public void mousePressed(MouseEvent e) {
+		}
+		public void mouseDragged(MouseEvent e) {
+		}
+		public void mouseReleased(MouseEvent e) {
+		}
+	}
+
+	class EraseMode extends MouseInputAdapter{
+		public void mousePressed(MouseEvent e) {
+		}
+		public void mouseDragged(MouseEvent e) {
+		}
+		public void mouseReleased(MouseEvent e) {
+		}
 	}
 }

@@ -16,22 +16,5 @@ public class SliderView extends JSlider{
 				repaint();
 			}
 		});
-		registerControllers();
-	}
-
-	private void registerControllers() {
-		MouseInputListener mil = new MController();
-		this.addMouseListener(mil);
-		this.addMouseMotionListener(mil);
-	}
-
-	class MController extends MouseInputAdapter{
-		long prevTime = System.nanoTime();
-	
-		public void mousePressed(MouseEvent e) {
-		}
-
-		public void mouseDragged(MouseEvent e) {
-		}
 	}
 }

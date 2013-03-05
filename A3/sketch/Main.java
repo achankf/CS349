@@ -28,9 +28,9 @@ class SketchFrame extends JFrame{
 
 public final class Main{
 	public static final SketchModel model = new SketchModel();
-	private static CanvasView canvas = new CanvasView();
-	private static ToolView tool = new ToolView();
-	private static SliderView slider = new SliderView();
+	public static final CanvasView canvas = new CanvasView();
+	public static final ToolView tool = new ToolView();
+	public static final SliderView slider = new SliderView();
 
 	public static void main(String[] args){
 

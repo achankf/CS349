@@ -1,7 +1,7 @@
 package sketch.view;
 
 import sketch.model.IView;
-import sketch.Main;
+import sketch.*;
 import sketch.model.SketchModel;
 import javax.swing.JComponent;
 import javax.swing.event.MouseInputAdapter;
@@ -22,7 +22,7 @@ public class ToolView extends JComponent{
 
 	public void paintComponent(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
-		g2d.drawRect(0,0,100,100);
+		g2d.drawRect(0,0,100,50);
 	}
 
 	private void registerControllers() {
@@ -38,6 +38,13 @@ public class ToolView extends JComponent{
 		}
 
 		public void mouseDragged(MouseEvent e) {
+			if (System.nanoTime() - prevTime < Config.TICK_PER_NANOSEC) return;
+			prevTime = System.nanoTime();
+System.out.println(e.getPoint());
 		}
+
+		public void mouseReleased(MouseEvent e) {
+System.out.println("RELEASED");
+ 		}
 	}
 }

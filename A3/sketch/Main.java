@@ -33,6 +33,11 @@ public final class Main{
 	private static SliderView slider = new SliderView();
 
 	public static void main(String[] args){
+
+		canvas.setPreferredSize(Config.CANVAS_SIZE);
+		slider.setPreferredSize(Config.SLIDER_SIZE);
+		tool.setPreferredSize(Config.TOOL_SIZE);
+
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				JPanel panel = new SketchPanel(canvas, tool, slider);

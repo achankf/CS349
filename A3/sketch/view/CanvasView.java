@@ -14,6 +14,8 @@ public final class CanvasView extends JComponent{
 	public final MouseInputAdapter eraseMode = new EraseMode();
 	public final MouseInputAdapter selectMode = new SelectMode();
 
+	public Polygon buffer = null;
+
 	public CanvasView(){
 		this.setForeground(Color.BLACK);
 		this.setBackground(Color.WHITE);
@@ -32,6 +34,10 @@ public final class CanvasView extends JComponent{
 		for (DrawableObject obj : Main.model.getObjLst()){
 			obj.draw(g2d,0);
 		}
+
+		if (buffer != null){
+			g2d.drawPolygon(buffer);
+		}
 	}
 
 	public void setDrawMode(){
@@ -47,6 +53,16 @@ public final class CanvasView extends JComponent{
 	}
 
 	private void registerControllers(MouseInputListener mil) {
+		buffer = null;
+
+		this.removeMouseListener(drawMode);
+		this.removeMouseListener(eraseMode);
+		this.removeMouseListener(selectMode);
+
+		this.removeMouseMotionListener(drawMode);
+		this.removeMouseMotionListener(eraseMode);
+		this.removeMouseMotionListener(selectMode);
+
 		this.addMouseListener(mil);
 		this.addMouseMotionListener(mil);
 	}
@@ -68,6 +84,7 @@ public final class CanvasView extends JComponent{
 		}
 
 		public void mouseReleased(MouseEvent e) {
+			if (obj == null) return;
 			obj.finalize();
 			obj = null;
 			repaint();
@@ -75,20 +92,35 @@ public final class CanvasView extends JComponent{
 	}
 
 	class SelectMode extends MouseInputAdapter{
+
 		public void mousePressed(MouseEvent e) {
+			buffer = new Polygon();
 		}
+
 		public void mouseDragged(MouseEvent e) {
+			Point pt = e.getPoint();
+			buffer.addPoint((int)pt.x, (int)pt.y);
+			repaint();
 		}
+
 		public void mouseReleased(MouseEvent e) {
 		}
 	}
 
 	class EraseMode extends MouseInputAdapter{
+
 		public void mousePressed(MouseEvent e) {
+			buffer = new Polygon();
 		}
+
 		public void mouseDragged(MouseEvent e) {
+			Point pt = e.getPoint();
+			buffer.addPoint((int)pt.x, (int)pt.y);
+			repaint();
 		}
+
 		public void mouseReleased(MouseEvent e) {
+			repaint();
 		}
 	}
 }

@@ -1,8 +1,8 @@
 package sketch.view;
 
-import sketch.model.IView;
-import sketch.model.SketchModel;
-import sketch.Main;
+import sketch.model.*;
+import sketch.model.object.DrawableObject;
+import sketch.*;
 import javax.swing.JComponent;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.event.MouseInputListener;
@@ -16,7 +16,6 @@ class MController extends MouseInputAdapter{
 	}
 
 	public void mouseDragged(MouseEvent e) {
-System.out.println("HIHI");
 	}
 }
 
@@ -36,6 +35,10 @@ public final class CanvasView extends JComponent{
 	public void paintComponent(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.drawRect(100,0,100,100);
+
+		for (DrawableObject obj : Main.model.getObjLst()){
+			obj.draw(g2d,0);
+		}
 	}
 
 	private void registerControllers() {
@@ -45,13 +48,27 @@ public final class CanvasView extends JComponent{
 	}
 
 	class MController extends MouseInputAdapter{
+		DrawableObject obj = null;
 		long prevTime = System.nanoTime();
 	
 		public void mousePressed(MouseEvent e) {
+			obj = new DrawableObject();
+			Main.model.addObject(obj);
 		}
 
 		public void mouseDragged(MouseEvent e) {
-System.out.println("HIHI");
+			obj.addPoint(e.getPoint());
+			if (System.nanoTime() - prevTime < Config.TICK_PER_NANOSEC) return;
+			prevTime = System.nanoTime();
+			repaint();
 		}
+
+		public void mouseReleased(MouseEvent e) {
+			obj.finalize();
+			obj = null;
+			if (System.nanoTime() - prevTime < Config.TICK_PER_NANOSEC) return;
+			prevTime = System.nanoTime();
+			repaint();
+ 		}
 	}
 }

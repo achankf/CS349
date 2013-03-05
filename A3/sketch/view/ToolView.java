@@ -32,19 +32,14 @@ public class ToolView extends JComponent{
 	}
 
 	class MController extends MouseInputAdapter{
-		long prevTime = System.nanoTime();
 	
 		public void mousePressed(MouseEvent e) {
 		}
 
 		public void mouseDragged(MouseEvent e) {
-			if (System.nanoTime() - prevTime < Config.TICK_PER_NANOSEC) return;
-			prevTime = System.nanoTime();
-System.out.println(e.getPoint());
 		}
 
 		public void mouseReleased(MouseEvent e) {
-System.out.println("RELEASED");
  		}
 	}
 }

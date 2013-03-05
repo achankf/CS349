@@ -44,4 +44,11 @@ public class DrawableObject{
 	public void finalize(){
 		ptLst.trimToSize();
 	}
+
+	public Boolean containedIn(Polygon p){
+		for (Point pt : ptLst){
+			if(!p.contains(pt)) return false;
+		}
+		return true;
+	}
 }

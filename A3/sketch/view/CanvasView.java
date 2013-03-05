@@ -1,7 +1,7 @@
 package sketch.view;
 
 import sketch.model.*;
-import sketch.model.object.DrawableObject;
+import sketch.model.object.*;
 import sketch.*;
 import javax.swing.JComponent;
 import javax.swing.event.MouseInputAdapter;
@@ -118,9 +118,13 @@ public final class CanvasView extends JComponent{
 
 	class SelectMode extends MouseInputAdapter{
 		Boolean alreadySelected = false;
+		Point prevMouseLoc;
+		Path path;
 
 		public void mousePressed(MouseEvent e) {
+			prevMouseLoc = e.getPoint();
 			if (!selected.isEmpty() && buffer.contains(e.getX(), e.getY())){
+				path = new Path(findCentreOfSelected());
 				alreadySelected = true;
 				return;
 			}
@@ -132,7 +136,7 @@ public final class CanvasView extends JComponent{
 
 		public void mouseDragged(MouseEvent e) {
 			if(alreadySelected){
-				
+				path.addPoint(e.getPoint());
 				return;
 			}
 			Point pt = e.getPoint();
@@ -141,25 +145,33 @@ public final class CanvasView extends JComponent{
 		}
 
 		public void mouseReleased(MouseEvent e) {
-			if (!alreadySelected){
-				for (DrawableObject obj : Main.model.getObjLst()){
-					if (obj.containedIn(buffer)){
-						selected.add(obj);
-					}
-				}
-			}
-			if (selected.isEmpty()){
-				buffer = null;
-			} else {
-				Polygon temp = new Polygon();
+			if (!alreadySelected) pushSelectedObj();
+			else {
 				for (DrawableObject obj : selected){
-					for (Point pt : obj.getPtLst()){
-						temp.addPoint((int)pt.x, (int)pt.y);
-					}
+					obj.setPath(path);
 				}
-				buffer = temp.getBounds();
 			}
+			if (selected.isEmpty()) buffer = null;
+			else setTightSelectBounds();
 			repaint();
+		}
+
+		public void setTightSelectBounds(){
+			Polygon temp = new Polygon();
+			for (DrawableObject obj : selected){
+				for (Point pt : obj.getPtLst()){
+					temp.addPoint((int)pt.x, (int)pt.y);
+				}
+			}
+			buffer = temp.getBounds();
+		}
+
+		public void pushSelectedObj(){
+			for (DrawableObject obj : Main.model.getObjLst()){
+				if (obj.containedIn(buffer)){
+					selected.add(obj);
+				}
+			}
 		}
 	}
 

@@ -10,7 +10,7 @@ public class Config{
 	public static Dimension TOOL_SIZE = new Dimension(800,100);
 	public static String TITLE = "Alfred Chan 255";
 
-	public static final int DRAWABLE_MIN = 1000;
+	public static final int DRAWABLE_MIN = 200;
 
 	public static final int FPS = 30;
 	public static final long TICK_PER_NANOSEC = 1000000000 / FPS;

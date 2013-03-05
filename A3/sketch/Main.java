@@ -8,11 +8,11 @@ import javax.swing.JFrame;
 import java.awt.BorderLayout;
 
 class SketchPanel extends JPanel{
-	public SketchPanel(CanvasView canvas, ToolView tool, SliderView slider){
+	public SketchPanel(){
 		this.setLayout(new BorderLayout());
-		this.add(tool, BorderLayout.NORTH);
-		this.add(canvas, BorderLayout.CENTER);
-		this.add(slider, BorderLayout.SOUTH);
+		this.add(Main.tool, BorderLayout.NORTH);
+		this.add(Main.canvas, BorderLayout.CENTER);
+		this.add(Main.slider, BorderLayout.SOUTH);
 	}
 }
 
@@ -40,7 +40,7 @@ public final class Main{
 
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				JPanel panel = new SketchPanel(canvas, tool, slider);
+				JPanel panel = new SketchPanel();
 				JFrame frame = new SketchFrame(panel);
 			}
 		});

@@ -44,9 +44,4 @@ public class ToolView extends JPanel{
 			}
 		});
 	}
-
-	public void paintComponent(Graphics g) {
-		Graphics2D g2d = (Graphics2D) g;
-		g2d.drawRect(0,0,100,50);
-	}
 }

@@ -15,7 +15,7 @@ public final class CanvasView extends JComponent{
 	public final MouseInputAdapter eraseMode = new EraseMode();
 	public final MouseInputAdapter selectMode = new SelectMode();
 
-	protected Polygon buffer = null;
+	protected Shape buffer = null;
 	protected ArrayList<DrawableObject> selected = new ArrayList<DrawableObject>();
 
 	public CanvasView(){
@@ -37,12 +37,19 @@ public final class CanvasView extends JComponent{
 			g2d.draw(buffer);
 			g2d.setColor(Color.BLACK);
 			g2d.setStroke(temp);
+			Draw.rectPoint(g2d, findCentreOfSelected(), 10);
 		}
+	}
+
+	public Point findCentreOfSelected(){
+		if (buffer == null) return null;
+		Rectangle rect = buffer.getBounds();
+		return new Point((int)(rect.getX() + rect.getWidth() / 2),
+			(int)(rect.getY() + rect.getHeight() / 2));
 	}
 
 	public void paintComponent(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
-		g2d.drawRect(100,0,100,100);
 
 		for (DrawableObject obj : Main.model.getObjLst()){
 			obj.draw(g2d,0);
@@ -109,14 +116,6 @@ public final class CanvasView extends JComponent{
  		}
 	}
 
-	public void findSelected(){
-		for (DrawableObject obj : Main.model.getObjLst()){
-			if (obj.containedIn(buffer)){
-				selected.add(obj);
-			}
-		}
-	}
-
 	class SelectMode extends MouseInputAdapter{
 		Boolean alreadySelected = false;
 
@@ -137,14 +136,28 @@ public final class CanvasView extends JComponent{
 				return;
 			}
 			Point pt = e.getPoint();
-			buffer.addPoint((int)pt.x, (int)pt.y);
+			((Polygon)buffer).addPoint((int)pt.x, (int)pt.y);
 			repaint();
 		}
 
 		public void mouseReleased(MouseEvent e) {
-			findSelected();
+			if (!alreadySelected){
+				for (DrawableObject obj : Main.model.getObjLst()){
+					if (obj.containedIn(buffer)){
+						selected.add(obj);
+					}
+				}
+			}
 			if (selected.isEmpty()){
 				buffer = null;
+			} else {
+				Polygon temp = new Polygon();
+				for (DrawableObject obj : selected){
+					for (Point pt : obj.getPtLst()){
+						temp.addPoint((int)pt.x, (int)pt.y);
+					}
+				}
+				buffer = temp.getBounds();
 			}
 			repaint();
 		}
@@ -160,14 +173,16 @@ public final class CanvasView extends JComponent{
 
 		public void mouseDragged(MouseEvent e) {
 			Point pt = e.getPoint();
-			buffer.addPoint((int)pt.x, (int)pt.y);
+			((Polygon)buffer).addPoint((int)pt.x, (int)pt.y);
 			repaint();
 		}
 
 		public void mouseReleased(MouseEvent e) {
-			findSelected();
-			for (DrawableObject obj : selected){
-					Main.model.removeObject(obj);
+			for (Iterator<DrawableObject> it =  Main.model.getObjLst().iterator(); it.hasNext();){
+				DrawableObject obj = it.next();
+				if (obj.containedIn(buffer)){
+					it.remove();
+				}
 			}
 			buffer = null;
 			selected.clear();

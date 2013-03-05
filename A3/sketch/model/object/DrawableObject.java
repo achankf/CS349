@@ -1,7 +1,7 @@
 package sketch.model.object;
 
 import sketch.Config;
-import java.awt.Polygon;
+import java.awt.Shape;
 import java.awt.Point;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
@@ -45,7 +45,11 @@ public class DrawableObject{
 		ptLst.trimToSize();
 	}
 
-	public Boolean containedIn(Polygon p){
+	public ArrayList<Point> getPtLst(){
+		return ptLst;
+	}
+
+	public Boolean containedIn(Shape p){
 		for (Point pt : ptLst){
 			if(!p.contains(pt)) return false;
 		}

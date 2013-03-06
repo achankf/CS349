@@ -51,15 +51,16 @@ public final class CanvasView extends JComponent{
 	public void paintComponent(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
 
+		int currentFrame = Main.slider.getValue();
 		for (DrawableObject obj : Main.model.getObjLst()){
-			obj.draw(g2d,0);
+			obj.draw(g2d, currentFrame);
 		}
 
 		drawSelectedArea(g2d);
 
 		g2d.setColor(Color.RED);
 		for (DrawableObject obj : selected){
-			obj.draw(g2d,0);
+			obj.draw(g2d, currentFrame);
 		}
 		g2d.setColor(Color.BLACK);
 	}
@@ -120,12 +121,24 @@ public final class CanvasView extends JComponent{
 		Boolean alreadySelected = false;
 		Point prevMouseLoc;
 		Path path;
+		long startTime;
+		int numTicks;
+		int startTick;
 
 		public void mousePressed(MouseEvent e) {
 			prevMouseLoc = e.getPoint();
+			numTicks = 0;
+			startTick = Main.slider.getValue();
 			if (!selected.isEmpty() && buffer.contains(e.getX(), e.getY())){
-				path = new Path(findCentreOfSelected());
+				path = selected.get(0).getPath();
+				if (path == null){
+					path = new Path(findCentreOfSelected());
+				}
+				for (DrawableObject obj : selected){
+					obj.setPath(path);
+				}
 				alreadySelected = true;
+				startTime = System.nanoTime();
 				return;
 			}
 			alreadySelected = false;
@@ -136,7 +149,11 @@ public final class CanvasView extends JComponent{
 
 		public void mouseDragged(MouseEvent e) {
 			if(alreadySelected){
-				path.addPoint(e.getPoint());
+				if (startTime - Config.TICK_PER_NANOSEC < 0) return;
+				startTime = System.nanoTime();
+				path.addDelta(startTick + numTicks, PointTools.ptDiff(e.getPoint(), prevMouseLoc));
+				prevMouseLoc = e.getPoint();
+				Main.slider.setValue(startTick + numTicks++);
 				return;
 			}
 			Point pt = e.getPoint();
@@ -145,11 +162,8 @@ public final class CanvasView extends JComponent{
 		}
 
 		public void mouseReleased(MouseEvent e) {
-			if (!alreadySelected) pushSelectedObj();
-			else {
-				for (DrawableObject obj : selected){
-					obj.setPath(path);
-				}
+			if (!alreadySelected){
+				pushSelectedObj();
 			}
 			if (selected.isEmpty()) buffer = null;
 			else setTightSelectBounds();

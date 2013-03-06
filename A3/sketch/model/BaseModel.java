@@ -18,7 +18,7 @@ public class BaseModel extends Object{
 	}
 
 	/** Update all the views that are viewing this triangle. */
-	protected void updateAllViews() {
+	public void updateAllViews() {
 		for (IView view : this.views) {
 			view.updateView();
 		}

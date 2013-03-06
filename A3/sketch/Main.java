@@ -34,10 +34,6 @@ public final class Main{
 
 	public static void main(String[] args){
 
-		canvas.setPreferredSize(Config.CANVAS_SIZE);
-		slider.setPreferredSize(Config.SLIDER_SIZE);
-		tool.setPreferredSize(Config.TOOL_SIZE);
-
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				JPanel panel = new SketchPanel();

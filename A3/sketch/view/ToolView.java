@@ -42,6 +42,9 @@ public class ToolView extends JPanel{
 			public void updateView(){
 				repaint();
 			}
+			public void resetView(){
+				updateView();
+			}
 		});
 	}
 }

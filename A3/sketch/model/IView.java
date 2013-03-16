@@ -4,4 +4,5 @@ import javax.swing.JComponent;
 
 public interface IView {
 	public void updateView();
+	public void resetView();
 }

@@ -23,4 +23,11 @@ public class BaseModel extends Object{
 			view.updateView();
 		}
 	}
+
+	/** Update all the views that are viewing this triangle. */
+	public void resetAllViews() {
+		for (IView view : this.views) {
+			view.resetView();
+		}
+	}
 };

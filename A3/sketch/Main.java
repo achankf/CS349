@@ -3,6 +3,7 @@ package sketch;
 import sketch.model.SketchModel;
 import sketch.view.*;
 
+import java.util.concurrent.*;
 import javax.swing.JPanel;
 import javax.swing.JFrame;
 import java.awt.BorderLayout;
@@ -31,9 +32,9 @@ public final class Main{
 	public static final CanvasView canvas = new CanvasView();
 	public static final ToolView tool = new ToolView();
 	public static final SliderView slider = new SliderView();
+	public static final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
 	public static void main(String[] args){
-
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				JPanel panel = new SketchPanel();

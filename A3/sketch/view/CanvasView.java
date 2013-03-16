@@ -25,6 +25,9 @@ public final class CanvasView extends JComponent{
 			public void updateView(){
 				repaint();
 			}
+			public void resetView(){
+				updateView();
+			}
 		});
 		setDrawMode();
 	}
@@ -74,19 +77,19 @@ public final class CanvasView extends JComponent{
 	public void setDrawMode(){
 		changeModeGarbageCollect();
 		registerControllers(drawMode);
-		Main.model.updateAllViews();
+		Main.model.resetAllViews();
 	}
 
 	public void setSelectMode(){
 		changeModeGarbageCollect();
 		registerControllers(selectMode);
-		Main.model.updateAllViews();
+		Main.model.resetAllViews();
 	}
 
 	public void setEraseMode(){
 		changeModeGarbageCollect();
 		registerControllers(eraseMode);
-		Main.model.updateAllViews();
+		Main.model.resetAllViews();
 	}
 
 	private void registerControllers(MouseInputListener mil) {

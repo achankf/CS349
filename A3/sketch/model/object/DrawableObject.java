@@ -12,6 +12,12 @@ public class DrawableObject{
 	protected ArrayList<Point> lst = new ArrayList<Point>(Config.COLLECTOR_MIN);
 	protected int existFrom = 0, existTo = -1;
 
+	public DrawableObject(){}
+
+	public DrawableObject(int existFrom){
+		this.existFrom = existFrom;
+	}
+
 	public void addPoint(Point pt){
 		lst.add(pt);
 	}
@@ -67,11 +73,30 @@ public class DrawableObject{
 		return true;
 	}
 
+	public Boolean containedPartlyIn(Shape p){
+		for (Point pt : lst){
+			if(p.contains(pt)) return true;
+		}
+		return false;
+	}
+
 	public void setPath(Path path){
 		this.path = path;
 	}
 
 	public Path getPath(){
 		return path;
+	}
+
+	public void erasedAt(int frame){
+		existTo = frame;
+	}
+
+	public Boolean exist(int frame){
+		return frame >= existFrom && (frame < existTo || existTo == -1);
+	}
+
+	public Boolean nonExistence(){
+		return existFrom == existTo;
 	}
 }

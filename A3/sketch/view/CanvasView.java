@@ -53,6 +53,7 @@ public final class CanvasView extends JComponent{
 
 		int currentFrame = Main.slider.getValue();
 		for (DrawableObject obj : Main.model.getObjLst()){
+			if (!obj.exist(currentFrame)) continue;
 			obj.draw(g2d, currentFrame);
 		}
 
@@ -65,16 +66,27 @@ public final class CanvasView extends JComponent{
 		g2d.setColor(Color.BLACK);
 	}
 
+	public void changeModeGarbageCollect(){
+		selected.clear();
+		buffer = null;
+	}
+
 	public void setDrawMode(){
+		changeModeGarbageCollect();
 		registerControllers(drawMode);
+		Main.model.updateAllViews();
 	}
 
 	public void setSelectMode(){
+		changeModeGarbageCollect();
 		registerControllers(selectMode);
+		Main.model.updateAllViews();
 	}
 
 	public void setEraseMode(){
+		changeModeGarbageCollect();
 		registerControllers(eraseMode);
+		Main.model.updateAllViews();
 	}
 
 	private void registerControllers(MouseInputListener mil) {
@@ -98,7 +110,8 @@ public final class CanvasView extends JComponent{
 		long prevTime = System.nanoTime();
 	
 		public void mousePressed(MouseEvent e) {
-			obj = new DrawableObject();
+			int frame = Main.slider.getValue();
+			obj = new DrawableObject(frame);
 			Main.model.addObject(obj);
 		}
 
@@ -149,7 +162,7 @@ public final class CanvasView extends JComponent{
 
 		public void mouseDragged(MouseEvent e) {
 			if(alreadySelected){
-				if (startTime - Config.TICK_PER_NANOSEC < 0) return;
+				//if (startTime - Config.TICK_PER_NANOSEC < 0) return;
 				startTime = System.nanoTime();
 				path.addDelta(startTick + numTicks, PointTools.ptDiff(e.getPoint(), prevMouseLoc));
 				prevMouseLoc = e.getPoint();
@@ -190,28 +203,21 @@ public final class CanvasView extends JComponent{
 	}
 
 	class EraseMode extends MouseInputAdapter{
-
-		public void mousePressed(MouseEvent e) {
-			buffer = new Polygon();
-			selected.clear();
-			repaint();
-		}
-
 		public void mouseDragged(MouseEvent e) {
 			Point pt = e.getPoint();
-			((Polygon)buffer).addPoint((int)pt.x, (int)pt.y);
-			repaint();
-		}
-
-		public void mouseReleased(MouseEvent e) {
+			Shape sp = new Rectangle((int)(e.getX() -2), (int)(e.getY()-2), 4, 4);
+			int frame = Main.slider.getValue();
 			for (Iterator<DrawableObject> it =  Main.model.getObjLst().iterator(); it.hasNext();){
 				DrawableObject obj = it.next();
-				if (obj.containedIn(buffer)){
-					it.remove();
+				if (!obj.exist(frame))continue;
+				if (obj.containedPartlyIn(sp)){
+					obj.erasedAt(frame);
+					// object's beginning and end are equal -- can be removed
+					if (obj.nonExistence()){
+						it.remove();
+					}
 				}
 			}
-			buffer = null;
-			selected.clear();
 			repaint();
 		}
 	}

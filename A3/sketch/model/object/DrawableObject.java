@@ -60,7 +60,9 @@ public class DrawableObject{
 			g2d.drawLine((int)(prev.x + deltax), (int)(prev.y + deltay), (int)(cur.x + deltax), (int)(cur.y + deltay));
 			prev = cur;
 		}
+	}
 
+	public void drawPath(Graphics2D g2d, int frame){
 		if (path != null){
 			path.draw(g2d, frame);
 		}

@@ -11,12 +11,13 @@ import java.awt.*;
 import java.util.*;
 
 public final class CanvasView extends JComponent{
-	public final MouseInputAdapter drawMode = new DrawMode();
-	public final MouseInputAdapter eraseMode = new EraseMode();
-	public final MouseInputAdapter selectMode = new SelectMode();
+	private final MouseInputAdapter drawMode = new DrawMode();
+	private final MouseInputAdapter eraseMode = new EraseMode();
+	private final MouseInputAdapter selectMode = new SelectMode();
+	private MouseInputAdapter currentMode = null;
 
-	protected Shape buffer = null;
-	protected ArrayList<DrawableObject> selected = new ArrayList<DrawableObject>();
+	private Shape buffer = null;
+	private ArrayList<DrawableObject> selected = new ArrayList<DrawableObject>();
 
 	public CanvasView(){
 		this.setForeground(Color.BLACK);
@@ -65,6 +66,7 @@ public final class CanvasView extends JComponent{
 		g2d.setColor(Color.RED);
 		for (DrawableObject obj : selected){
 			obj.draw(g2d, currentFrame);
+			obj.drawPath(g2d, currentFrame);
 		}
 		g2d.setColor(Color.BLACK);
 	}
@@ -78,18 +80,21 @@ public final class CanvasView extends JComponent{
 		changeModeGarbageCollect();
 		registerControllers(drawMode);
 		Main.model.resetAllViews();
+		currentMode = drawMode;
 	}
 
 	public void setSelectMode(){
 		changeModeGarbageCollect();
 		registerControllers(selectMode);
 		Main.model.resetAllViews();
+		currentMode = selectMode;
 	}
 
 	public void setEraseMode(){
 		changeModeGarbageCollect();
 		registerControllers(eraseMode);
 		Main.model.resetAllViews();
+		currentMode = eraseMode;
 	}
 
 	private void registerControllers(MouseInputListener mil) {
@@ -137,9 +142,7 @@ public final class CanvasView extends JComponent{
 		Boolean alreadySelected = false;
 		Point prevMouseLoc;
 		Path path;
-		long startTime;
-		int numTicks;
-		int startTick;
+		int numTicks, startTick;
 
 		public void mousePressed(MouseEvent e) {
 			prevMouseLoc = e.getPoint();
@@ -154,7 +157,6 @@ public final class CanvasView extends JComponent{
 					obj.setPath(path);
 				}
 				alreadySelected = true;
-				startTime = System.nanoTime();
 				return;
 			}
 			alreadySelected = false;
@@ -165,8 +167,6 @@ public final class CanvasView extends JComponent{
 
 		public void mouseDragged(MouseEvent e) {
 			if(alreadySelected){
-				//if (startTime - Config.TICK_PER_NANOSEC < 0) return;
-				startTime = System.nanoTime();
 				path.addDelta(startTick + numTicks, PointTools.ptDiff(e.getPoint(), prevMouseLoc));
 				prevMouseLoc = e.getPoint();
 				Main.slider.setValue(startTick + numTicks++);
@@ -206,14 +206,21 @@ public final class CanvasView extends JComponent{
 	}
 
 	class EraseMode extends MouseInputAdapter{
+		private Shape sh = null;
+
+		public void mousePressed(MouseEvent e){
+			sh = new Polygon();
+		}
+
 		public void mouseDragged(MouseEvent e) {
 			Point pt = e.getPoint();
-			Shape sp = new Rectangle((int)(e.getX() -2), (int)(e.getY()-2), 4, 4);
+			//Shape sp = new Rectangle((int)(e.getX() -2), (int)(e.getY()-2), 4, 4);
+			((Polygon)sh).addPoint((int)pt.getX(), (int)pt.getY());
 			int frame = Main.slider.getValue();
 			for (Iterator<DrawableObject> it =  Main.model.getObjLst().iterator(); it.hasNext();){
 				DrawableObject obj = it.next();
 				if (!obj.exist(frame))continue;
-				if (obj.containedPartlyIn(sp)){
+				if (obj.containedPartlyIn(sh)){
 					obj.erasedAt(frame);
 					// object's beginning and end are equal -- can be removed
 					if (obj.nonExistence()){
@@ -222,6 +229,10 @@ public final class CanvasView extends JComponent{
 				}
 			}
 			repaint();
+		}
+
+		public void mouseReleased(MouseEvent e){
+			sh = null;
 		}
 	}
 }

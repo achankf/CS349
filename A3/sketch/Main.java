@@ -27,7 +27,6 @@ public final class Main{
 			this.setLayout(new BorderLayout());
 
 			JScrollPane jsp = new JScrollPane(Main.canvas);
-			jsp.setMinimumSize(new Dimension(500,400));
 
 			this.add(Main.tool, BorderLayout.NORTH);
 			this.add(jsp, BorderLayout.CENTER);

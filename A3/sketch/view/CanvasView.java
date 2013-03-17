@@ -20,8 +20,15 @@ public final class CanvasView extends JComponent{
 	private ArrayList<DrawableObject> selected = new ArrayList<DrawableObject>();
 	private final SketchModel model;
 
+	private int width = 600;
+	private int height = 400;
+
 	public ModeState getModeState(){
 		return new ModeState();
+	}
+
+	public Dimension getPreferredSize() {
+    return new Dimension(width,height);
 	}
 
 	public CanvasView(SketchModel model){
@@ -73,7 +80,15 @@ public final class CanvasView extends JComponent{
 			(int)(rect.getY() + rect.getHeight() / 2));
 	}
 
+	public void updateDim(Point pt){
+		int x = (int) pt.getX();
+		int y = (int) pt.getY();
+		if (x > width) width = x;
+		if (y > height) height = y;
+	}
+
 	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
 
 		int currentFrame = model.getFrame();
@@ -121,7 +136,6 @@ public final class CanvasView extends JComponent{
 		long prevTime = System.nanoTime();
 	
 		public void mousePressed(MouseEvent e) {
-System.out.println("HIHI");
 			int frame = model.getFrame();
 			obj = new DrawableObject(frame);
 			model.addObject(obj);
@@ -129,6 +143,7 @@ System.out.println("HIHI");
 
 		public void mouseDragged(MouseEvent e) {
 			obj.addPoint(e.getPoint());
+			updateDim(e.getPoint());
 			if (System.nanoTime() - prevTime < Config.TICK_PER_NANOSEC) return;
 			prevTime = System.nanoTime();
 			repaint();
@@ -172,8 +187,9 @@ System.out.println("HIHI");
 
 		public void mouseDragged(MouseEvent e) {
 			if(alreadySelected){
+				Rectangle rect = buffer.getBounds();
+				updateDim(PointTools.ptSum(e.getPoint(), new Point((int)rect.getWidth(), (int)rect.getHeight())));
 				for (DrawableObject obj : selected){
-					//path.addDelta(startTick + numTicks, PointTools.ptDiff(e.getPoint(), prevMouseLoc));
 					obj.addPathDelta(startTick + numTicks, PointTools.ptDiff(e.getPoint(), prevMouseLoc));
 				}
 				prevMouseLoc = e.getPoint();

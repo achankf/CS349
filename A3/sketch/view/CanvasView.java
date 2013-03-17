@@ -20,8 +20,8 @@ public final class CanvasView extends JComponent{
 	private ArrayList<DrawableObject> selected = new ArrayList<DrawableObject>();
 	private final SketchModel model;
 
-	private int width = 600;
-	private int height = 400;
+	private int width = 1200;
+	private int height = 800;
 
 	public ModeState getModeState(){
 		return new ModeState();

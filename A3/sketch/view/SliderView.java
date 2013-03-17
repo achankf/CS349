@@ -11,36 +11,44 @@ import java.util.concurrent.*;
 public class SliderView extends JPanel{
 	private JSlider slider = new TimeSlider();
 	private ScheduledFuture<?> future;
-	private Boolean doNotSchedulePlayBack = false;
 	private final SketchModel model;
 	private ScheduledExecutorService executor;
+
+	private JButton play = new JButton("Play");
+	private boolean playing = false;
+	private boolean controlPressed = false;
+	
 
 	public SliderView(SketchModel sModel, ScheduledExecutorService sExecutor){
 		this.model = sModel;
 		this.executor = sExecutor;
-		JButton play = new JButton("Play");
-		JButton stop = new JButton("Stop");
 
 		play.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				startPlaying();
+				if (!playing){
+					startPlaying();
+				} else {
+					stopPlaying();
+				}
 			}
 		});
 
-		stop.addActionListener(new ActionListener(){
+		final JButton addFrames = new JButton("Add " + Config.FRAMES_PER_ADD + " frames");
+
+		addFrames.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				stopPlaying();
+				slider.setMaximum(slider.getMaximum() + Config.FRAMES_PER_ADD);
 			}
 		});
 
 		this.setLayout(new BorderLayout());
 		this.add(slider, BorderLayout.CENTER);
+		this.add(addFrames, BorderLayout.EAST);
 
 		JPanel westPanel = new JPanel();
 		westPanel.setLayout(new BorderLayout());
 
 		westPanel.add(play, BorderLayout.WEST);
-		westPanel.add(stop, BorderLayout.EAST);
 		this.add(westPanel, BorderLayout.WEST);
 
 		model.addView(new IView(){
@@ -50,13 +58,17 @@ public class SliderView extends JPanel{
 			}
 
 			public void resetView(){
-				stopPlaying();
 				updateView();
+				if (future == null) return;
+				future.cancel(true);
 			}
 		});
 	}
 
 	public void startPlaying(){
+		play.setText("Stop");
+		playing = true;
+
 		model.resetAllViews();
 		Runnable runnable = new Runnable(){
 			public void run(){
@@ -65,7 +77,6 @@ public class SliderView extends JPanel{
 						long prevTime = System.nanoTime();
 						int frame = slider.getValue();
 						if (frame >= slider.getMaximum()){
-							//doNotSchedulePlayBack = true;
 							stopPlaying();
 							return;
 						}
@@ -80,6 +91,8 @@ public class SliderView extends JPanel{
 	}
 
 	public void stopPlaying(){
+		play.setText("Play");
+		playing = false;
 		if (future == null) return;
 		future.cancel(true);
 	}
@@ -92,20 +105,27 @@ public class SliderView extends JPanel{
 		return slider.getValue();
 	}
 
-	private class myChangeListener implements ChangeListener {
-		public void stateChanged(ChangeEvent e){
-			model.setFrame(((JSlider)(e.getSource())).getValue());
-			model.updateAllViews();
-		}
+	public void setControlPressed(boolean pressed){
+		controlPressed = pressed;
 	}
 
 	private class TimeSlider extends JSlider{
+		private int max = Config.SLIDER_MAX;
+	
 		TimeSlider(){
 			super(JSlider.HORIZONTAL, 0, Config.SLIDER_MAX, 0);
 			setMajorTickSpacing(Config.FPS);
-			setPaintTicks(true);
+			setPaintTicks(false);
 			setPaintLabels(false);
 			addChangeListener(new myChangeListener());
+		}
+
+		private class myChangeListener implements ChangeListener {
+			long time = System.nanoTime();
+			public void stateChanged(ChangeEvent e){
+				model.setFrame(((JSlider)(e.getSource())).getValue());
+				model.updateAllViews();
+			}
 		}
 	}
 }

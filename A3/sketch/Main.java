@@ -1,12 +1,11 @@
 package sketch;
 
-import sketch.model.SketchModel;
+import sketch.model.*;
 import sketch.view.*;
 
 import java.util.concurrent.*;
-import javax.swing.JPanel;
-import javax.swing.JFrame;
-import java.awt.BorderLayout;
+import javax.swing.*;
+import java.awt.*;
 
 public final class Main{
 	private static final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
@@ -18,8 +17,7 @@ public final class Main{
 	public static void main(String[] args){
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				JPanel panel = new SketchPanel();
-				JFrame frame = new SketchFrame(panel);
+				JFrame frame = new SketchFrame();
 			}
 		});
 	}
@@ -27,14 +25,19 @@ public final class Main{
 	private static class SketchPanel extends JPanel{
 		public SketchPanel(){
 			this.setLayout(new BorderLayout());
+
+			JScrollPane jsp = new JScrollPane(Main.canvas);
+			jsp.setMinimumSize(new Dimension(500,400));
+
 			this.add(Main.tool, BorderLayout.NORTH);
-			this.add(Main.canvas, BorderLayout.CENTER);
+			this.add(jsp, BorderLayout.CENTER);
 			this.add(Main.slider, BorderLayout.SOUTH);
 		}
 	}
 	
 	private static class SketchFrame extends JFrame{
-		public SketchFrame(JPanel panel){
+		public SketchFrame(){
+			JPanel panel = new SketchPanel();
 			JFrame frame = new JFrame(Config.TITLE);
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			frame.setSize(Config.DIM);

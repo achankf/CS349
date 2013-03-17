@@ -3,7 +3,7 @@ package sketch.view;
 import sketch.model.*;
 import sketch.model.object.*;
 import sketch.*;
-import javax.swing.JComponent;
+import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.event.MouseInputListener;
 import java.awt.event.MouseEvent;
@@ -25,6 +25,7 @@ public final class CanvasView extends JComponent{
 	}
 
 	public CanvasView(SketchModel model){
+		this.setSize(new Dimension(600,400));
 		this.model = model;
 		this.setForeground(Color.BLACK);
 		this.setBackground(Color.WHITE);
@@ -120,6 +121,7 @@ public final class CanvasView extends JComponent{
 		long prevTime = System.nanoTime();
 	
 		public void mousePressed(MouseEvent e) {
+System.out.println("HIHI");
 			int frame = model.getFrame();
 			obj = new DrawableObject(frame);
 			model.addObject(obj);

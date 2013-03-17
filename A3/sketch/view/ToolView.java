@@ -9,27 +9,31 @@ import java.awt.event.*;
 import java.awt.*;
 
 public class ToolView extends JPanel{
+	private final SketchModel model;
+	private final CanvasView.ModeState ms;
 
-	public ToolView(){
+	public ToolView(SketchModel model, CanvasView.ModeState modeState){
+		this.model = model;
+		this.ms = modeState;
 		JButton draw = new JButton("Draw");
 		JButton erase = new JButton("Erase");
 		JButton select = new JButton("Select");
 
 		draw.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				Main.canvas.setDrawMode();
+				ms.setMode(ms.getDraw());
 			}
 		});
 
 		select.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				Main.canvas.setSelectMode();
+				ms.setMode(ms.getSelect());
 			}
 		});
 
 		erase.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				Main.canvas.setEraseMode();
+				ms.setMode(ms.getErase());
 			}
 		});
 
@@ -38,7 +42,7 @@ public class ToolView extends JPanel{
 		this.add(erase);
 		this.add(select);
 
-		Main.model.addView(new IView(){
+		model.addView(new IView(){
 			public void updateView(){
 				repaint();
 			}

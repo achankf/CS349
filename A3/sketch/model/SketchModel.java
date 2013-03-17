@@ -4,9 +4,9 @@ import java.util.LinkedList;
 import sketch.model.object.*;
 import sketch.Config;
 
-public class SketchModel extends BaseModel{
-	protected int timeCurrent = 0, timeLast = Config.TIMELAST;
-	protected LinkedList<DrawableObject> objList = new LinkedList<DrawableObject>();
+public final class SketchModel extends BaseModel{
+	private LinkedList<DrawableObject> objList = new LinkedList<DrawableObject>();
+	private int frame = 0;
 
 	public void addObject(DrawableObject obj){
 		objList.add(obj);
@@ -20,5 +20,13 @@ public class SketchModel extends BaseModel{
 
 	public LinkedList<DrawableObject> getObjLst(){
 		return objList;
+	}
+
+	public void setFrame(int frame){
+		this.frame = frame;
+	}
+	
+	public int getFrame(){
+		return this.frame;
 	}
 }

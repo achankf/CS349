@@ -1,6 +1,6 @@
 package sketch.model.object;
 
-import sketch.Config;
+import sketch.*;
 import java.awt.Shape;
 import java.awt.Point;
 import java.awt.Graphics2D;
@@ -68,16 +68,18 @@ public class DrawableObject{
 		}
 	}
 
-	public Boolean containedIn(Shape p){
+	public Boolean containedIn(Shape p, int frame){
+		Point delta = getDelta(frame);
 		for (Point pt : lst){
-			if(!p.contains(pt)) return false;
+			if(!p.contains(PointTools.ptSum(pt, delta))) return false;
 		}
 		return true;
 	}
 
-	public Boolean containedPartlyIn(Shape p){
+	public Boolean containedPartlyIn(Shape p, int frame){
+		Point delta = getDelta(frame);
 		for (Point pt : lst){
-			if(p.contains(pt)) return true;
+			if(p.contains(PointTools.ptSum(pt, delta))) return true;
 		}
 		return false;
 	}
@@ -100,5 +102,12 @@ public class DrawableObject{
 
 	public Boolean nonExistence(){
 		return existFrom == existTo;
+	}
+
+	public Point getDelta(int frame){
+		if (path == null){
+			return new Point(0,0);
+		}
+		return path.getDelta(frame);
 	}
 }

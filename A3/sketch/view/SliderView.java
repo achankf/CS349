@@ -12,8 +12,12 @@ public class SliderView extends JPanel{
 	private JSlider slider = new TimeSlider();
 	private ScheduledFuture<?> future;
 	private Boolean doNotSchedulePlayBack = false;
+	private final SketchModel model;
+	private ScheduledExecutorService executor;
 
-	public SliderView(){
+	public SliderView(SketchModel sModel, ScheduledExecutorService sExecutor){
+		this.model = sModel;
+		this.executor = sExecutor;
 		JButton play = new JButton("Play");
 		JButton stop = new JButton("Stop");
 
@@ -39,8 +43,9 @@ public class SliderView extends JPanel{
 		westPanel.add(stop, BorderLayout.EAST);
 		this.add(westPanel, BorderLayout.WEST);
 
-		Main.model.addView(new IView(){
+		model.addView(new IView(){
 			public void updateView(){
+				setValue(model.getFrame());
 				repaint();
 			}
 
@@ -52,6 +57,7 @@ public class SliderView extends JPanel{
 	}
 
 	public void startPlaying(){
+		model.resetAllViews();
 		Runnable runnable = new Runnable(){
 			public void run(){
 				javax.swing.SwingUtilities.invokeLater(new Runnable(){
@@ -64,13 +70,13 @@ public class SliderView extends JPanel{
 							return;
 						}
 						slider.setValue(frame + 1);
-						Main.model.updateAllViews();
+						model.updateAllViews();
 						prevTime = System.nanoTime();
 					}
 				});
 			}
 		};
-		future = Main.executor.scheduleAtFixedRate(runnable,0, Config.TICK_PER_NANOSEC, TimeUnit.NANOSECONDS);
+		future = executor.scheduleAtFixedRate(runnable,0, Config.TICK_PER_NANOSEC, TimeUnit.NANOSECONDS);
 	}
 
 	public void stopPlaying(){
@@ -88,7 +94,8 @@ public class SliderView extends JPanel{
 
 	private class myChangeListener implements ChangeListener {
 		public void stateChanged(ChangeEvent e){
-			Main.model.updateAllViews();
+			model.setFrame(((JSlider)(e.getSource())).getValue());
+			model.updateAllViews();
 		}
 	}
 

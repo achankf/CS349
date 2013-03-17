@@ -153,14 +153,10 @@ public final class CanvasView extends JComponent{
 			if (!selected.isEmpty()){// && buffer.contains(e.getX(), e.getY())){
 				Point pt = PointTools.ptDiff(e.getPoint(),selected.get(0).getDelta(startTick));
 				if (buffer.contains(pt.getX(), pt.getY())){
-
-					path = selected.get(0).getPath();
-
-					if (path == null){
-						path = new Path(findCentreOfSelected());
-					}
+					Point centre = findCentreOfSelected();
 					for (DrawableObject obj : selected){
-						obj.setPath(path);
+						if (obj.getPath() != null) continue;
+						obj.setPath(new Path(centre));
 					}
 					alreadySelected = true;
 					return;
@@ -174,7 +170,10 @@ public final class CanvasView extends JComponent{
 
 		public void mouseDragged(MouseEvent e) {
 			if(alreadySelected){
-				path.addDelta(startTick + numTicks, PointTools.ptDiff(e.getPoint(), prevMouseLoc));
+				for (DrawableObject obj : selected){
+					//path.addDelta(startTick + numTicks, PointTools.ptDiff(e.getPoint(), prevMouseLoc));
+					obj.addPathDelta(startTick + numTicks, PointTools.ptDiff(e.getPoint(), prevMouseLoc));
+				}
 				prevMouseLoc = e.getPoint();
 				model.setFrame(startTick + numTicks++);
 			} else {

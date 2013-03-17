@@ -110,4 +110,9 @@ public class DrawableObject{
 		}
 		return path.getDelta(frame);
 	}
+
+	public void addPathDelta(int frame, Point delta){
+		if (path == null) return;
+		path.addDelta(frame,delta);
+	}
 }

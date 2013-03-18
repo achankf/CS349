@@ -58,6 +58,7 @@ public class ToolView extends JPanel{
 
 		save.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
+				model.resetAllViews();
 				try{
 					int returnVal = fc.showOpenDialog(temp);
 					if (returnVal == JFileChooser.APPROVE_OPTION){
@@ -76,6 +77,7 @@ public class ToolView extends JPanel{
 
 		load.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
+				model.resetAllViews();
 				try{
 					int returnVal = fc.showOpenDialog(temp);
 					if (returnVal == JFileChooser.APPROVE_OPTION){

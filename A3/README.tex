@@ -1,0 +1,32 @@
+\documentclass[12pt]{article}
+\usepackage[left=3.8cm,top=3.8cm,right=3.8cm]{geometry}
+\usepackage{ifthen,enumerate}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[hypcap]{caption}
+
+\title{README for CS349 Assignment 3}
+\author{Alfred Chan -- 20392255}
+
+\begin{document}
+\maketitle
+{ \noindent \bf Run with ``make run'' }\\
+
+\noindent The sketch application works just as the assignment description described.
+Namely, there are three modes in this sketch program:
+\begin{description}
+\item[Draw Mode] draw objects on the canvas
+\item[Erase Mode] erase part of an objects on the canvas would erase the entire object at current frame
+\item[Select Mode] lasso-selection on objects; dragging on selected objects would animate them. If you try animate an object at the last frame, the animation will still be recorded but the total number of frames WILL NOT change.
+\end{description}
+
+To play an animation, press the play button.
+To stop an animation, press stop (play changed to stop).
+To add more frames, press ``Add 150 frames'' located near right of the slider.\\
+
+\noindent Enhancement:
+\begin{itemize}
+\item save and load animation to files (*.sketch)
+\end{itemize}
+Hint: try to load and play demo.sketch within the A3 directory.
+\end{document}

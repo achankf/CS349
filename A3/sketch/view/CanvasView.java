@@ -25,7 +25,7 @@ public final class CanvasView extends JComponent{
 	}
 
 	public Dimension getPreferredSize() {
-    return new Dimension(800,520);
+    return new Dimension(780,505);
 	}
 
 	public CanvasView(SketchModel model){

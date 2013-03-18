@@ -25,11 +25,10 @@ public final class CanvasView extends JComponent{
 	}
 
 	public Dimension getPreferredSize() {
-    return new Dimension(600,400);
+    return new Dimension(800,520);
 	}
 
 	public CanvasView(SketchModel model){
-		this.setSize(new Dimension(600,400));
 		this.model = model;
 		this.setForeground(Color.BLACK);
 		this.setBackground(Color.WHITE);

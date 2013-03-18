@@ -1,0 +1,556 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="12.0">
+  <zoom_level>7</zoom_level>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>210</x>
+      <y>203</y>
+      <w>160</w>
+      <h>76</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+m1=*</panel_attributes>
+    <additional_attributes>147;21;21;63</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>0</x>
+      <y>245</y>
+      <w>231</w>
+      <h>182</h>
+    </coordinates>
+    <panel_attributes>sketch.model::SketchModel
+--
+-objList: LinkedList&lt;DrawableObject&gt;
+-maxFrame: int
+-frame: int
+--
++addObject(DrawableObject obj): void
++removeObject(DrawableObject obj): void
++getObjLst(): LinkedList&lt;DrawableObject&gt;
++setFrame(int frame): void
++getFrame(): int
++write(DataOutputStream out): void
++read(DataInputStream in): void
++setMaxFrame(int val): void
++getMaxFrame(): int
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1029</x>
+      <y>98</y>
+      <w>146</w>
+      <h>34</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>133;21;21;21</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>371</x>
+      <y>14</y>
+      <w>720</w>
+      <h>300</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>686;287;707;245;707;21;21;21</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>658</x>
+      <y>469</y>
+      <w>378</w>
+      <h>98</h>
+    </coordinates>
+    <panel_attributes>sketch.view::ToolView
+--
+-model: SketchModel
+-ms: CanvasView.ModeState
+--
++ToolView(SketchModel sModel, CanvasView.ModeState modeState): ctor
++save(File fileLocation): void
++load(File fileLocation): void
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1036</x>
+      <y>371</y>
+      <w>132</w>
+      <h>34</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>21;21;119;21</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>210</x>
+      <y>294</y>
+      <w>461</w>
+      <h>62</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>21;49;448;21</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1162</x>
+      <y>112</y>
+      <w>175</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>javax.swing::JComponent
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>658</x>
+      <y>273</y>
+      <w>399</w>
+      <h>189</h>
+    </coordinates>
+    <panel_attributes>sketch.view::SliderView
+--
+-slider = new TimeSlider(): JSlider
+-future: ScheduledFuture&lt;?&gt;
+-model: SketchModel
+-executor: ScheduledExecutorService
+-play = new JButton("Play"): JButton
+-playing = false: boolean
+-controlPressed = false: boolean
+--
++SliderView(SketchModel sModel, ScheduledExecutorService sExecutor): ctor
++startPlaying(): void
++stopPlaying(): void
++setValue(int val): void
++getValue(): int
+--
+-class TimeSlider
+-class myChangeListener</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>357</x>
+      <y>182</y>
+      <w>112</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;interface&gt;&gt;
+sketch.model::IView
+--
+--
++updateView(): void
++resetView(): void
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1036</x>
+      <y>413</y>
+      <w>132</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>119;77;21;21</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1155</x>
+      <y>483</y>
+      <w>175</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>javax.swing::JPanel
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1155</x>
+      <y>315</y>
+      <w>294</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>sketch.view::myChangeListener
+--
+~time: long
+--
++stateChanged(javax.swing.event.ChangeEvent): void
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>196</x>
+      <y>42</y>
+      <w>132</w>
+      <h>216</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>21;203;119;21</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1036</x>
+      <y>315</y>
+      <w>132</w>
+      <h>34</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>21;21;119;21</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>210</x>
+      <y>203</y>
+      <w>461</w>
+      <h>146</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>21;133;448;21</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>210</x>
+      <y>329</y>
+      <w>461</w>
+      <h>174</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>21;21;448;161</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>70</x>
+      <y>196</y>
+      <w>34</w>
+      <h>62</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>21;21;21;49</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>322</x>
+      <y>672</y>
+      <w>266</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>sketch::PointTools
+--
+--
++ptDiff(Point pt1, Point pt2): Point
++ptSum(Point pt1, Point pt2): Point
++writeToFile(DataOutputStream out, Point pt): void
++readFromFile(DataInputStream in): Point
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1155</x>
+      <y>385</y>
+      <w>294</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>sketch.view::TimeSlider
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>252</x>
+      <y>14</y>
+      <w>140</w>
+      <h>49</h>
+    </coordinates>
+    <panel_attributes>sketch::Main
+--
+--
++main(String[] args): void
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>259</x>
+      <y>525</y>
+      <w>97</w>
+      <h>34</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>84;21;21;21</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>658</x>
+      <y>49</y>
+      <w>392</w>
+      <h>217</h>
+    </coordinates>
+    <panel_attributes>sketch.view::CanvasView
+--
+-drawMode: MouseInputAdapter
+-eraseMode: MouseInputAdapter
+-selectMode: MouseInputAdapter
+-buffer = null: Shape
+-selected: ArrayList&lt;DrawableObject&gt;
+-model: SketchModel
+--
++CanvasView(SketchModel model): ctor
++getModeState(): ModeState
++getPreferredSize(): Dimension
+-drawSelectedArea(Graphics2D g2d, int currentFrame): void
+-findCentreOfSelected(): Point
++paintComponent(Graphics g): void
+-changeModeGarbageCollect(): void
+-setMainMode(MouseInputListener mil): void
+-registerControllers(MouseInputListener mil): void
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>448</x>
+      <y>203</y>
+      <w>223</w>
+      <h>111</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>21;21;210;98</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1155</x>
+      <y>427</y>
+      <w>175</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>javax.swing::JSlider
+--</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>343</x>
+      <y>469</y>
+      <w>210</w>
+      <h>161</h>
+    </coordinates>
+    <panel_attributes>sketch.model.object::Path
+--
+#centre: Point
+#tree: TreeMap&lt;Integer, Point&gt;
+--
++Path(Path path): ctor
++Path(DataInputStream in, int size): ctor
++Path(Point centre): ctor
++getPoint(int idx): Point
++addDelta(int time, Point delta): void
++draw(Graphics2D g2d, int frame): void
++getDelta(int frame): Point
++write(DataOutputStream out): void
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>616</x>
+      <y>595</y>
+      <w>588</w>
+      <h>161</h>
+    </coordinates>
+    <panel_attributes>sketch::Config
+--
++DIM = new Dimension(800, 600): Dimension
++TITLE = "Alfred Chan 255": String
++FPS = 30: int
++COLLECTOR_MIN = 100: int
++TICK_PER_NANOSEC = 1000000000 / FPS: long
++FRAMES_PER_ADD = 5 * FPS: int
++SELECTED_COLOUR = Color.BLUE: Color
+-DASH1[] = { 10.0f }: float
++DASHED = new BasicStroke(1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, DASH1, 0.0f): BasicStroke
++SLIDER_MAX = 60 * FPS: int
+--
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>371</x>
+      <y>21</y>
+      <w>300</w>
+      <h>76</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>287;63;21;21</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1232</x>
+      <y>385</y>
+      <w>34</w>
+      <h>55</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>21;42;21;21</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1015</x>
+      <y>476</y>
+      <w>153</w>
+      <h>41</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>140;21;21;28</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>448</x>
+      <y>217</y>
+      <w>223</w>
+      <h>272</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>21;21;210;259</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>448</x>
+      <y>133</y>
+      <w>223</w>
+      <h>97</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>21;84;210;21</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>371</x>
+      <y>0</y>
+      <w>762</w>
+      <h>545</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>665;532;749;504;749;21;21;21</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>14</x>
+      <y>91</y>
+      <w>196</w>
+      <h>126</h>
+    </coordinates>
+    <panel_attributes>sketch.model::BaseModel
+--
+-objList: LinkedList&lt;DrawableObject&gt;
+-views: new ArrayList&lt;IView&gt;;
+-maxFrame: int
+-frame: int
+--
++addView(IView view): void
++removeView(IView view): void
++updateAllViews(): void
++resetAllViews(): void
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>70</x>
+      <y>406</y>
+      <w>76</w>
+      <h>76</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m1=   0..n</panel_attributes>
+    <additional_attributes>21;63;63;21</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>0</x>
+      <y>469</y>
+      <w>280</w>
+      <h>280</h>
+    </coordinates>
+    <panel_attributes>sketch.model.object::DrawableObject
+--
+#path: Path
+#lst: ArrayList&lt;Point&gt;
+#existFrom, existTo: int
+--
++DrawableObject(int existFrom): ctor
++DrawableObject(DataInputStream in): ctor
++addPoint(Point pt): void
++finalize(): void
++getPtLst(): ArrayList&lt;Point&gt;
++draw(Graphics2D g2d, int frame): void
++drawPath(Graphics2D g2d, int frame): void
++containedIn(Shape p, int frame): Boolean
++containedPartlyIn(Shape p, int frame): Boolean
++setPath(Path path): void
++getPath(): Path
++erasedAt(int frame): void
++exist(int frame): Boolean
++nonExistence(): Boolean
++getDelta(int frame): Point
++addPathDelta(int frame, Point delta): void
++write(DataOutputStream out): void
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>

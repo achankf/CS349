@@ -68,7 +68,7 @@ public final class CanvasView extends JComponent{
 		}
 	}
 
-	public Point findCentreOfSelected(){
+	private Point findCentreOfSelected(){
 		if (buffer == null) return null;
 		Rectangle rect = buffer.getBounds();
 		return new Point((int)(rect.getX() + rect.getWidth() / 2),
@@ -95,12 +95,12 @@ public final class CanvasView extends JComponent{
 		g2d.setColor(Color.BLACK);
 	}
 
-	public void changeModeGarbageCollect(){
+	private void changeModeGarbageCollect(){
 		selected.clear();
 		buffer = new Polygon();
 	}
 
-	public void setMainMode(MouseInputListener mil){
+	private void setMainMode(MouseInputListener mil){
 		changeModeGarbageCollect();
 		registerControllers(mil);
 		model.resetAllViews();
@@ -119,7 +119,7 @@ public final class CanvasView extends JComponent{
 		this.addMouseMotionListener(mil);
 	}
 
-	class DrawMode extends MouseInputAdapter{
+	private class DrawMode extends MouseInputAdapter{
 		DrawableObject obj = null;
 		long prevTime = System.nanoTime();
 	
@@ -144,7 +144,7 @@ public final class CanvasView extends JComponent{
  		}
 	}
 
-	class SelectMode extends MouseInputAdapter{
+	private class SelectMode extends MouseInputAdapter{
 		Boolean alreadySelected = false;
 		Point prevMouseLoc;
 		Path path;
@@ -228,7 +228,7 @@ public final class CanvasView extends JComponent{
 		}
 	}
 
-	class EraseMode extends MouseInputAdapter{
+	private class EraseMode extends MouseInputAdapter{
 
 		public void mouseDragged(MouseEvent e) {
 			Shape sh = new Rectangle((int)(e.getX() -5), (int)(e.getY()-5), 10, 10);

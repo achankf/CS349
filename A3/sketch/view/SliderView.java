@@ -109,10 +109,6 @@ public class SliderView extends JPanel{
 		return slider.getValue();
 	}
 
-	public void setControlPressed(boolean pressed){
-		controlPressed = pressed;
-	}
-
 	private class TimeSlider extends JSlider{
 		TimeSlider(){
 			super(JSlider.HORIZONTAL, 0, Config.SLIDER_MAX, 0);

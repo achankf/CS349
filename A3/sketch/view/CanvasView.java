@@ -20,15 +20,12 @@ public final class CanvasView extends JComponent{
 	private ArrayList<DrawableObject> selected = new ArrayList<DrawableObject>();
 	private final SketchModel model;
 
-	private int width = 1200;
-	private int height = 800;
-
 	public ModeState getModeState(){
 		return new ModeState();
 	}
 
 	public Dimension getPreferredSize() {
-    return new Dimension(width,height);
+    return new Dimension(600,400);
 	}
 
 	public CanvasView(SketchModel model){
@@ -41,7 +38,6 @@ public final class CanvasView extends JComponent{
 				repaint();
 			}
 			public void resetView(){
-				changeModeGarbageCollect();
 				updateView();
 			}
 		});
@@ -78,13 +74,6 @@ public final class CanvasView extends JComponent{
 		Rectangle rect = buffer.getBounds();
 		return new Point((int)(rect.getX() + rect.getWidth() / 2),
 			(int)(rect.getY() + rect.getHeight() / 2));
-	}
-
-	public void updateDim(Point pt){
-		int x = (int) pt.getX();
-		int y = (int) pt.getY();
-		if (x > width) width = x;
-		if (y > height) height = y;
 	}
 
 	public void paintComponent(Graphics g) {
@@ -143,7 +132,6 @@ public final class CanvasView extends JComponent{
 
 		public void mouseDragged(MouseEvent e) {
 			obj.addPoint(e.getPoint());
-			updateDim(e.getPoint());
 			if (System.nanoTime() - prevTime < Config.TICK_PER_NANOSEC) return;
 			prevTime = System.nanoTime();
 			repaint();
@@ -188,7 +176,6 @@ public final class CanvasView extends JComponent{
 		public void mouseDragged(MouseEvent e) {
 			if(alreadySelected){
 				Rectangle rect = buffer.getBounds();
-				updateDim(PointTools.ptSum(e.getPoint(), new Point((int)rect.getWidth(), (int)rect.getHeight())));
 				for (DrawableObject obj : selected){
 					obj.addPathDelta(startTick + numTicks, PointTools.ptDiff(e.getPoint(), prevMouseLoc));
 				}
@@ -198,7 +185,7 @@ public final class CanvasView extends JComponent{
 				Point pt = e.getPoint();
 				((Polygon)buffer).addPoint((int)pt.x, (int)pt.y);
 			}
-			model.updateAllViews();
+			model.resetAllViews();
 		}
 
 		public void mouseReleased(MouseEvent e) {

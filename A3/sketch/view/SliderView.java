@@ -38,6 +38,7 @@ public class SliderView extends JPanel{
 		addFrames.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				slider.setMaximum(slider.getMaximum() + Config.FRAMES_PER_ADD);
+				model.resetAllViews();
 			}
 		});
 
@@ -59,8 +60,7 @@ public class SliderView extends JPanel{
 
 			public void resetView(){
 				updateView();
-				if (future == null) return;
-				future.cancel(true);
+				stopPlaying();
 			}
 		});
 	}
@@ -69,7 +69,7 @@ public class SliderView extends JPanel{
 		play.setText("Stop");
 		playing = true;
 
-		model.resetAllViews();
+		model.updateAllViews();
 		Runnable runnable = new Runnable(){
 			public void run(){
 				javax.swing.SwingUtilities.invokeLater(new Runnable(){

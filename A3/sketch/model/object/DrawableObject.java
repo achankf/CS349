@@ -4,26 +4,34 @@ import sketch.*;
 import java.awt.Shape;
 import java.awt.Point;
 import java.awt.Graphics2D;
-import java.util.ArrayList;
+import java.util.*;
+import java.io.*;
 
 public class DrawableObject{
-	protected Boolean highlighted = false;
 	protected Path path = null;
 	protected ArrayList<Point> lst = new ArrayList<Point>(Config.COLLECTOR_MIN);
 	protected int existFrom = 0, existTo = -1;
-
-	public DrawableObject(){}
 
 	public DrawableObject(int existFrom){
 		this.existFrom = existFrom;
 	}
 
-	public void addPoint(Point pt){
-		lst.add(pt);
+	public DrawableObject(DataInputStream in) throws IOException{
+		existFrom = in.readInt();
+		existTo = in.readInt();
+		int objSize = in.readInt();
+		for (int i = 0; i < objSize; i++){
+			Point temp = PointTools.readFromFile(in);
+			lst.add(temp);
+		}
+
+		int pathSize = in.readInt();
+		if (pathSize == 0) return;
+		path = new Path(in, pathSize);
 	}
 
-	public Point getPoint(int idx){
-		return lst.get(idx);
+	public void addPoint(Point pt){
+		lst.add(pt);
 	}
 
 	public void finalize(){
@@ -32,16 +40,6 @@ public class DrawableObject{
 
 	public ArrayList<Point> getPtLst(){
 		return lst;
-	}
-
-	public void print(){
-		for (int i = 0; i < lst.size(); i++){
-			System.out.println(i + " " + lst.get(i));
-		}
-	}
-
-	public void setHighlighted(Boolean b){
-		this.highlighted = b;
 	}
 
 	public void draw(Graphics2D g2d, int frame){
@@ -114,5 +112,19 @@ public class DrawableObject{
 	public void addPathDelta(int frame, Point delta){
 		if (path == null) return;
 		path.addDelta(frame,delta);
+	}
+
+	public void write(DataOutputStream out) throws IOException{
+		out.writeInt(existFrom);
+		out.writeInt(existTo);
+		out.writeInt(lst.size());
+		for (Point pt : lst){
+			PointTools.writeToFile(out, pt);
+		}
+		if (path == null){
+			out.writeInt(0);
+		} else {
+			path.write(out);
+		}
 	}
 }

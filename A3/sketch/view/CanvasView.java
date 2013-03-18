@@ -38,6 +38,7 @@ public final class CanvasView extends JComponent{
 				repaint();
 			}
 			public void resetView(){
+				changeModeGarbageCollect();
 				updateView();
 			}
 		});
@@ -65,7 +66,6 @@ public final class CanvasView extends JComponent{
 			g2d.translate(-x,-y);
 			g2d.setColor(Color.BLACK);
 			g2d.setStroke(temp);
-			Draw.rectPoint(g2d, PointTools.ptSum(findCentreOfSelected(), delta), 10);
 		}
 	}
 
@@ -98,7 +98,7 @@ public final class CanvasView extends JComponent{
 
 	public void changeModeGarbageCollect(){
 		selected.clear();
-		buffer = null;
+		buffer = new Polygon();
 	}
 
 	public void setMainMode(MouseInputListener mil){
@@ -134,14 +134,14 @@ public final class CanvasView extends JComponent{
 			obj.addPoint(e.getPoint());
 			if (System.nanoTime() - prevTime < Config.TICK_PER_NANOSEC) return;
 			prevTime = System.nanoTime();
-			repaint();
+			model.resetAllViews();
 		}
 
 		public void mouseReleased(MouseEvent e) {
 			if (obj == null) return;
 			obj.finalize();
 			obj = null;
-			repaint();
+			model.resetAllViews();
  		}
 	}
 
@@ -170,7 +170,7 @@ public final class CanvasView extends JComponent{
 			alreadySelected = false;
 			buffer = new Polygon();
 			selected.clear();
-			repaint();
+			model.resetAllViews();
 		}
 
 		public void mouseDragged(MouseEvent e) {
@@ -185,7 +185,12 @@ public final class CanvasView extends JComponent{
 				Point pt = e.getPoint();
 				((Polygon)buffer).addPoint((int)pt.x, (int)pt.y);
 			}
+			Shape temp = buffer;
+			ArrayList<DrawableObject> tempSelected = new ArrayList<DrawableObject>(selected);
+			
 			model.resetAllViews();
+			buffer = temp;
+			selected = tempSelected;
 		}
 
 		public void mouseReleased(MouseEvent e) {
@@ -197,7 +202,12 @@ public final class CanvasView extends JComponent{
 			} else {
 				setTightSelectBounds();
 			}
-			repaint();
+			Shape temp = buffer;
+			ArrayList<DrawableObject> tempSelected = new ArrayList<DrawableObject>(selected);
+			
+			model.resetAllViews();
+			buffer = temp;
+			selected = tempSelected;
 		}
 
 		private void setTightSelectBounds(){
@@ -234,7 +244,7 @@ public final class CanvasView extends JComponent{
 					}
 				}
 			}
-			repaint();
+			model.resetAllViews();
 		}
 	}
 

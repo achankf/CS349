@@ -25,7 +25,9 @@ public class SliderView extends JPanel{
 
 		play.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				if (!playing){
+				Boolean temp = playing;
+				model.resetAllViews();
+				if (!temp){
 					startPlaying();
 				} else {
 					stopPlaying();
@@ -37,7 +39,9 @@ public class SliderView extends JPanel{
 
 		addFrames.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				slider.setMaximum(slider.getMaximum() + Config.FRAMES_PER_ADD);
+				int maxFrame = model.getMaxFrame() + Config.FRAMES_PER_ADD;
+				model.setMaxFrame(maxFrame);
+				slider.setMaximum(maxFrame);
 				model.resetAllViews();
 			}
 		});
@@ -59,8 +63,8 @@ public class SliderView extends JPanel{
 			}
 
 			public void resetView(){
-				updateView();
 				stopPlaying();
+				updateView();
 			}
 		});
 	}
@@ -110,8 +114,6 @@ public class SliderView extends JPanel{
 	}
 
 	private class TimeSlider extends JSlider{
-		private int max = Config.SLIDER_MAX;
-	
 		TimeSlider(){
 			super(JSlider.HORIZONTAL, 0, Config.SLIDER_MAX, 0);
 			setMajorTickSpacing(Config.FPS);

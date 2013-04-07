@@ -1,14 +1,27 @@
 package chan.alfred.sketchplayer.model;
 
 import java.util.LinkedList;
+
+import android.graphics.Point;
 import chan.alfred.sketchplayer.model.object.*;
 import chan.alfred.sketchplayer.Config;
+
 import java.io.*;
 
 public final class SketchModel extends BaseModel{
 	private LinkedList<DrawableObject> objList = new LinkedList<DrawableObject>();
 	private int maxFrame = Config.SLIDER_MAX;
 	private int frame = 0;
+	
+	public SketchModel(){
+        DrawableObject draw = new DrawableObject(0);
+        draw.addPoint(new Point(50,10));
+        draw.addPoint(new Point(50,30));
+        draw.addPoint(new Point(80,30));
+        draw.addPoint(new Point(80,10));
+        draw.addPoint(new Point(50,10));
+        addObject(draw);
+	}
 
 	public void addObject(DrawableObject obj){
 		objList.add(obj);

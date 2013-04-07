@@ -10,14 +10,8 @@ import chan.alfred.sketchplayer.*;
 
 public final class CanvasView extends View{
 	private final SketchModel model;
-
-	public Dimension getPreferredSize() {
-		return new Dimension(780,505);
-	}
 	
-	public CanvasView(Context context, AttributeSet attrs){
-		super(context, attrs);
-		this.model = MainActivity.model;
+	private void addView(){
 		model.addView(new IView(){
 			public void updateView(){
 				invalidate();
@@ -26,6 +20,25 @@ public final class CanvasView extends View{
 				updateView();
 			}
 		});
+		model.updateAllViews();
+	}
+
+	public CanvasView(Context context) {
+		super(context);
+		this.model = MainActivity.model;
+		addView();
+	}
+	
+	public CanvasView(Context context, AttributeSet attrs, int defStyle) {
+		super(context, attrs, defStyle);
+		this.model = MainActivity.model;
+		addView();
+	}
+	
+	public CanvasView(Context context, AttributeSet attrs){
+		super(context, attrs);
+		this.model = MainActivity.model;
+		addView();
 	}
 
 	public void draw(Canvas g2d) {

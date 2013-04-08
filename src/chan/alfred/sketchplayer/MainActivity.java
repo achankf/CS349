@@ -13,7 +13,6 @@ import org.w3c.dom.Document;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -51,8 +50,7 @@ public class MainActivity extends Activity {
 		switch (requestCode) {
 		case ACTIVITY_CHOOSE_FILE:
 			if (resultCode == RESULT_OK) {
-				Uri uri = data.getData();
-				String filePath = uri.getPath();
+				String filePath = data.getStringExtra("path");
 				DocumentBuilderFactory docFactory = DocumentBuilderFactory
 						.newInstance();
 
@@ -64,6 +62,7 @@ public class MainActivity extends Activity {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+				seekBar.setProgress(0);
 			}
 			break;
 		case ACTIVITY_CONFIGURE:
@@ -72,8 +71,8 @@ public class MainActivity extends Activity {
 				red = data.getIntExtra("red", 0xff);
 				blue = data.getIntExtra("blue", 0xff);
 				green = data.getIntExtra("green", 0xff);
-				this.getWindow().getDecorView().setBackgroundColor(
-						Color.rgb(red, blue, green));
+				this.getWindow().getDecorView()
+						.setBackgroundColor(Color.rgb(red, blue, green));
 			}
 			break;
 		}
@@ -118,12 +117,10 @@ public class MainActivity extends Activity {
 		loadFile.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent chooseFile;
-				Intent intent;
-				chooseFile = new Intent(Intent.ACTION_GET_CONTENT);
-				chooseFile.setType("*/*");
-				intent = Intent.createChooser(chooseFile, "Choose a file");
-				startActivityForResult(intent, ACTIVITY_CHOOSE_FILE);
+				stopPlaying();
+				Intent chooseFile = new Intent(MainActivity.this,
+						FileChooserActivity.class);
+				startActivityForResult(chooseFile, ACTIVITY_CHOOSE_FILE);
 			}
 		});
 
@@ -144,7 +141,7 @@ public class MainActivity extends Activity {
 		config.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				garbageCollectTimerTasks();
+				stopPlaying();
 				Intent configure = new Intent(MainActivity.this,
 						ConfigActivity.class);
 
@@ -190,6 +187,7 @@ public class MainActivity extends Activity {
 						int frame = seekBar.getProgress();
 						if (frame >= seekBar.getMax()) {
 							stopPlaying();
+							seekBar.setProgress(0);
 							return;
 						}
 						seekBar.setProgress(frame + 1);

@@ -1,6 +1,9 @@
 package chan.alfred.sketchplayer;
 
 import java.io.File;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -44,6 +47,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		setContentView(R.layout.activity_main);
 
 		loadFile = (Button) findViewById(R.id.load_file);
@@ -54,15 +58,29 @@ public class MainActivity extends Activity {
 		seekBar.setMax(1000);
 
 		setupListeners();
+		
+		DocumentBuilderFactory docFactory = DocumentBuilderFactory
+				.newInstance();
+
+		try {
+			InputStream is = getAssets().open("sample.xml");
+			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+			Document doc = docBuilder.parse(is);
+			model.read(doc);
+		} catch (Exception e) {
+			StringWriter sw = new StringWriter();
+			e.printStackTrace(new PrintWriter(sw));
+			tv.setText(sw.toString());
+		}
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		tv.setText(tv.getText()+" ret intent");
+		tv.setText(tv.getText() + " ret intent");
 		switch (requestCode) {
 		case ACTIVITY_CHOOSE_FILE: {
 			if (resultCode == RESULT_OK) {
-				tv.setText(tv.getText()+" intent ok");
+				tv.setText(tv.getText() + " intent ok");
 				Uri uri = data.getData();
 				String filePath = uri.getPath();
 				tv.setText(filePath);

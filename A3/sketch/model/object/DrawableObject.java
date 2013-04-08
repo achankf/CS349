@@ -6,6 +6,9 @@ import java.awt.Point;
 import java.awt.Graphics2D;
 import java.util.*;
 import java.io.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Attr;
 
 public class DrawableObject{
 	protected Path path = null;
@@ -114,17 +117,16 @@ public class DrawableObject{
 		path.addDelta(frame,delta);
 	}
 
-	public void write(DataOutputStream out) throws IOException{
-		out.writeInt(existFrom);
-		out.writeInt(existTo);
-		out.writeInt(lst.size());
+	public void write(Document doc, Element ele) throws IOException{
+		XMLTools.addPair(doc,ele,"exist_from", existFrom);
+		XMLTools.addPair(doc,ele,"exist_to", existTo);
+		XMLTools.addPair(doc,ele,"num_points", lst.size());
 		for (Point pt : lst){
-			PointTools.writeToFile(out, pt);
+			XMLTools.appendPoint(doc,XMLTools.nextLevel(doc, ele, "pt"),pt);
 		}
-		if (path == null){
-			out.writeInt(0);
-		} else {
-			path.write(out);
+		if (path != null){
+			Element next = XMLTools.nextLevel(doc, ele, "path");
+			path.write(doc,next);
 		}
 	}
 }

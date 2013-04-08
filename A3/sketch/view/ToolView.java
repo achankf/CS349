@@ -9,6 +9,16 @@ import java.awt.event.*;
 import java.awt.*;
 import java.io.*;
 import javax.swing.filechooser.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 public class ToolView extends JPanel{
 	private final SketchModel model;
@@ -108,10 +118,24 @@ public class ToolView extends JPanel{
 	}
 
 	public void save(File fileLocation) throws IOException{
-		OutputStream ostream = new FileOutputStream(fileLocation);
-		DataOutputStream out = new DataOutputStream(ostream);
-		model.write(out);
-		out.close();
+		try{
+			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+			Document doc = docBuilder.newDocument();
+
+			Element root = doc.createElement("Sketch");
+			doc.appendChild(root);
+
+			model.write(doc,root);
+
+			DOMSource source = new DOMSource(doc);
+			StreamResult result = new StreamResult(fileLocation);
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			Transformer transformer = transformerFactory.newTransformer();
+			transformer.transform(source, result);
+	  } catch (Exception e) {
+			e.printStackTrace();
+	  }
 	}
 
 	public void load(File fileLocation) throws IOException{

@@ -2,9 +2,12 @@ package sketch.model;
 
 import java.util.LinkedList;
 import sketch.model.object.*;
-import sketch.Config;
+import sketch.*;
 import java.io.*;
 import java.util.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Attr;
 
 public final class SketchModel extends BaseModel{
 	private LinkedList<DrawableObject> objList = new LinkedList<DrawableObject>();
@@ -33,11 +36,13 @@ public final class SketchModel extends BaseModel{
 		return this.frame;
 	}
 
-	public void write(DataOutputStream out) throws IOException{
-		out.writeInt(maxFrame);
-		out.writeInt(objList.size());
+	public void write(Document doc, Element ele) throws IOException{
+		XMLTools.addPair(doc,ele,"max_frame", maxFrame);
+		XMLTools.addPair(doc,ele,"num_objects", objList.size());
+
 		for (DrawableObject obj : objList){
-			obj.write(out);
+			Element next = XMLTools.nextLevel(doc, ele, "object");
+			obj.write(doc, next);
 		}
 	}
 

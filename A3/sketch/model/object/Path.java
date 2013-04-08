@@ -4,6 +4,9 @@ import sketch.*;
 import java.awt.*;
 import java.util.*;
 import java.io.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Attr;
 
 public class Path{
 	protected Point centre;
@@ -66,12 +69,15 @@ public class Path{
 		}
 	}
 
-	public void write(DataOutputStream out) throws IOException{
-		out.writeInt(tree.size());
-		PointTools.writeToFile(out, centre);
+	public void write(Document doc, Element ele) throws IOException{
+		XMLTools.addPair(doc, ele, "path_size", tree.size());
+		Element centreEle = doc.createElement("centre");
+		XMLTools.appendPoint(doc, centreEle, centre);
+		ele.appendChild(centreEle);
 		for (Map.Entry<Integer,Point> en : tree.entrySet()){
-			out.writeInt(en.getKey());
-			PointTools.writeToFile(out, en.getValue());
+			Element next = XMLTools.nextLevel(doc, ele, "delta");
+			XMLTools.addPair(doc,next,"frame", en.getKey());
+			XMLTools.appendPoint(doc,next,en.getValue());
 		}
 	}
 }

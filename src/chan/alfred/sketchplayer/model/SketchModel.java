@@ -3,7 +3,6 @@ package chan.alfred.sketchplayer.model;
 import java.util.LinkedList;
 
 import chan.alfred.sketchplayer.model.object.*;
-import chan.alfred.sketchplayer.Config;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -11,7 +10,7 @@ import org.w3c.dom.NodeList;
 
 public final class SketchModel extends BaseModel {
 	private int frame = 0;
-	private int maxFrame = Config.SLIDER_MAX;
+	private int maxFrame = 100;
 	private LinkedList<DrawableObject> objList = new LinkedList<DrawableObject>();
 
 	public void addObject(DrawableObject obj) {

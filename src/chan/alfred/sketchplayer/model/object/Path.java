@@ -4,24 +4,12 @@ import chan.alfred.sketchplayer.*;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import java.util.*;
-import java.io.*;
-
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 public class Path{
 	protected Point centre;
 	protected TreeMap<Integer, Point> tree;
-
-	public Path(DataInputStream in, int size) throws IOException{
-		tree = new TreeMap<Integer, Point>();
-		centre = PointTools.readFromFile(in);
-		for (int i = 0; i < size; i++){
-			int frame = in.readInt();
-			Point pt = PointTools.readFromFile(in);
-			tree.put(frame,pt);
-		}
-	}
 
 	public Path(Element ele) throws Exception{
 		tree = new TreeMap<Integer, Point>();
@@ -78,14 +66,5 @@ public class Path{
 
 	public Point getPoint(int idx){
 		return tree.get(idx);
-	}
-
-	public void write(DataOutputStream out) throws IOException{
-		out.writeInt(tree.size());
-		PointTools.writeToFile(out, centre);
-		for (Map.Entry<Integer,Point> en : tree.entrySet()){
-			out.writeInt(en.getKey());
-			PointTools.writeToFile(out, en.getValue());
-		}
 	}
 }

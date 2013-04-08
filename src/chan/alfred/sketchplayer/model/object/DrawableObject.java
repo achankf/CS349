@@ -4,14 +4,12 @@ import chan.alfred.sketchplayer.*;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import java.util.*;
-import java.io.*;
-
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 public class DrawableObject {
 	protected int existFrom = 0, existTo = -1;
-	protected ArrayList<Point> lst = new ArrayList<Point>(Config.COLLECTOR_MIN);
+	protected ArrayList<Point> lst = new ArrayList<Point>();
 	protected Path path = null;
 
 	public DrawableObject(Element ele) throws Exception {
@@ -101,19 +99,5 @@ public class DrawableObject {
 
 	public void setPath(Path path) {
 		this.path = path;
-	}
-
-	public void write(DataOutputStream out) throws IOException {
-		out.writeInt(existFrom);
-		out.writeInt(existTo);
-		out.writeInt(lst.size());
-		for (Point pt : lst) {
-			PointTools.writeToFile(out, pt);
-		}
-		if (path == null) {
-			out.writeInt(0);
-		} else {
-			path.write(out);
-		}
 	}
 }

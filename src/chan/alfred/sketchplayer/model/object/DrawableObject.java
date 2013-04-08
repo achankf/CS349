@@ -7,13 +7,9 @@ import java.util.*;
 import java.io.*;
 
 public class DrawableObject{
-	protected Path path = null;
-	protected ArrayList<Point> lst = new ArrayList<Point>(Config.COLLECTOR_MIN);
 	protected int existFrom = 0, existTo = -1;
-
-	public DrawableObject(int existFrom){
-		this.existFrom = existFrom;
-	}
+	protected ArrayList<Point> lst = new ArrayList<Point>(Config.COLLECTOR_MIN);
+	protected Path path = null;
 
 	public DrawableObject(DataInputStream in) throws IOException{
 		existFrom = in.readInt();
@@ -29,12 +25,17 @@ public class DrawableObject{
 		path = new Path(in, pathSize);
 	}
 
-	public void addPoint(Point pt){
-		lst.add(pt);
+	public DrawableObject(int existFrom){
+		this.existFrom = existFrom;
 	}
 
-	public ArrayList<Point> getPtLst(){
-		return lst;
+	public void addPathDelta(int frame, Point delta){
+		if (path == null) return;
+		path.addDelta(frame,delta);
+	}
+
+	public void addPoint(Point pt){
+		lst.add(pt);
 	}
 
 	public void draw(Canvas g2d, int frame){
@@ -61,24 +62,12 @@ public class DrawableObject{
 		}
 	}
 
-	public void setPath(Path path){
-		this.path = path;
-	}
-
-	public Path getPath(){
-		return path;
-	}
-
 	public void erasedAt(int frame){
 		existTo = frame;
 	}
 
 	public Boolean exist(int frame){
 		return frame >= existFrom && (frame < existTo || existTo == -1);
-	}
-
-	public Boolean nonExistence(){
-		return existFrom == existTo;
 	}
 
 	public Point getDelta(int frame){
@@ -88,9 +77,20 @@ public class DrawableObject{
 		return path.getDelta(frame);
 	}
 
-	public void addPathDelta(int frame, Point delta){
-		if (path == null) return;
-		path.addDelta(frame,delta);
+	public Path getPath(){
+		return path;
+	}
+
+	public ArrayList<Point> getPtLst(){
+		return lst;
+	}
+
+	public Boolean nonExistence(){
+		return existFrom == existTo;
+	}
+
+	public void setPath(Path path){
+		this.path = path;
 	}
 
 	public void write(DataOutputStream out) throws IOException{

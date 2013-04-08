@@ -9,38 +9,37 @@ import chan.alfred.sketchplayer.model.object.*;
 import chan.alfred.sketchplayer.*;
 
 public final class CanvasView extends View{
-	private final SketchModel model;
-	
-	private void addView(){
-		model.addView(new IView(){
-			public void updateView(){
-				invalidate();
-			}
-			public void resetView(){
-				updateView();
-			}
-		});
-		model.updateAllViews();
-	}
+	private final SketchModel model = MainActivity.model;
 
 	public CanvasView(Context context) {
 		super(context);
-		this.model = MainActivity.model;
-		addView();
-	}
-	
-	public CanvasView(Context context, AttributeSet attrs, int defStyle) {
-		super(context, attrs, defStyle);
-		this.model = MainActivity.model;
 		addView();
 	}
 	
 	public CanvasView(Context context, AttributeSet attrs){
 		super(context, attrs);
-		this.model = MainActivity.model;
 		addView();
 	}
+	
+	public CanvasView(Context context, AttributeSet attrs, int defStyle) {
+		super(context, attrs, defStyle);
+		addView();
+	}
+	
+	private void addView(){
+		model.addView(new IView(){
+			@Override
+			public void resetView(){
+				updateView();
+			}
+			@Override
+			public void updateView(){
+				invalidate();
+			}
+		});
+	}
 
+	@Override
 	public void draw(Canvas g2d) {
 		int currentFrame = model.getFrame();
 		for (DrawableObject obj : model.getObjLst()){

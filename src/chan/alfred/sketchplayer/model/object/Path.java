@@ -10,11 +10,6 @@ public class Path{
 	protected Point centre;
 	protected TreeMap<Integer, Point> tree;
 
-	public Path(Path path){
-		centre = new Point(path.centre);
-		tree = new TreeMap<Integer, Point>(path.tree);
-	}
-
 	public Path(DataInputStream in, int size) throws IOException{
 		tree = new TreeMap<Integer, Point>();
 		centre = PointTools.readFromFile(in);
@@ -25,8 +20,9 @@ public class Path{
 		}
 	}
 
-	public Point getPoint(int idx){
-		return tree.get(idx);
+	public Path(Path path){
+		centre = new Point(path.centre);
+		tree = new TreeMap<Integer, Point>(path.tree);
 	}
 
 	public Path(Point centre){
@@ -65,6 +61,10 @@ public class Path{
 		} else {
 			return new Point(0,0);
 		}
+	}
+
+	public Point getPoint(int idx){
+		return tree.get(idx);
 	}
 
 	public void write(DataOutputStream out) throws IOException{

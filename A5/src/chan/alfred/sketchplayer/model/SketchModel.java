@@ -9,9 +9,9 @@ import chan.alfred.sketchplayer.Config;
 import java.io.*;
 
 public final class SketchModel extends BaseModel{
-	private LinkedList<DrawableObject> objList = new LinkedList<DrawableObject>();
-	private int maxFrame = Config.SLIDER_MAX;
 	private int frame = 0;
+	private int maxFrame = Config.SLIDER_MAX;
+	private LinkedList<DrawableObject> objList = new LinkedList<DrawableObject>();
 	
 	public SketchModel(){
         DrawableObject draw = new DrawableObject(0);
@@ -28,31 +28,18 @@ public final class SketchModel extends BaseModel{
 		resetAllViews();
 	}
 
-	public void removeObject(DrawableObject obj){
-		objList.remove(obj);
-		resetAllViews();
+	public int getFrame(){
+		return this.frame;
+	}
+
+	public int getMaxFrame(){
+		return maxFrame;
 	}
 
 	public LinkedList<DrawableObject> getObjLst(){
 		return objList;
 	}
-
-	public void setFrame(int frame){
-		this.frame = frame;
-	}
 	
-	public int getFrame(){
-		return this.frame;
-	}
-
-	public void write(DataOutputStream out) throws IOException{
-		out.writeInt(maxFrame);
-		out.writeInt(objList.size());
-		for (DrawableObject obj : objList){
-			obj.write(out);
-		}
-	}
-
 	public void read(DataInputStream in) throws IOException{
 		LinkedList<DrawableObject> newObjList = new LinkedList<DrawableObject>();
 
@@ -67,11 +54,24 @@ public final class SketchModel extends BaseModel{
 		maxFrame = newMaxFrame;
 	}
 
+	public void removeObject(DrawableObject obj){
+		objList.remove(obj);
+		resetAllViews();
+	}
+
+	public void setFrame(int frame){
+		this.frame = frame;
+	}
+
 	public void setMaxFrame(int val){
 		maxFrame = val;
 	}
 
-	public int getMaxFrame(){
-		return maxFrame;
+	public void write(DataOutputStream out) throws IOException{
+		out.writeInt(maxFrame);
+		out.writeInt(objList.size());
+		for (DrawableObject obj : objList){
+			obj.write(out);
+		}
 	}
 }

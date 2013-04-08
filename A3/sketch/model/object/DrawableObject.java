@@ -9,6 +9,8 @@ import java.io.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Attr;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Node;
 
 public class DrawableObject{
 	protected Path path = null;
@@ -19,18 +21,20 @@ public class DrawableObject{
 		this.existFrom = existFrom;
 	}
 
-	public DrawableObject(DataInputStream in) throws IOException{
-		existFrom = in.readInt();
-		existTo = in.readInt();
-		int objSize = in.readInt();
-		for (int i = 0; i < objSize; i++){
-			Point temp = PointTools.readFromFile(in);
-			lst.add(temp);
-		}
+	public DrawableObject(Element ele) throws Exception{
+			existFrom = Integer.parseInt(XMLTools.extractKVP(ele,"exist_from"));
+			existTo = Integer.parseInt(XMLTools.extractKVP(ele,"exist_to"));
+		
+			NodeList pts = ele.getElementsByTagName("pt");
+			for (int j = 0; j < pts.getLength(); j++){
+				Element pt = (Element) pts.item(j);
+				addPoint(XMLTools.makePoint(pt));
+			}
 
-		int pathSize = in.readInt();
-		if (pathSize == 0) return;
-		path = new Path(in, pathSize);
+			NodeList pathlst = ele.getElementsByTagName("path");
+			if (pathlst.getLength() == 0) return;
+			Element pathele = (Element)pathlst.item(0);
+			path = new Path(pathele);
 	}
 
 	public void addPoint(Point pt){
@@ -118,15 +122,15 @@ public class DrawableObject{
 	}
 
 	public void write(Document doc, Element ele) throws IOException{
+		if (lst.size() == 0) return;
 		XMLTools.addPair(doc,ele,"exist_from", existFrom);
 		XMLTools.addPair(doc,ele,"exist_to", existTo);
-		XMLTools.addPair(doc,ele,"num_points", lst.size());
 		for (Point pt : lst){
 			XMLTools.appendPoint(doc,XMLTools.nextLevel(doc, ele, "pt"),pt);
 		}
-		if (path != null){
-			Element next = XMLTools.nextLevel(doc, ele, "path");
-			path.write(doc,next);
-		}
+
+		if (path == null) return;
+		Element next = XMLTools.nextLevel(doc, ele, "path");
+		path.write(doc,next);
 	}
 }

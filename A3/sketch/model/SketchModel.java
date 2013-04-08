@@ -8,6 +8,8 @@ import java.util.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Attr;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Node;
 
 public final class SketchModel extends BaseModel{
 	private LinkedList<DrawableObject> objList = new LinkedList<DrawableObject>();
@@ -37,22 +39,25 @@ public final class SketchModel extends BaseModel{
 	}
 
 	public void write(Document doc, Element ele) throws IOException{
-		XMLTools.addPair(doc,ele,"max_frame", maxFrame);
-		XMLTools.addPair(doc,ele,"num_objects", objList.size());
-
+		XMLTools.addPair(doc,ele,"max_frame",maxFrame);
 		for (DrawableObject obj : objList){
 			Element next = XMLTools.nextLevel(doc, ele, "object");
 			obj.write(doc, next);
 		}
 	}
 
-	public void read(DataInputStream in) throws IOException{
+	public void read(Document doc) throws Exception{
+		NodeList nlst = doc.getElementsByTagName("max_frame");
+		Element ele = (Element)nlst.item(0);
+		NodeList nlst2 = ele.getChildNodes();
+		int newMaxFrame = Integer.parseInt(nlst2.item(0).getNodeValue());
+
+		NodeList nodeLst = doc.getElementsByTagName("object");
+		int size = nodeLst.getLength();
 		LinkedList<DrawableObject> newObjList = new LinkedList<DrawableObject>();
 
-		int newMaxFrame = in.readInt();
-		int size = in.readInt();
 		for (int i = 0; i < size; i++){
-			newObjList.add(new DrawableObject(in));
+			newObjList.add(new DrawableObject((Element) nodeLst.item(i)));
 		}
 
 		this.objList = newObjList;

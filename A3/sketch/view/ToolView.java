@@ -19,6 +19,8 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Node;
 
 public class ToolView extends JPanel{
 	private final SketchModel model;
@@ -138,10 +140,12 @@ public class ToolView extends JPanel{
 	  }
 	}
 
-	public void load(File fileLocation) throws IOException{
-		InputStream istream = new FileInputStream(fileLocation);
-		DataInputStream in = new DataInputStream(istream);
-		model.read(in);
-		in.close();
+	public void load(File fileLocation) throws Exception{
+		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+		Document doc = docBuilder.parse(fileLocation);
+
+		NodeList nodeLst = doc.getElementsByTagName("object");
+		model.read(doc);
 	}
 }

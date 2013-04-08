@@ -6,7 +6,9 @@ import android.graphics.Point;
 import chan.alfred.sketchplayer.model.object.*;
 import chan.alfred.sketchplayer.Config;
 
-import java.io.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 public final class SketchModel extends BaseModel{
 	private int frame = 0;
@@ -40,38 +42,30 @@ public final class SketchModel extends BaseModel{
 		return objList;
 	}
 	
-	public void read(DataInputStream in) throws IOException{
+	public void read(Document doc) throws Exception{
+		NodeList nlst = doc.getElementsByTagName("max_frame");
+		Element ele = (Element)nlst.item(0);
+		NodeList nlst2 = ele.getChildNodes();
+		int newMaxFrame = Integer.parseInt(nlst2.item(0).getNodeValue());
+
+		NodeList nodeLst = doc.getElementsByTagName("object");
+		int size = nodeLst.getLength();
 		LinkedList<DrawableObject> newObjList = new LinkedList<DrawableObject>();
 
-		int newMaxFrame = in.readInt();
-		int size = in.readInt();
 		for (int i = 0; i < size; i++){
-			newObjList.add(new DrawableObject(in));
+			newObjList.add(new DrawableObject((Element) nodeLst.item(i)));
 		}
 
 		this.objList = newObjList;
 		frame = 0;
 		maxFrame = newMaxFrame;
 	}
-
-	public void removeObject(DrawableObject obj){
-		objList.remove(obj);
-		resetAllViews();
-	}
-
+	
 	public void setFrame(int frame){
 		this.frame = frame;
 	}
 
 	public void setMaxFrame(int val){
 		maxFrame = val;
-	}
-
-	public void write(DataOutputStream out) throws IOException{
-		out.writeInt(maxFrame);
-		out.writeInt(objList.size());
-		for (DrawableObject obj : objList){
-			obj.write(out);
-		}
 	}
 }

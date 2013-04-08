@@ -6,6 +6,9 @@ import android.graphics.Point;
 import java.util.*;
 import java.io.*;
 
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
 public class Path{
 	protected Point centre;
 	protected TreeMap<Integer, Point> tree;
@@ -20,9 +23,19 @@ public class Path{
 		}
 	}
 
-	public Path(Path path){
-		centre = new Point(path.centre);
-		tree = new TreeMap<Integer, Point>(path.tree);
+	public Path(Element ele) throws Exception{
+		tree = new TreeMap<Integer, Point>();
+
+		Element centreEle = (Element)ele.getElementsByTagName("centre").item(0);
+		centre = XMLTools.makePoint(centreEle);
+
+		NodeList deltas = ele.getElementsByTagName("delta");
+		for (int i = 0; i < deltas.getLength(); i++){
+			Element delta= (Element) deltas.item(i);
+			Integer frame = Integer.parseInt(XMLTools.extractKVP(delta, "frame"));
+			Point pt = XMLTools.makePoint(delta);
+			tree.put(frame,pt);
+		}
 	}
 
 	public Path(Point centre){

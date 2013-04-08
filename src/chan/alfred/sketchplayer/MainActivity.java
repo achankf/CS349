@@ -1,16 +1,18 @@
 package chan.alfred.sketchplayer;
 
-import java.io.DataInputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import android.net.Uri;
-import android.os.Bundle;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,7 +20,7 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
-import chan.alfred.sketchplayer.model.*;
+import chan.alfred.sketchplayer.model.SketchModel;
 
 public class MainActivity extends Activity {
 	final public static SketchModel model = new SketchModel();
@@ -54,18 +56,25 @@ public class MainActivity extends Activity {
 		setupListeners();
 	}
 
+	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		tv.setText(tv.getText()+" ret intent");
 		switch (requestCode) {
 		case ACTIVITY_CHOOSE_FILE: {
 			if (resultCode == RESULT_OK) {
+				tv.setText(tv.getText()+" intent ok");
 				Uri uri = data.getData();
 				String filePath = uri.getPath();
 				tv.setText(filePath);
+				DocumentBuilderFactory docFactory = DocumentBuilderFactory
+						.newInstance();
+
 				try {
-					model.read(new DataInputStream(new FileInputStream(filePath)));
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
+					DocumentBuilder docBuilder = docFactory
+							.newDocumentBuilder();
+					Document doc = docBuilder.parse(new File(filePath));
+					model.read(doc);
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
@@ -82,6 +91,7 @@ public class MainActivity extends Activity {
 
 	private void setupListeners() {
 		loadFile.setOnClickListener(new OnClickListener() {
+			@Override
 			public void onClick(View v) {
 				Intent chooseFile;
 				Intent intent;
@@ -137,6 +147,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void run() {
 				runOnUiThread(new Runnable() {
+					@Override
 					public void run() {
 						int frame = seekBar.getProgress();
 						if (frame >= seekBar.getMax()) {

@@ -28,6 +28,7 @@ public class DrawableObject{
 			NodeList pts = ele.getElementsByTagName("pt");
 			for (int j = 0; j < pts.getLength(); j++){
 				Element pt = (Element) pts.item(j);
+				Point temp = XMLTools.makePoint(pt);
 				addPoint(XMLTools.makePoint(pt));
 			}
 
@@ -122,7 +123,6 @@ public class DrawableObject{
 	}
 
 	public void write(Document doc, Element ele) throws IOException{
-		if (lst.size() == 0) return;
 		XMLTools.addPair(doc,ele,"exist_from", existFrom);
 		XMLTools.addPair(doc,ele,"exist_to", existTo);
 		for (Point pt : lst){

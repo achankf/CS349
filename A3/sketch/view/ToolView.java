@@ -65,7 +65,7 @@ public class ToolView extends JPanel{
 
 		final JPanel temp = this;
 		final JFileChooser fc = new JFileChooser();
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("Sketch files only", "sketch");
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("XML files only", "xml");
 		fc.setFileFilter(filter);
 
 		save.addActionListener(new ActionListener(){
@@ -76,8 +76,8 @@ public class ToolView extends JPanel{
 					if (returnVal == JFileChooser.APPROVE_OPTION){
 						File f = fc.getSelectedFile();
 						String path = f.getPath();
-						if(!path.toLowerCase().endsWith(".sketch")){
-				    	f = new File(path + ".sketch");
+						if(!path.toLowerCase().endsWith(".xml")){
+				    	f = new File(path + ".xml");
 						}
 						save(f);
 					}
@@ -119,25 +119,21 @@ public class ToolView extends JPanel{
 		});
 	}
 
-	public void save(File fileLocation) throws IOException{
-		try{
-			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-			Document doc = docBuilder.newDocument();
+	public void save(File fileLocation) throws Exception{
+		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+		Document doc = docBuilder.newDocument();
 
-			Element root = doc.createElement("Sketch");
-			doc.appendChild(root);
+		Element root = doc.createElement("Sketch");
+		doc.appendChild(root);
 
-			model.write(doc,root);
+		model.write(doc,root);
 
-			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(fileLocation);
-			TransformerFactory transformerFactory = TransformerFactory.newInstance();
-			Transformer transformer = transformerFactory.newTransformer();
-			transformer.transform(source, result);
-	  } catch (Exception e) {
-			e.printStackTrace();
-	  }
+		DOMSource source = new DOMSource(doc);
+		StreamResult result = new StreamResult(fileLocation);
+		TransformerFactory transformerFactory = TransformerFactory.newInstance();
+		Transformer transformer = transformerFactory.newTransformer();
+		transformer.transform(source, result);
 	}
 
 	public void load(File fileLocation) throws Exception{

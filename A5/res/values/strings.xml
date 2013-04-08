@@ -13,5 +13,6 @@
     <string name="apply">Apply Change</string>
     <string name="config">Config</string>
     <string name="config_title">Configure</string>
+    <string name="file_chooser_title">Select a File</string>
 
 </resources>

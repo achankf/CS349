@@ -8,11 +8,11 @@ public class Dimension extends Pair<Integer, Integer> {
 		super(first, second);
 	}
 	
-	public int getWidth(){
-		return first;
-	}
-	
 	public int getHeight(){
 		return second;
+	}
+	
+	public int getWidth(){
+		return first;
 	}
 }

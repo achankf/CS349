@@ -18,16 +18,16 @@ public class BaseModel extends Object{
 	}
 
 	/** Update all the views that are viewing this triangle. */
-	public void updateAllViews() {
+	public void resetAllViews() {
 		for (IView view : this.views) {
-			view.updateView();
+			view.resetView();
 		}
 	}
 
 	/** Update all the views that are viewing this triangle. */
-	public void resetAllViews() {
+	public void updateAllViews() {
 		for (IView view : this.views) {
-			view.resetView();
+			view.updateView();
 		}
 	}
 };

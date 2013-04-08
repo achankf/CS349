@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">SketchPlayer</string>
+    <string name="app_name">Sketch Player (Chan 255)</string>
     <string name="action_settings">Settings</string>
     <string name="play">Play</string>
     <string name="stop">Stop</string>
     <string name="load">load</string>
+    <string name="FPS">FPS:</string>
+    <string name="green">Green (less &lt;-&gt; more):</string>
+    <string name="red">Red (less &lt;-&gt; more):</string>
+    <string name="blue">Blue (less &lt;-&gt; more):</string>
+    <string name="apply">Apply Change</string>
+    <string name="config">Config</string>
+    <string name="config_title">Configure</string>
 
 </resources>

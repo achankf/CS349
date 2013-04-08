@@ -2,7 +2,7 @@ package chan.alfred.sketchplayer.model;
 
 import java.util.ArrayList;
 
-public class BaseModel extends Object{
+public class BaseModel extends Object {
 	/* A list of the model's views. */
 	private ArrayList<IView> views = new ArrayList<IView>();
 

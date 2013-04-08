@@ -144,8 +144,6 @@ public class ToolView extends JPanel{
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 		Document doc = docBuilder.parse(fileLocation);
-
-		NodeList nodeLst = doc.getElementsByTagName("object");
 		model.read(doc);
 	}
 }

@@ -9,6 +9,18 @@ import java.awt.event.*;
 import java.awt.*;
 import java.io.*;
 import javax.swing.filechooser.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Node;
 
 public class ToolView extends JPanel{
 	private final SketchModel model;
@@ -53,7 +65,7 @@ public class ToolView extends JPanel{
 
 		final JPanel temp = this;
 		final JFileChooser fc = new JFileChooser();
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("Sketch files only", "sketch");
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("XML files only", "xml");
 		fc.setFileFilter(filter);
 
 		save.addActionListener(new ActionListener(){
@@ -64,8 +76,8 @@ public class ToolView extends JPanel{
 					if (returnVal == JFileChooser.APPROVE_OPTION){
 						File f = fc.getSelectedFile();
 						String path = f.getPath();
-						if(!path.toLowerCase().endsWith(".sketch")){
-				    	f = new File(path + ".sketch");
+						if(!path.toLowerCase().endsWith(".xml")){
+				    	f = new File(path + ".xml");
 						}
 						save(f);
 					}
@@ -107,17 +119,27 @@ public class ToolView extends JPanel{
 		});
 	}
 
-	public void save(File fileLocation) throws IOException{
-		OutputStream ostream = new FileOutputStream(fileLocation);
-		DataOutputStream out = new DataOutputStream(ostream);
-		model.write(out);
-		out.close();
+	public void save(File fileLocation) throws Exception{
+		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+		Document doc = docBuilder.newDocument();
+
+		Element root = doc.createElement("Sketch");
+		doc.appendChild(root);
+
+		model.write(doc,root);
+
+		DOMSource source = new DOMSource(doc);
+		StreamResult result = new StreamResult(fileLocation);
+		TransformerFactory transformerFactory = TransformerFactory.newInstance();
+		Transformer transformer = transformerFactory.newTransformer();
+		transformer.transform(source, result);
 	}
 
-	public void load(File fileLocation) throws IOException{
-		InputStream istream = new FileInputStream(fileLocation);
-		DataInputStream in = new DataInputStream(istream);
-		model.read(in);
-		in.close();
+	public void load(File fileLocation) throws Exception{
+		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+		Document doc = docBuilder.parse(fileLocation);
+		model.read(doc);
 	}
 }

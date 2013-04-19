@@ -4,6 +4,11 @@ import sketch.*;
 import java.awt.*;
 import java.util.*;
 import java.io.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Attr;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Node;
 
 public class Path{
 	protected Point centre;
@@ -14,12 +19,17 @@ public class Path{
 		tree = new TreeMap<Integer, Point>(path.tree);
 	}
 
-	public Path(DataInputStream in, int size) throws IOException{
+	public Path(Element ele) throws Exception{
 		tree = new TreeMap<Integer, Point>();
-		centre = PointTools.readFromFile(in);
-		for (int i = 0; i < size; i++){
-			int frame = in.readInt();
-			Point pt = PointTools.readFromFile(in);
+
+		Element centreEle = (Element)ele.getElementsByTagName("centre").item(0);
+		centre = XMLTools.makePoint(centreEle);
+
+		NodeList deltas = ele.getElementsByTagName("delta");
+		for (int i = 0; i < deltas.getLength(); i++){
+			Element delta= (Element) deltas.item(i);
+			Integer frame = Integer.parseInt(XMLTools.extractKVP(delta, "frame"));
+			Point pt = XMLTools.makePoint(delta);
 			tree.put(frame,pt);
 		}
 	}
@@ -66,12 +76,14 @@ public class Path{
 		}
 	}
 
-	public void write(DataOutputStream out) throws IOException{
-		out.writeInt(tree.size());
-		PointTools.writeToFile(out, centre);
+	public void write(Document doc, Element ele) throws IOException{
+		Element centreEle = doc.createElement("centre");
+		XMLTools.appendPoint(doc, centreEle, centre);
+		ele.appendChild(centreEle);
 		for (Map.Entry<Integer,Point> en : tree.entrySet()){
-			out.writeInt(en.getKey());
-			PointTools.writeToFile(out, en.getValue());
+			Element next = XMLTools.nextLevel(doc, ele, "delta");
+			XMLTools.addPair(doc,next,"frame", en.getKey());
+			XMLTools.appendPoint(doc,next,en.getValue());
 		}
 	}
 }

@@ -6,6 +6,11 @@ import java.awt.Point;
 import java.awt.Graphics2D;
 import java.util.*;
 import java.io.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Attr;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Node;
 
 public class DrawableObject{
 	protected Path path = null;
@@ -16,18 +21,21 @@ public class DrawableObject{
 		this.existFrom = existFrom;
 	}
 
-	public DrawableObject(DataInputStream in) throws IOException{
-		existFrom = in.readInt();
-		existTo = in.readInt();
-		int objSize = in.readInt();
-		for (int i = 0; i < objSize; i++){
-			Point temp = PointTools.readFromFile(in);
-			lst.add(temp);
-		}
+	public DrawableObject(Element ele) throws Exception{
+			existFrom = Integer.parseInt(XMLTools.extractKVP(ele,"exist_from"));
+			existTo = Integer.parseInt(XMLTools.extractKVP(ele,"exist_to"));
+		
+			NodeList pts = ele.getElementsByTagName("pt");
+			for (int j = 0; j < pts.getLength(); j++){
+				Element pt = (Element) pts.item(j);
+				Point temp = XMLTools.makePoint(pt);
+				addPoint(XMLTools.makePoint(pt));
+			}
 
-		int pathSize = in.readInt();
-		if (pathSize == 0) return;
-		path = new Path(in, pathSize);
+			NodeList pathlst = ele.getElementsByTagName("path");
+			if (pathlst.getLength() == 0) return;
+			Element pathele = (Element)pathlst.item(0);
+			path = new Path(pathele);
 	}
 
 	public void addPoint(Point pt){
@@ -114,17 +122,15 @@ public class DrawableObject{
 		path.addDelta(frame,delta);
 	}
 
-	public void write(DataOutputStream out) throws IOException{
-		out.writeInt(existFrom);
-		out.writeInt(existTo);
-		out.writeInt(lst.size());
+	public void write(Document doc, Element ele) throws IOException{
+		XMLTools.addPair(doc,ele,"exist_from", existFrom);
+		XMLTools.addPair(doc,ele,"exist_to", existTo);
 		for (Point pt : lst){
-			PointTools.writeToFile(out, pt);
+			XMLTools.appendPoint(doc,XMLTools.nextLevel(doc, ele, "pt"),pt);
 		}
-		if (path == null){
-			out.writeInt(0);
-		} else {
-			path.write(out);
-		}
+
+		if (path == null) return;
+		Element next = XMLTools.nextLevel(doc, ele, "path");
+		path.write(doc,next);
 	}
 }
